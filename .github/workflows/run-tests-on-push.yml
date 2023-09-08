@@ -1,4 +1,4 @@
-name: run-tests-on-push
+name: Continuous Integration
 on: [push]
 
 jobs:
@@ -19,3 +19,14 @@ jobs:
         if: runner.os == 'Linux'
       - run: npm test
         if: runner.os != 'Linux'
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
+        with:
+          dry: True

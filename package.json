@@ -1,4 +1,5 @@
 {
+  "publisher": "vs-code-ai-extension",
   "name": "vs-code-ai-extension",
   "displayName": "vs-code-ai-extension",
   "description": "",
@@ -12,10 +13,30 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "AI Extension",
+      "properties": {
+        "vs-code-ai-extension.model": {
+          "type": "enum",
+          "enum": [ "gpt-3.5-turbo" ],
+          "default": "gpt-3.5-turbo",
+          "description": "The model to use for AI completion"
+        },
+        "vs-code-ai-extension.APIKey": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "The API key to use for AI completion"
+        }
+        }
+      },
     "commands": [
       {
         "command": "vs-code-ai-extension.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "vs-code-ai-extension.reviewCode",
+        "title": "Review Code"
       }
     ]
   },

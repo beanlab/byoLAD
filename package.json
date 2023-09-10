@@ -18,25 +18,36 @@
       "properties": {
         "vs-code-ai-extension.model": {
           "type": "enum",
-          "enum": [ "gpt-3.5-turbo" ],
+          "enum": [
+            "gpt-3.5-turbo"
+          ],
           "default": "gpt-3.5-turbo",
           "description": "The model to use for AI completion"
         },
         "vs-code-ai-extension.APIKey": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "default": null,
           "description": "The API key to use for AI completion"
         }
-        }
-      },
+      }
+    },
     "commands": [
       {
         "command": "vs-code-ai-extension.helloWorld",
         "title": "Hello World"
       },
       {
-        "command": "vs-code-ai-extension.reviewCode",
-        "title": "Review Code"
+        "command": "vs-code-ai-extension.reviewFileCode",
+        "title": "Review Code File",
+        "category": "AI Extension"
+      },
+      {
+        "command": "vs-code-ai-extension.reviewSelectedCode",
+        "title": "Review Selected Code",
+        "category": "AI Extension"
       }
     ]
   },

@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { injectCompletionModel } from "./helpers/injectCompletionModel";
+import { CompletionModelResponse } from "./CompletionModel/CompletionModel";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -30,16 +31,17 @@ export function activate(context: vscode.ExtensionContext) {
     },
   );
 
-  const reviewCodeCommand = vscode.commands.registerCommand(
-    "vs-code-ai-extension.reviewCode",
+  const reviewFileCodeCommand = vscode.commands.registerCommand(
+    "vs-code-ai-extension.reviewFileCode",
     async () => {
-      vscode.window.showInformationMessage("Reviewing Code");
       const activeEditor = vscode.window.activeTextEditor;
-      if (!activeEditor) {
+      const code = activeEditor?.document.getText();
+      if (!activeEditor || !code) {
         vscode.window.showErrorMessage("No code to review");
         return;
       }
-      const code = activeEditor.document.getText();
+      vscode.window.showInformationMessage("Reviewing Code File");
+
       const completion = await completionModel.complete({
         instruction:
           "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
@@ -66,8 +68,80 @@ export function activate(context: vscode.ExtensionContext) {
     },
   );
 
+  const reviewSelectedCodeCommand = vscode.commands.registerCommand(
+    "vs-code-ai-extension.reviewSelectedCode",
+    async () => {
+      const activeEditor = vscode.window.activeTextEditor;
+      const code = activeEditor?.document.getText(activeEditor?.selection);
+      if (!activeEditor || !code) {
+        vscode.window.showErrorMessage("No code selected to review");
+        return;
+      }
+
+      let completion: CompletionModelResponse | undefined;
+
+      vscode.window
+        .withProgress(
+          {
+            location: vscode.ProgressLocation.Window,
+            cancellable: false, // TODO: make this cancellable and use ProgressLocation.Notification
+            title: "Reviewing selected code",
+          },
+          async (progress) => {
+            progress.report({ increment: 0 });
+
+            completion = await completionModel.complete({
+              instruction:
+                "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
+              code: code,
+            });
+
+            progress.report({ increment: 100 });
+          },
+        )
+        .then(async () => {
+          if (completion && completion.success) {
+            const beforeSelection = activeEditor.document.getText(
+              new vscode.Range(
+                new vscode.Position(0, 0),
+                activeEditor.selection.start,
+              ),
+            );
+            const afterSelection = activeEditor.document.getText(
+              new vscode.Range(
+                activeEditor.selection.end,
+                new vscode.Position(
+                  activeEditor.document.lineCount - 1,
+                  activeEditor.document.lineAt(
+                    activeEditor.document.lineCount - 1,
+                  ).text.length,
+                ),
+              ),
+            );
+            const suggestionTempFile = await vscode.workspace.openTextDocument({
+              content: beforeSelection + completion.completion + afterSelection,
+              language: activeEditor.document.languageId,
+            });
+
+            vscode.commands.executeCommand(
+              "vscode.diff",
+              activeEditor.document.uri,
+              suggestionTempFile.uri,
+            );
+
+            return;
+          }
+          const errorMessage = completion?.errorMessage;
+          vscode.window.showErrorMessage(
+            errorMessage || "Unknown error occurred during code review",
+          );
+        });
+    },
+  );
+
   context.subscriptions.push(disposable);
-  context.subscriptions.push(reviewCodeCommand);
+  context.subscriptions.push(reviewFileCodeCommand);
+  context.subscriptions.push(reviewSelectedCodeCommand);
 }
 
 // This method is called when your extension is deactivated

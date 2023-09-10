@@ -40,31 +40,48 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showErrorMessage("No code to review");
         return;
       }
-      vscode.window.showInformationMessage("Reviewing Code File");
 
-      const completion = await completionModel.complete({
-        instruction:
-          "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
-        code: code,
-      });
-      if (completion.success) {
-        const tempFile = await vscode.workspace.openTextDocument({
-          content: completion.completion,
-          language: activeEditor.document.languageId,
+      let completion: CompletionModelResponse | undefined;
+
+      vscode.window
+        .withProgress(
+          {
+            location: vscode.ProgressLocation.Window,
+            cancellable: false, // TODO: make this cancellable and use ProgressLocation.Notification
+            title: "Reviewing code file",
+          },
+          async (progress) => {
+            progress.report({ increment: 0 });
+
+            completion = await completionModel.complete({
+              instruction:
+                "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
+              code: code,
+            });
+
+            progress.report({ increment: 100 });
+          },
+        )
+        .then(async () => {
+          if (completion && completion.success) {
+            const tempFile = await vscode.workspace.openTextDocument({
+              content: completion.completion,
+              language: activeEditor.document.languageId,
+            });
+
+            vscode.commands.executeCommand(
+              "vscode.diff",
+              activeEditor.document.uri,
+              tempFile.uri,
+            );
+
+            return;
+          }
+          const errorMessage = completion?.errorMessage;
+          vscode.window.showErrorMessage(
+            errorMessage || "Unknown error occurred during code review",
+          );
         });
-
-        vscode.commands.executeCommand(
-          "vscode.diff",
-          activeEditor.document.uri,
-          tempFile.uri,
-        );
-
-        return;
-      }
-      const errorMessage = completion.errorMessage;
-      vscode.window.showErrorMessage(
-        errorMessage || "Unknown error occurred during code review",
-      );
     },
   );
 

@@ -17,7 +17,7 @@
       "title": "AI Extension",
       "properties": {
         "vs-code-ai-extension.model": {
-          "type": "enum",
+          "type": "string",
           "enum": [
             "gpt-3.5-turbo"
           ],
@@ -25,11 +25,8 @@
           "description": "The model to use for AI completion"
         },
         "vs-code-ai-extension.APIKey": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null,
+          "type": "string",
+          "default": "",
           "description": "The API key to use for AI completion"
         }
       }

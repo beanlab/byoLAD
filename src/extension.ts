@@ -24,16 +24,6 @@ export function activate(context: vscode.ExtensionContext) {
   // For commands that have been defined in the package.json file,
   // provide the implementation with registerCommand.
   // The commandId parameter must match the command field in package.json
-  const disposable = vscode.commands.registerCommand(
-    "vs-code-ai-extension.helloWorld",
-    () => {
-      // The code you place here will be executed every time your command is executed
-      // Display a message box to the user
-      vscode.window.showInformationMessage(
-        "Hello World from vs-code-ai-extension!",
-      );
-    },
-  );
 
   /**
    * Queries the model for a reviewed, edited version of the current file contents. Displays a diff of the active editor document and the completion response.
@@ -181,7 +171,6 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   // Add the commands to the extension context so they can be used
-  context.subscriptions.push(disposable);
   context.subscriptions.push(reviewFileCodeCommand);
   context.subscriptions.push(reviewSelectedCodeCommand);
 }

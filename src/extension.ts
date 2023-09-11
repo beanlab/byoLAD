@@ -6,7 +6,7 @@ import { CompletionModelResponse } from "./CompletionModel/CompletionModel";
 
 const codeReviewInstruction =
   "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.";
-const codeReviewProgressTitle = "Reviewing code";
+const codeReviewProgressTitle = "Reviewing code...";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -91,7 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   /**
-   * Displays a diff of the active editor document and the provided content in a new editor.
+   * Displays a diff comparison of the active editor document and the provided content in a new editor.
    *
    * @param diffText Text to compare to the active editor document text
    * @param activeEditor The active editor to compare to the diff text

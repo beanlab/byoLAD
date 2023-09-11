@@ -36,20 +36,51 @@
     },
     "commands": [
       {
-        "command": "vs-code-ai-extension.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "vs-code-ai-extension.reviewFileCode",
         "title": "Review Code File",
-        "category": "AI Extension"
+        "category": "AI Extension",
+        "icon": {
+          "dark": "./media/icons8-stars-16-white.png",
+          "light": "./media/icons8-stars-16-black.png"
+        }
       },
       {
         "command": "vs-code-ai-extension.reviewSelectedCode",
         "title": "Review Selected Code",
         "category": "AI Extension"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "vs-code-ai-extension.reviewFileCode",
+          "when": "!editorReadonly && !isInDiffEditor"
+        },
+        {
+          "command": "vs-code-ai-extension.reviewSelectedCode",
+          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vs-code-ai-extension.reviewFileCode",
+          "group": "1_modification"
+        },
+        {
+          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
+          "command": "vs-code-ai-extension.reviewSelectedCode",
+          "group": "1_modification"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "!editorReadonly && !isInDiffEditor",
+          "command": "vs-code-ai-extension.reviewFileCode",
+          "group": "navigation@1"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

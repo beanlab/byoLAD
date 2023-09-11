@@ -19,7 +19,8 @@
         "vs-code-ai-extension.model": {
           "type": "string",
           "enum": [
-            "gpt-3.5-turbo"
+            "gpt-3.5-turbo",
+            "text-bison-001"
           ],
           "default": "gpt-3.5-turbo",
           "description": "The model to use for AI completion"
@@ -102,6 +103,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@google-ai/generativelanguage": "^1.0.1",
+    "google-auth-library": "^9.0.0",
     "openai": "^4.5.0"
   }
 }

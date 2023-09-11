@@ -1,3 +1,5 @@
+<a target="_blank" href="https://icons8.com/icon/tDtvWzs979he/sparkling">Stars</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+
 # vs-code-ai-extension README
 
 This is the README for your extension "vs-code-ai-extension". After writing up a brief description, we recommend including the following sections.

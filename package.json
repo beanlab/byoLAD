@@ -51,7 +51,7 @@
       "commandPalette": [
         {
           "command": "vs-code-ai-extension.reviewFileCode",
-          "when": "!editorReadonly && !isInDiffEditor"
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor"
         },
         {
           "command": "vs-code-ai-extension.reviewSelectedCode",
@@ -72,7 +72,7 @@
       ],
       "editor/title": [
         {
-          "when": "!editorReadonly && !isInDiffEditor",
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
           "command": "vs-code-ai-extension.reviewFileCode",
           "group": "navigation@1"
         }

@@ -2,24 +2,10 @@ import { CompletionModel } from "../CompletionModel/CompletionModel";
 import { GPTCompletionModel } from "../CompletionModel/Implementations/GPTCompletionModel";
 import { UnsetCompletionModel } from "../CompletionModel/Implementations/UnsetCompletionModel";
 import * as vscode from "vscode";
-import { CompletionModelType, MessageSeverity } from "./types";
+import { CompletionModelType } from "./types";
 import { PaLMCompletionModel } from "../CompletionModel/Implementations/PaLMCompletionModel";
 
-const injectUnsetCompletionModel = (
-  message: string,
-  severity: MessageSeverity,
-): UnsetCompletionModel => {
-  switch (severity) {
-    case MessageSeverity.Error:
-      vscode.window.showErrorMessage(message);
-      break;
-    case MessageSeverity.Warning:
-      vscode.window.showWarningMessage(message);
-      break;
-    case MessageSeverity.Info:
-      vscode.window.showInformationMessage(message);
-      break;
-  }
+const injectUnsetCompletionModel = (message: string): UnsetCompletionModel => {
   return new UnsetCompletionModel(message);
 };
 
@@ -31,10 +17,7 @@ const injectGPTCompletionModel = ():
 
   if (apiKey) return new GPTCompletionModel(apiKey);
 
-  return injectUnsetCompletionModel(
-    "vs-code-ai-extension: APIKey not set",
-    MessageSeverity.Warning,
-  );
+  return injectUnsetCompletionModel("vs-code-ai-extension: APIKey not set");
 };
 
 const injectPaLMCompletionModel = ():
@@ -45,10 +28,7 @@ const injectPaLMCompletionModel = ():
 
   if (apiKey) return new PaLMCompletionModel(apiKey);
 
-  return injectUnsetCompletionModel(
-    "vs-code-ai-extension: APIKey not set",
-    MessageSeverity.Warning,
-  );
+  return injectUnsetCompletionModel("vs-code-ai-extension: APIKey not set");
 };
 
 export const injectCompletionModel = (): CompletionModel => {
@@ -61,9 +41,6 @@ export const injectCompletionModel = (): CompletionModel => {
     case CompletionModelType.PaLM:
       return injectPaLMCompletionModel();
     default:
-      return injectUnsetCompletionModel(
-        "vs-code-ai-extension: Model not set",
-        MessageSeverity.Warning,
-      );
+      return injectUnsetCompletionModel("vs-code-ai-extension: Model not set");
   }
 };

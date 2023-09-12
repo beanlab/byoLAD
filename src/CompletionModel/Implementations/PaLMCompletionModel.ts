@@ -10,7 +10,6 @@ export class PaLMCompletionModel implements CompletionModel {
   private client: TextServiceClient;
 
   constructor(apiKey: string) {
-    console.log(apiKey);
     this.client = new TextServiceClient({
       authClient: new GoogleAuth().fromAPIKey(apiKey),
     });
@@ -29,7 +28,6 @@ export class PaLMCompletionModel implements CompletionModel {
         text: this.formatPrompt(request),
       },
     });
-    console.log(completion);
 
     if (
       completion[0] &&

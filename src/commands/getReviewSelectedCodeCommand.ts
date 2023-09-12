@@ -9,14 +9,14 @@ import {
   CODE_REVIEW_INSTRUCTION,
   CODE_REVIEW_PROGRESS_TITLE,
 } from "./constants";
-import { CompletionModel } from "../CompletionModel/CompletionModel";
+import { CompletionModelProvider } from "../CompletionModel/CompletionModelProvider";
 
 /**
  * Queries the model for a reviewed, edited version of the currently selected code.
  * Displays a diff of the active editor document and the completion response in context of the overall file.
  */
 export const getReviewSelectedCodeCommand = (
-  completionModel: CompletionModel,
+  completionModelProvider: CompletionModelProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     "vs-code-ai-extension.reviewSelectedCode",
@@ -28,7 +28,7 @@ export const getReviewSelectedCodeCommand = (
       const progressTitle = CODE_REVIEW_PROGRESS_TITLE;
 
       doCompletion(
-        completionModel,
+        completionModelProvider.getCompletionModel(),
         code,
         modelInstruction,
         progressTitle,

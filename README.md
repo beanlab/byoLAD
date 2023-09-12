@@ -1,6 +1,6 @@
-# vs-code-ai-extension README
+# A Super Cool Extension
 
-This is an open-source AI extension to assist with reviewing and generating code. 
+This extension is an open-source AI extension to assist with reviewing and generating code developed by a professor and students at Brigham Young University. This extension is here to help with general code review abilities that cover looking for bugs, suggesting different naming, and making the code look cleaner. In addition to code review, this extension helps generate code as you type. If the code doesn't seem exactly how you wanted it, you can ask it to make modifications to the code that it generated for you. Overall, this extension is here to help streamline your development process while providing the flexibility of different APIs. 
 
 ## Features
 
@@ -8,27 +8,27 @@ This AI platform is an open-source AI extension. Some of the main features are c
 
 ### Code Review
 
-This extension has the option of reviewing a whole file or reviewing selected code. 
+This extension has the option of reviewing a whole file or reviewing selected code. When it reviews your code, it will look for bugs in the code and look for general naming problems. In addition, it will suggest getting rid of or adding spacing to make the code easier to read. When you ask it to review your code, it will open another tab showing a dif view of your code and the code that it suggests. You can then choose which changes you will add to your code. 
 
 ### Code Completion
 
-This extension will help as you type to complete the code for you. With the tool, you can have it generate functions and other snippets of code. 
+This extension will help as you type to complete the code for you. With the tool, you can have it generate functions and other snippets of code. It will analyze what you have written so far, and it will suggest what it thinks you want. 
 
 ### Code Discussion
 
-This extension also allows you to discuss or modify the suggested code. Instead of trying to find the right prompt to get the code you are looking for, you can suggest changes to the proposed code until you have the code you want. 
+This extension also allows you to discuss or modify the generated code. Instead of trying to find the right prompt to get the code you are looking for, you can suggest changes to the proposed code until you have the code you want. 
 
 ## Requirements
 
-The only requirement needed if not running locally would be to set your API key in the setting, which is explained in this document.
+The only requirement needed if not running locally would be to set your API key in the setting, which is explained in this document. You will have to get your own API key for the AI service you would like to use like OpenAI or ChatGPT. 
 
-<a target="_blank" href="https://code.visualstudio.com/docs/getstarted/settings">Settings</a>
+<a target="_blank" href="https://code.visualstudio.com/docs/getstarted/settings">How to set your API key</a>
 
 ## Local Set Up
 
 If you desire to run this extension locally, here are the steps to have it run properly. 
 
-#### Specific instructions for setup to be updated as needed:
+#### Specific instructions for setup:
 1. Clone the repo.
 2. Run npm install.
 3. Copy the .vscode.sample folder and rename it to .vscode.
@@ -38,64 +38,13 @@ If you desire to run this extension locally, here are the steps to have it run p
 2. Another "Extension Development Host" VS code window should open.
 3. With a file open, right click.
 4. Click "Review Code File".
-5. An error message should pop up saying "APIKey not set".
+5. An error message may pop up saying "APIKey not set". If not, then it should have opened a new tab showing your code and the suggested changes.
 
-> Note: The instructions for setting your APIKey are in the section above (Requirements)
+> Note: The instructions for setting your APIKey in setting is <a target="_blank" href="https://code.visualstudio.com/docs/getstarted/settings">here</a>
 
 #### Strongly suggested options
 - Install the vscode-eslint and prettier-vscode extensions.
 - Set Prettier as your default formatter in VS code settings.
 - Turn on format on save in VS code settings.
-
-## Extension Settings
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-- `myExtension.enable`: Enable/disable this extension.
-- `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-- [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-- Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-- Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**

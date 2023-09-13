@@ -3,6 +3,10 @@ export enum CompletionModelType {
   PaLM = "text-bison-001",
 }
 
+export enum TextProviderScheme {
+  AiCodeReview = "ai-code-review",
+}
+
 export enum MessageSeverity {
   Error = "error",
   Warning = "warning",

@@ -7,6 +7,7 @@ import {
 /**
  * Gets a completion from the model given code and instructions, and handles the response.
  * Checks for input/response errors along the way. Handles a failed completion response.
+ * Displays a progress bar notification while waiting for the response.
  *
  * @param code The code to act on in the completion model
  * @param instruction The instructions for the completion model

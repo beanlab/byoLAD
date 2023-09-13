@@ -46,13 +46,18 @@
         "command": "vs-code-ai-extension.reviewSelectedCode",
         "title": "Review Selected Code",
         "category": "AI Extension"
+      },
+      {
+        "command": "vs-code-ai-extension.applyProposedChanges",
+        "title": "Apply Proposed Changes",
+        "category": "AI Extension"
       }
     ],
     "menus": {
       "commandPalette": [
         {
           "command": "vs-code-ai-extension.reviewFileCode",
-          "when": "editorFocus && !editorReadonly && !isInDiffEditor"
+          "when": "!editorReadonly && !isInDiffEditor"
         },
         {
           "command": "vs-code-ai-extension.reviewSelectedCode",
@@ -76,6 +81,11 @@
           "when": "editorFocus && !editorReadonly && !isInDiffEditor",
           "command": "vs-code-ai-extension.reviewFileCode",
           "group": "navigation@1"
+        },
+        {
+          "command": "vs-code-ai-extension.applyProposedChanges",
+          "group": "navigation",
+          "when": "resourceScheme == ai-code-review"
         }
       ]
     }

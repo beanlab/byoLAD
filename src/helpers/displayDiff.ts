@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { TextProviderScheme } from "./types";
 
 /**
  * Displays a diff comparison of the active editor document and the provided content in a new editor.
@@ -10,14 +11,20 @@ export async function displayDiff(
   diffText: string | undefined,
   activeEditor: vscode.TextEditor,
 ) {
-  const tempFile = await vscode.workspace.openTextDocument({
-    content: diffText ?? "",
-    language: activeEditor.document.languageId,
-  });
+  // Using the uri of the document the changes are for in the uri of the document to display the changes in means that
+  // the command that applies the proposed changes can find the original document to updatea and apply changes to.
+  const uri = vscode.Uri.parse(
+    TextProviderScheme.AiCodeReview + ":" + activeEditor.document.fileName,
+  );
+  const doc = await vscode.workspace.openTextDocument(uri); // calls back into the custom TextDocumentContentProvider for the scheme
+  const edit = new vscode.WorkspaceEdit();
+  edit.insert(uri, new vscode.Position(0, 0), diffText ?? "");
+  await vscode.workspace.applyEdit(edit);
 
   vscode.commands.executeCommand(
     "vscode.diff",
     activeEditor.document.uri,
-    tempFile.uri,
+    doc.uri,
+    activeEditor.document.fileName + " ↔️ " + "AI Suggestions", // TODO: Separate into method / use constants?
   );
 }

@@ -29,6 +29,16 @@
           "type": "string",
           "default": "",
           "description": "The API key to use for AI completion"
+        },
+        "vs-code-ai-extension.reviewFileCodePrompt": {
+          "type": "string",
+          "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
+          "description": "The prompt to use when reviewing a file"
+        },
+        "vs-code-ai-extension.reviewSelectedCodePrompt": {
+          "type": "string",
+          "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
+          "description": "The prompt to use when reviewing selected code"
         }
       }
     },

@@ -7,6 +7,8 @@ In addition, byoLAD enables you to use your own LLM API, so you can use your fav
 - OpenAI
 - PaLM
 
+![](ReviewCode.gif)
+
 ## Features
 
 - Option to review a whole file or just a piece of selected code
@@ -26,10 +28,12 @@ After installing the byoLAD extension, configure it with your API key from your 
 - Then under APIKey put in your API key from your provider.
 - Then under Model select your LLM provider's API.
 
+![](SetAPIKey.gif)
+
 > Note: If you want to run the extension locally, go to the [contribute.md](contribute.md)
 
 ## Who is the BeanLab?
 
-We are a lab at Brigham Young University, and our goal is to provide useful open-source programs for everyone to use. We are made up of a small group of students and a professor. We enjoy pushing ourselves to make new and improved programs, and we are happy to share them with everybody. 
+We are a lab at Brigham Young University, and our goal is to provide useful open-source programs for everyone to use. We are made up of a small group of students and a professor. We enjoy pushing ourselves to make new and improved programs, and we are happy to share them with everyone. 
 
 **Want to contribute to byoLAD? See [contribute.md](contribute.md)**

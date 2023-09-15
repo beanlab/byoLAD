@@ -1,6 +1,6 @@
-# Instructions for running locally
+# Contribute
 
-Here are the instructions for anyone who wants to run this extension locally. 
+Please feel free to contribute to our project. Here are the instructions for anyone who wants to run this extension locally. 
 
 ## Local Set Up
 

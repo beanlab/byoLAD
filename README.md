@@ -5,7 +5,7 @@ byoLAD augments your development experience by reviewing your code, identifying 
 In addition, byoLAD enables you to use your own LLM API, so you can use your favorite AI and control how much you spend. We don't add any extra costs, and there are no extra parties looking at your data. You only have to manage your account with your LLM provider. 
 #### LLM Providers Currently Supported: 
 - OpenAI
-- PaLM
+- Google
 
 ![](ReviewCode.gif)
 

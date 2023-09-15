@@ -1,6 +1,6 @@
-# A Super Cool Extension
+# byoLAD
 
-This extension is an open-source AI extension to assist with reviewing and generating code developed by a professor and students at Brigham Young University. This extension is here to help with general code review abilities that cover looking for bugs, suggesting different naming, and making the code look cleaner. In addition to code review, this extension helps generate code as you type. If the code doesn't seem exactly how you wanted it, you can ask it to make modifications to the code that it generated for you. Overall, this extension is here to help streamline your development process while providing the flexibility of different APIs. 
+byoLAD augments your development experience by reviewing your code, identifying errors, adding documentation, and suggesting general improvements. In addition, byoLAD enables you to use your own AI API, so you can use your favorite AI and control how much you spend. Since byoLAD is open-source, you can modify prompts and other configurations to your liking. 
 
 ## Features
 
@@ -24,27 +24,8 @@ The only requirement needed if not running locally would be to set your API key 
 
 <a target="_blank" href="https://code.visualstudio.com/docs/getstarted/settings">How to set your API key</a>
 
-## Local Set Up
+## Who is the BeanLab?
 
-If you desire to run this extension locally, here are the steps to have it run properly. 
-
-#### Specific instructions for setup:
-1. Clone the repo.
-2. Run npm install.
-3. Copy the .vscode.sample folder and rename it to .vscode.
-
-#### To verify that it's working:
-1. With VS code open, press F5.
-2. Another "Extension Development Host" VS code window should open.
-3. With a file open, right click.
-4. Click "Review Code File".
-5. An error message may pop up saying "APIKey not set". If not, then it should have opened a new tab showing your code and the suggested changes.
-
-> Note: The instructions for setting your APIKey in setting is <a target="_blank" href="https://code.visualstudio.com/docs/getstarted/settings">here</a>
-
-#### Strongly suggested options
-- Install the vscode-eslint and prettier-vscode extensions.
-- Set Prettier as your default formatter in VS code settings.
-- Turn on format on save in VS code settings.
+We are a lab at Brigham Young University, and our goal is to provide useful open-source programs for everyone to use. We are made up of a small group of students and a professor. We enjoy pushing ourselves to make new and improved programs, and we are happy to share them with everybody. 
 
 **Enjoy!**

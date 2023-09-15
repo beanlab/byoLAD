@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
-import { injectCompletionModel } from "./helpers";
 import { getReviewFileCodeCommand } from "./commands/getReviewFileCodeCommand";
 import { getReviewSelectedCodeCommand } from "./commands/getReviewSelectedCodeCommand";
-import { CompletionModelProvider } from "./CompletionModel/CompletionModelProvider";
+import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
 import { getApplyProposedChangesCommand } from "./commands/getApplyProposedChangesCommand";
@@ -14,24 +13,19 @@ export function activate(context: vscode.ExtensionContext) {
     'Congratulations, your extension "vs-code-ai-extension" is now active!',
   );
 
-  const completionModelProvider = new CompletionModelProvider(
-    injectCompletionModel(),
-  );
+  const config = vscode.workspace.getConfiguration("vs-code-ai-extension");
+  const settingsProvider = new SettingsProvider(config);
 
   // For commands that have been defined in the package.json file,
   // provide the implementation with registerCommand.
   // The commandId parameter must match the command field in package.json
 
-  const reviewFileCodeCommand = getReviewFileCodeCommand(
-    completionModelProvider,
-  );
-  const reviewSelectedCodeCommand = getReviewSelectedCodeCommand(
-    completionModelProvider,
-  );
+  const reviewFileCodeCommand = getReviewFileCodeCommand(settingsProvider);
+  const reviewSelectedCodeCommand =
+    getReviewSelectedCodeCommand(settingsProvider);
   const applyProposedChangesCommand = getApplyProposedChangesCommand();
-  const onDidChangeConfigurationHandler = getOnDidChangeConfigurationHandler(
-    completionModelProvider,
-  );
+  const onDidChangeConfigurationHandler =
+    getOnDidChangeConfigurationHandler(settingsProvider);
   const reviewCodeTextDocumentContentProvider =
     getReviewCodeTextDocumentContentProvider();
 

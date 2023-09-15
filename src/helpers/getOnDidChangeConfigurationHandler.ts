@@ -1,16 +1,14 @@
 import * as vscode from "vscode";
-import { CompletionModelProvider } from "../CompletionModel/CompletionModelProvider";
-import { injectCompletionModel } from "./injectCompletionModel";
+import { SettingsProvider } from "./SettingsProvider";
 
 export const getOnDidChangeConfigurationHandler = (
-  completionModelProvider: CompletionModelProvider,
+  settingsProvider: SettingsProvider,
 ): vscode.Disposable => {
   return vscode.workspace.onDidChangeConfiguration((event) => {
-    if (
-      event.affectsConfiguration("vs-code-ai-extension.model") ||
-      event.affectsConfiguration("vs-code-ai-extension.APIKey")
-    ) {
-      completionModelProvider.setCompletionModel(injectCompletionModel());
+    if (event.affectsConfiguration("vs-code-ai-extension")) {
+      settingsProvider.setConfig(
+        vscode.workspace.getConfiguration("vs-code-ai-extension"),
+      );
     }
   });
 };

@@ -16,13 +16,18 @@
     "configuration": {
       "title": "AI Extension",
       "properties": {
-        "vs-code-ai-extension.model": {
+        "vs-code-ai-extension.provider": {
           "type": "string",
           "enum": [
-            "gpt-3.5-turbo",
-            "text-bison-001"
+            "OpenAI",
+            "Google"
           ],
-          "default": "gpt-3.5-turbo",
+          "default": "OpenAI",
+          "description": "The provider to use for AI completion"
+        },
+        "vs-code-ai-extension.model": {
+          "type": "string",
+          "default": "",
           "description": "The model to use for AI completion"
         },
         "vs-code-ai-extension.APIKey": {

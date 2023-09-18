@@ -1,5 +1,5 @@
 import { CompletionModel } from "../CompletionModel/CompletionModel";
-import { CompletionModelType } from "./types";
+import { CompletionProviderType } from "./types";
 import { injectCompletionModel } from "./injectCompletionModel";
 import * as vscode from "vscode";
 
@@ -10,6 +10,7 @@ export class SettingsProvider {
   constructor(config: vscode.WorkspaceConfiguration) {
     this._config = config;
     this._completionModel = injectCompletionModel(
+      this.getProvider(),
       this.getModel(),
       this.getAPIKey(),
     );
@@ -22,6 +23,7 @@ export class SettingsProvider {
   setConfig(config: vscode.WorkspaceConfiguration) {
     this._config = config;
     this._completionModel = injectCompletionModel(
+      this.getProvider(),
       this.getModel(),
       this.getAPIKey(),
     );
@@ -39,7 +41,11 @@ export class SettingsProvider {
     return this._config.get("APIKey") as string;
   }
 
-  getModel(): CompletionModelType {
-    return this._config.get("model") as CompletionModelType;
+  getModel(): string {
+    return this._config.get("model") as string;
+  }
+
+  getProvider(): CompletionProviderType {
+    return this._config.get("provider") as CompletionProviderType;
   }
 }

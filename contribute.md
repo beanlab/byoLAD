@@ -2,11 +2,6 @@
 
 Please feel free to contribute to our project. Here are the instructions for anyone who wants to run this extension locally. 
 
-#### Specific instructions for setup:
-1. Clone the repo.
-2. Run npm install.
-3. Copy the .vscode.sample folder and rename it to .vscode.
-
 #### To verify that it's working:
 1. With VS code open, press F5.
 2. An "Extension Development Host" VS code window should open.

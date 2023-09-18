@@ -1,4 +1,4 @@
-# byoLAD
+![](byo_LAD.png)# byoLAD
 
 byoLAD augments your development experience by reviewing your code, identifying errors, adding documentation, and suggesting general improvements.  Since byoLAD is open-source, you can modify prompts and other configurations to your liking. 
 
@@ -32,8 +32,6 @@ After installing the byoLAD extension, configure it with your API key from your 
 
 > Note: If you want to run the extension locally, go to [contribute.md](contribute.md)
 
-## Who is the BeanLab?
-
-We are a lab at Brigham Young University, and our goal is to provide useful open-source programs for everyone to use. We enjoy pushing ourselves to make new and improved programs, and we are happy to share them with everyone. 
+**Want to learn more about the creators?** ![](pexels-lukas-942732.jpg)
 
 **Want to contribute to byoLAD? See [contribute.md](contribute.md)**

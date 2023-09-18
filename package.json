@@ -61,6 +61,11 @@
         "command": "vs-code-ai-extension.applyProposedChanges",
         "title": "Apply Proposed Changes",
         "category": "AI Extension"
+      },
+      {
+        "command": "vs-code-ai-extension.askAIAboutSelectedCode",
+        "title": "Ask AI About Selected Code",
+        "category": "AI Extension"
       }
     ],
     "menus": {
@@ -72,6 +77,10 @@
         {
           "command": "vs-code-ai-extension.reviewSelectedCode",
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections"
+        },
+        {
+          "command": "vs-code-ai-extension.askAIAboutSelectedCode",
+          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor"
         }
       ],
       "editor/context": [
@@ -83,6 +92,11 @@
         {
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
           "command": "vs-code-ai-extension.reviewSelectedCode",
+          "group": "1_modification"
+        },
+        {
+          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
+          "command": "vs-code-ai-extension.askAIAboutSelectedCode",
           "group": "1_modification"
         }
       ],

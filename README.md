@@ -1,4 +1,6 @@
-![](byo_LAD.png)# byoLAD
+<img src="byo_LAD.png"  width="200" height="200">
+
+# byoLAD
 
 byoLAD augments your development experience by reviewing your code, identifying errors, adding documentation, and suggesting general improvements.  Since byoLAD is open-source, you can modify prompts and other configurations to your liking. 
 
@@ -32,6 +34,8 @@ After installing the byoLAD extension, configure it with your API key from your 
 
 > Note: If you want to run the extension locally, go to [contribute.md](contribute.md)
 
-**Want to learn more about the creators?** ![](pexels-lukas-942732.jpg)
+**Want to learn more about the creators?** 
+
+<img src="bean.jpg"  width="300" height="200">
 
 **Want to contribute to byoLAD? See [contribute.md](contribute.md)**

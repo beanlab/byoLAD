@@ -23,27 +23,32 @@
             "Google"
           ],
           "default": "OpenAI",
-          "description": "The provider to use for AI completion"
+          "description": "The provider to use for AI completion",
+          "order": 0
         },
         "vs-code-ai-extension.model": {
           "type": "string",
           "default": "",
-          "description": "The model to use for AI completion"
+          "description": "The model to use for AI completion",
+          "order": 1
         },
         "vs-code-ai-extension.APIKey": {
           "type": "string",
           "default": "",
-          "description": "The API key to use for AI completion"
+          "description": "The API key to use for AI completion",
+          "order": 2
         },
         "vs-code-ai-extension.reviewFileCodePrompt": {
           "type": "string",
           "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
-          "description": "The prompt to use when reviewing a file"
+          "description": "The prompt to use when reviewing a file",
+          "order": 3
         },
         "vs-code-ai-extension.reviewSelectedCodePrompt": {
           "type": "string",
           "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
-          "description": "The prompt to use when reviewing selected code"
+          "description": "The prompt to use when reviewing selected code",
+          "order": 4
         }
       }
     },

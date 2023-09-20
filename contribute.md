@@ -2,23 +2,17 @@
 
 Please feel free to contribute to our project. Here are the instructions for anyone who wants to run this extension locally. 
 
-## Local Set Up
-
-If you desire to run this extension locally, here are the steps to have it run properly. 
-
-#### Specific instructions for setup:
-1. Clone the repo.
-2. Run npm install.
-3. Copy the .vscode.sample folder and rename it to .vscode.
-
 #### To verify that it's working:
 1. With VS code open, press F5.
-2. Another "Extension Development Host" VS code window should open.
-3. With a file open, right click.
-4. Click "Review Code File".
-5. An error message may pop up saying "APIKey not set". If not, then it should have opened a new tab showing your code and the suggested changes.
-
-> Note: The instructions for setting your APIKey in setting is <a target="_blank" href="https://code.visualstudio.com/docs/getstarted/settings">here</a>
+2. An "Extension Development Host" VS code window should open.
+3. Set up your API Key for your chosen API:
+    - Go to File and under Preferences select Settings.
+    - Once in Settings, click on Extensions.
+    - Then select byoLAD under Extensions.
+    - Then under APIKey put in your API key from your provider.
+    - Then under Model select your LLM provider's API.
+5. Right-click an open file in the editor.
+6. Click "Review Code File".
 
 #### Strongly suggested options
 - Install the vscode-eslint and prettier-vscode extensions.

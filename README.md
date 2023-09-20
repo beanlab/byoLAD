@@ -1,6 +1,6 @@
 <img src="byo_LAD.png"  width="200" height="200">
 
-# byoLAD
+# byoLAD: Your code improvement buddy
 
 byoLAD augments your development experience by reviewing your code, identifying errors, adding documentation, and suggesting general improvements.  Since byoLAD is open-source, you can modify prompts and other configurations to your liking. 
 
@@ -8,16 +8,15 @@ In addition, byoLAD enables you to use your own Large Language Model (LLM) API, 
 #### LLM Providers Currently Supported: 
 - [OpenAI](https://openai.com/blog/openai-api)
 - [Google](https://developers.generativeai.google/)
-
+  
 ![](ReviewCode.gif)
 
 ## Features
 
 - Option to review a whole file or just a piece of selected code
-- Suggests formatting improvements (like getting rid of extra lines to make it easier to read)
+- Suggests formatting improvements
 - Identifies bugs in code
 - Adds Documentation
-- Checks Spelling
 - Suggests general code improvements
 
 ## Set Up
@@ -34,8 +33,6 @@ After installing the byoLAD extension, configure it with your API key from your 
 
 > Note: If you want to run the extension locally, go to [contribute.md](contribute.md)
 
-**Want to learn more about the creators?** 
+**Contributions of any kind welcome.**
 
-<img src="bean.jpg"  width="300" height="200">
-
-**Want to contribute to byoLAD? See [contribute.md](contribute.md)**
+<img src="bean.jpg"  width="150" height="100">

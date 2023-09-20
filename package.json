@@ -73,8 +73,8 @@
         "category": "AI Extension"
       },
       {
-        "command": "vs-code-ai-extension.askAIAboutSelectedCode",
-        "title": "Ask AI About Selected Code",
+        "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
+        "title": "Review Selected Code (Custom Prompt)",
         "category": "AI Extension"
       }
     ],
@@ -89,7 +89,7 @@
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections"
         },
         {
-          "command": "vs-code-ai-extension.askAIAboutSelectedCode",
+          "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor"
         }
       ],
@@ -106,7 +106,7 @@
         },
         {
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
-          "command": "vs-code-ai-extension.askAIAboutSelectedCode",
+          "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
           "group": "1_modification"
         }
       ],

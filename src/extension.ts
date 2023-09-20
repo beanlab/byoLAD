@@ -5,7 +5,8 @@ import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
 import { getApplyProposedChangesCommand } from "./commands/getApplyProposedChangesCommand";
-import { getAskAIAboutSelectedCodeCommand } from "./commands/getAskAIAboutSelectedCodeCommand";
+import { getReviewSelectedCodeCustomPromptCommand } from "./commands/getReviewSelectedCodeCustomPromptCommand";
+import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
 
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
@@ -24,8 +25,10 @@ export function activate(context: vscode.ExtensionContext) {
   const reviewFileCodeCommand = getReviewFileCodeCommand(settingsProvider);
   const reviewSelectedCodeCommand =
     getReviewSelectedCodeCommand(settingsProvider);
-  const askAIAboutSelectedCodeCommand =
-    getAskAIAboutSelectedCodeCommand(settingsProvider);
+  const reviewFileCodeCustomPromptCommand =
+    getReviewFileCodeCustomPromptCommand(settingsProvider);
+  const reviewSelectedCodeCustomPromptCommand =
+    getReviewSelectedCodeCustomPromptCommand(settingsProvider);
   const applyProposedChangesCommand = getApplyProposedChangesCommand();
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
@@ -36,7 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     reviewFileCodeCommand,
     reviewSelectedCodeCommand,
-    askAIAboutSelectedCodeCommand,
+    reviewFileCodeCustomPromptCommand,
+    reviewSelectedCodeCustomPromptCommand,
     applyProposedChangesCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,

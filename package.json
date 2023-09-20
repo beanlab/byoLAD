@@ -65,16 +65,33 @@
       {
         "command": "vs-code-ai-extension.reviewSelectedCode",
         "title": "Review Selected Code",
-        "category": "AI Extension"
+        "category": "AI Extension",
+        "icon": {
+          "dark": "./media/icons8-stars-16-white.png",
+          "light": "./media/icons8-stars-16-black.png"
+        }
       },
       {
-        "command": "vs-code-ai-extension.applyProposedChanges",
-        "title": "Apply Proposed Changes",
-        "category": "AI Extension"
+        "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
+        "title": "Review Code File (Custom Prompt)",
+        "category": "AI Extension",
+        "icon": {
+          "dark": "./media/icons8-stars-16-white.png",
+          "light": "./media/icons8-stars-16-black.png"
+        }
       },
       {
         "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
         "title": "Review Selected Code (Custom Prompt)",
+        "category": "AI Extension",
+        "icon": {
+          "dark": "./media/icons8-stars-16-white.png",
+          "light": "./media/icons8-stars-16-black.png"
+        }
+      },
+      {
+        "command": "vs-code-ai-extension.applyProposedChanges",
+        "title": "Apply Proposed Changes",
         "category": "AI Extension"
       }
     ],
@@ -89,19 +106,28 @@
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections"
         },
         {
+          "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
+          "when": "!editorReadonly && !isInDiffEditor"
+        },
+        {
           "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor"
         }
       ],
       "editor/context": [
         {
-          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
           "command": "vs-code-ai-extension.reviewFileCode",
           "group": "1_modification"
         },
         {
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
           "command": "vs-code-ai-extension.reviewSelectedCode",
+          "group": "1_modification"
+        },
+        {
+          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
           "group": "1_modification"
         },
         {
@@ -112,8 +138,13 @@
       ],
       "editor/title": [
         {
-          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
           "command": "vs-code-ai-extension.reviewFileCode",
+          "group": "navigation@1"
+        },
+        {
+          "when": "editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vs-code-ai-extension.reviewSelectedCode",
           "group": "navigation@1"
         },
         {

@@ -14,7 +14,7 @@
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "AI Extension",
+      "title": "byoLAD",
       "properties": {
         "vs-code-ai-extension.provider": {
           "type": "string",
@@ -55,8 +55,8 @@
     "commands": [
       {
         "command": "vs-code-ai-extension.reviewFileCode",
-        "title": "Review Code File",
-        "category": "AI Extension",
+        "title": "Review Code File with AI",
+        "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
           "light": "./media/icons8-stars-16-black.png"
@@ -64,8 +64,8 @@
       },
       {
         "command": "vs-code-ai-extension.reviewSelectedCode",
-        "title": "Review Selected Code",
-        "category": "AI Extension",
+        "title": "Review Selected Code with AI",
+        "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
           "light": "./media/icons8-stars-16-black.png"
@@ -73,8 +73,8 @@
       },
       {
         "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
-        "title": "Review Code File (Custom Prompt)",
-        "category": "AI Extension",
+        "title": "Review Code File with AI (Custom Prompt)",
+        "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
           "light": "./media/icons8-stars-16-black.png"
@@ -82,8 +82,8 @@
       },
       {
         "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
-        "title": "Review Selected Code (Custom Prompt)",
-        "category": "AI Extension",
+        "title": "Review Selected Code with AI (Custom Prompt)",
+        "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
           "light": "./media/icons8-stars-16-black.png"
@@ -92,7 +92,7 @@
       {
         "command": "vs-code-ai-extension.applyProposedChanges",
         "title": "Apply Proposed Changes",
-        "category": "AI Extension"
+        "category": "byoLAD"
       }
     ],
     "menus": {

@@ -55,7 +55,7 @@
     "commands": [
       {
         "command": "vs-code-ai-extension.reviewFileCode",
-        "title": "Review Code File with AI",
+        "title": "byoLAD — Review Code File",
         "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
@@ -64,7 +64,7 @@
       },
       {
         "command": "vs-code-ai-extension.reviewSelectedCode",
-        "title": "Review Selected Code with AI",
+        "title": "byoLAD — Review Selected Code",
         "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
@@ -73,7 +73,7 @@
       },
       {
         "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
-        "title": "Review Code File with AI (Custom Prompt)",
+        "title": "byoLAD — Review Code File (Custom Prompt)",
         "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
@@ -82,7 +82,7 @@
       },
       {
         "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
-        "title": "Review Selected Code with AI (Custom Prompt)",
+        "title": "byoLAD — Review Selected Code (Custom Prompt)",
         "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
@@ -138,12 +138,12 @@
       ],
       "editor/title": [
         {
-          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
+          "when": "!editorHasSelection && !editorReadonly && !isInDiffEditor",
           "command": "vs-code-ai-extension.reviewFileCode",
           "group": "navigation@1"
         },
         {
-          "when": "editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
+          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor",
           "command": "vs-code-ai-extension.reviewSelectedCode",
           "group": "navigation@1"
         },

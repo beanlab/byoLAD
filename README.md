@@ -4,10 +4,14 @@
 
 byoLAD augments your development experience by reviewing your code, identifying errors, adding documentation, and suggesting general improvements.  Since byoLAD is open-source, you can modify prompts and other configurations to your liking. 
 
-In addition, byoLAD enables you to use your own Large Language Model (LLM) API, so you can use your favorite AI and control how much you spend. We don't add any extra costs, and there are no extra parties looking at your data. You only have to manage your account with your LLM provider. 
+In addition, byoLAD enables you to use your own Large Language Model (LLM) API, so you can use your favorite AI and control how much you spend. We don't add any extra costs, and there are no extra parties looking at your data. You manage your account directly with your LLM provider. 
 #### LLM Providers Currently Supported: 
 - [OpenAI](https://openai.com/blog/openai-api)
+    - [models](https://platform.openai.com/docs/models/overview)
+    - [API Key](https://platform.openai.com/docs/api-reference/authentication)
 - [Google](https://developers.generativeai.google/)
+    - [models](https://developers.generativeai.google/models/language)
+    - [API Key](https://developers.generativeai.google/tutorials/setup)
   
 ![](ReviewCode.gif)
 

@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import {
   CODE_REVIEW_PROGRESS_TITLE,
+  CUSTOM_PROMPT_TEMPLATE_PREFIX,
+  CUSTOM_PROMPT_TEMPLATE_SUFFIX,
   INVALID_USER_INPUT_ERROR_MESSAGE,
 } from "./constants";
 import { doCompletion, displayDiff, getUserPrompt } from "../helpers";
@@ -17,7 +19,10 @@ export const getReviewFileCodeCustomPromptCommand = (
     "vs-code-ai-extension.reviewFileCodeCustomPrompt",
     async () => {
       const code = vscode.window.activeTextEditor?.document.getText();
-      const modelInstruction = await getUserPrompt();
+      const modelInstruction =
+        CUSTOM_PROMPT_TEMPLATE_PREFIX +
+        (await getUserPrompt()) +
+        CUSTOM_PROMPT_TEMPLATE_SUFFIX;
       const progressTitle = CODE_REVIEW_PROGRESS_TITLE;
 
       if (!modelInstruction) {

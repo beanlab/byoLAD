@@ -8,3 +8,6 @@ export const PROMPT_FOR_USER_PROMPT =
   "Enter a request for the AI's review of the code.";
 export const INVALID_USER_INPUT_ERROR_MESSAGE =
   "No input provided. Cannot query model.";
+export const CUSTOM_PROMPT_TEMPLATE_PREFIX =
+  "You are a coding assistant. Return only the modified code. Avoid returning any code fences or additional explanations. Your primary task: ";
+export const CUSTOM_PROMPT_TEMPLATE_SUFFIX = "\nCode to review:\n";

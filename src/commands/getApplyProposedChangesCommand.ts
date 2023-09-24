@@ -9,7 +9,7 @@ import { TextProviderScheme } from "../helpers/types";
  */
 export const getApplyProposedChangesCommand = (): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    "vs-code-ai-extension.applyProposedChanges",
+    "vscode-byolad.applyProposedChanges",
     async () => {
       if (!vscode.window.activeTextEditor) {
         return;

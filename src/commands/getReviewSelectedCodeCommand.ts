@@ -19,7 +19,7 @@ export const getReviewSelectedCodeCommand = (
   settingsProvider: SettingsProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    "vs-code-ai-extension.reviewSelectedCode",
+    "vscode-byolad.reviewSelectedCode",
     async () => {
       const code = vscode.window.activeTextEditor?.document.getText(
         vscode.window.activeTextEditor?.selection,

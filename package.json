@@ -1,14 +1,18 @@
 {
-  "publisher": "vs-code-ai-extension",
-  "name": "vs-code-ai-extension",
-  "displayName": "vs-code-ai-extension",
+  "publisher": "BeanLab",
+  "name": "vscode-byolad",
+  "displayName": "byoLAD",
   "description": "",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.81.0"
   },
+  "license": "SEE LICENSE IN LICENSE",
   "categories": [
-    "Other"
+    "Programming Languages",
+    "Snippets",
+    "Machine Learning",
+    "Education"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
@@ -16,45 +20,47 @@
     "configuration": {
       "title": "byoLAD",
       "properties": {
-        "vs-code-ai-extension.provider": {
+        "vscode-byolad.provider": {
           "type": "string",
           "enum": [
             "OpenAI",
             "Google"
           ],
           "default": "OpenAI",
-          "description": "The provider to use for AI completion",
+          "markdownDescription": "The provider to use for AI completion\n\nYou are billed by the provider for AI completion according to their policies.",
           "order": 0
         },
-        "vs-code-ai-extension.model": {
+        "vscode-byolad.model": {
           "type": "string",
           "default": "",
-          "description": "The model to use for AI completion",
+          "markdownDescription": "The model to use for AI completion\n\nFor OpenAI, format your input like 'gpt-4-32k' or 'gpt-3.5-turbo'. See all available models [here](https://platform.openai.com/docs/models/).\n\nFor Google, format your input like 'text-bison-001' or 'chat-bison-001'. See all available models [here](https://developers.generativeai.google/models/language).",
           "order": 1
         },
-        "vs-code-ai-extension.APIKey": {
+        "vscode-byolad.APIKey": {
           "type": "string",
           "default": "",
-          "description": "The API key to use for AI completion",
+          "markdownDescription": "The API key to use for AI completion\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys). Get an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
           "order": 2
         },
-        "vs-code-ai-extension.reviewFileCodePrompt": {
+        "vscode-byolad.reviewFileCodePrompt": {
           "type": "string",
           "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
           "description": "The prompt to use when reviewing a file",
+          "editPresentation": "multilineText",
           "order": 3
         },
-        "vs-code-ai-extension.reviewSelectedCodePrompt": {
+        "vscode-byolad.reviewSelectedCodePrompt": {
           "type": "string",
           "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
           "description": "The prompt to use when reviewing selected code",
+          "editPresentation": "multilineText",
           "order": 4
         }
       }
     },
     "commands": [
       {
-        "command": "vs-code-ai-extension.reviewFileCode",
+        "command": "vscode-byolad.reviewFileCode",
         "title": "byoLAD — Review Code File",
         "category": "byoLAD",
         "icon": {
@@ -63,7 +69,7 @@
         }
       },
       {
-        "command": "vs-code-ai-extension.reviewSelectedCode",
+        "command": "vscode-byolad.reviewSelectedCode",
         "title": "byoLAD — Review Selected Code",
         "category": "byoLAD",
         "icon": {
@@ -72,7 +78,7 @@
         }
       },
       {
-        "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
+        "command": "vscode-byolad.reviewFileCodeCustomPrompt",
         "title": "byoLAD — Review Code File (Custom Prompt)",
         "category": "byoLAD",
         "icon": {
@@ -81,7 +87,7 @@
         }
       },
       {
-        "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
+        "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
         "title": "byoLAD — Review Selected Code (Custom Prompt)",
         "category": "byoLAD",
         "icon": {
@@ -90,7 +96,7 @@
         }
       },
       {
-        "command": "vs-code-ai-extension.applyProposedChanges",
+        "command": "vscode-byolad.applyProposedChanges",
         "title": "Apply Proposed Changes",
         "category": "byoLAD"
       }
@@ -98,57 +104,57 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "vs-code-ai-extension.reviewFileCode",
+          "command": "vscode-byolad.reviewFileCode",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vs-code-ai-extension.reviewSelectedCode",
+          "command": "vscode-byolad.reviewSelectedCode",
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections"
         },
         {
-          "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
+          "command": "vscode-byolad.reviewFileCodeCustomPrompt",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
+          "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor"
         }
       ],
       "editor/context": [
         {
           "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vs-code-ai-extension.reviewFileCode",
+          "command": "vscode-byolad.reviewFileCode",
           "group": "1_modification"
         },
         {
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
-          "command": "vs-code-ai-extension.reviewSelectedCode",
+          "command": "vscode-byolad.reviewSelectedCode",
           "group": "1_modification"
         },
         {
           "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vs-code-ai-extension.reviewFileCodeCustomPrompt",
+          "command": "vscode-byolad.reviewFileCodeCustomPrompt",
           "group": "1_modification"
         },
         {
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
-          "command": "vs-code-ai-extension.reviewSelectedCodeCustomPrompt",
+          "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
           "group": "1_modification"
         }
       ],
       "editor/title": [
         {
           "when": "!editorHasSelection && !editorReadonly && !isInDiffEditor",
-          "command": "vs-code-ai-extension.reviewFileCode",
+          "command": "vscode-byolad.reviewFileCode",
           "group": "navigation@1"
         },
         {
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor",
-          "command": "vs-code-ai-extension.reviewSelectedCode",
+          "command": "vscode-byolad.reviewSelectedCode",
           "group": "navigation@1"
         },
         {
-          "command": "vs-code-ai-extension.applyProposedChanges",
+          "command": "vscode-byolad.applyProposedChanges",
           "group": "navigation",
           "when": "resourceScheme == ai-code-review"
         }

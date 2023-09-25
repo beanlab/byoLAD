@@ -27,19 +27,19 @@
             "Google"
           ],
           "default": "OpenAI",
-          "markdownDescription": "The provider to use for AI completion\n\nYou are billed by the provider for AI completion according to their policies.",
+          "markdownDescription": "You are billed by the provider according to their API usage policies.",
           "order": 0
         },
         "vscode-byolad.model": {
           "type": "string",
           "default": "",
-          "markdownDescription": "The model to use for AI completion\n\nFor OpenAI, format your input like 'gpt-4-32k' or 'gpt-3.5-turbo'. See all available models [here](https://platform.openai.com/docs/models/).\n\nFor Google, format your input like 'text-bison-001' or 'chat-bison-001'. See all available models [here](https://developers.generativeai.google/models/language).",
+          "markdownDescription": "For OpenAI, format your input like 'gpt-4-32k' or 'gpt-3.5-turbo'. See all available models [here](https://platform.openai.com/docs/models/).\n\nFor Google, format your input like 'text-bison-001' or 'chat-bison-001'. See all available models [here](https://developers.generativeai.google/models/language).",
           "order": 1
         },
         "vscode-byolad.APIKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "The API key to use for AI completion\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys). Get an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
+          "markdownDescription": "Get an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
           "order": 2
         },
         "vscode-byolad.reviewFileCodePrompt": {

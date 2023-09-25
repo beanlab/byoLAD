@@ -14,7 +14,7 @@ export const getReviewFileCodeCustomPromptCommand = (
   settingsProvider: SettingsProvider,
 ): vscode.Disposable => {
   const reviewFileCodeCommand = vscode.commands.registerCommand(
-    "vs-code-ai-extension.reviewFileCodeCustomPrompt",
+    "vscode-byolad.reviewFileCodeCustomPrompt",
     async () => {
       const code = vscode.window.activeTextEditor?.document.getText();
       const modelInstruction = await getUserPrompt();

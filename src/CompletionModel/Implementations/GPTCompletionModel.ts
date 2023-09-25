@@ -40,13 +40,13 @@ export class GPTCompletionModel implements CompletionModel {
         return {
           success: false,
           errorMessage:
-            "vs-code-ai-extension: There was no completion provided by the model.",
+            "vscode-byolad: There was no completion provided by the model.",
         };
       })
       .catch((error) => {
         return {
           success: false,
-          errorMessage: `vs-code-ai-extension: ${error.message}`,
+          errorMessage: `vscode-byolad: ${error.message}`,
         };
       });
   }

@@ -14,7 +14,7 @@ export const getReviewFileCodeCommand = (
   settingsProvider: SettingsProvider,
 ): vscode.Disposable => {
   const reviewFileCodeCommand = vscode.commands.registerCommand(
-    "vs-code-ai-extension.reviewFileCode",
+    "vscode-byolad.reviewFileCode",
     async () => {
       const code = vscode.window.activeTextEditor?.document.getText();
       const modelInstruction =

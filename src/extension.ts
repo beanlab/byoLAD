@@ -11,11 +11,9 @@ import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCo
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  console.log(
-    'Congratulations, your extension "vs-code-ai-extension" is now active!',
-  );
+  console.log('Congratulations, your extension "vscode-byolad" is now active!');
 
-  const config = vscode.workspace.getConfiguration("vs-code-ai-extension");
+  const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
 
   // For commands that have been defined in the package.json file,

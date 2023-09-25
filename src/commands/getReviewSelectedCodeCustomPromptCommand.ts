@@ -8,6 +8,8 @@ import {
 } from "../helpers";
 import {
   CODE_REVIEW_PROGRESS_TITLE,
+  CUSTOM_PROMPT_TEMPLATE_PREFIX,
+  CUSTOM_PROMPT_TEMPLATE_SUFFIX,
   INVALID_USER_INPUT_ERROR_MESSAGE,
 } from "./constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
@@ -26,7 +28,10 @@ export const getReviewSelectedCodeCustomPromptCommand = (
         vscode.window.activeTextEditor?.selection,
       );
 
-      const modelInstruction = await getUserPrompt();
+      const modelInstruction =
+        CUSTOM_PROMPT_TEMPLATE_PREFIX +
+        (await getUserPrompt()) +
+        CUSTOM_PROMPT_TEMPLATE_SUFFIX;
       const progressTitle = CODE_REVIEW_PROGRESS_TITLE;
 
       if (!modelInstruction) {

@@ -18,7 +18,14 @@ export async function displayDiff(
   );
   const doc = await vscode.workspace.openTextDocument(uri); // calls back into the custom TextDocumentContentProvider for the scheme
   const edit = new vscode.WorkspaceEdit();
-  edit.insert(uri, new vscode.Position(0, 0), diffText ?? "");
+  edit.replace(
+    uri,
+    new vscode.Range(
+      new vscode.Position(0, 0),
+      doc.lineAt(doc.lineCount - 1).range.end,
+    ),
+    diffText ?? "",
+  );
   await vscode.workspace.applyEdit(edit);
 
   vscode.commands.executeCommand(

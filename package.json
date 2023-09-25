@@ -166,11 +166,6 @@
           "when": "editorHasSelection && !editorReadonly && !isInDiffEditor",
           "command": "vscode-byolad.reviewSelectedCode",
           "group": "navigation@1"
-        },
-        {
-          "command": "vscode-byolad.applyProposedChanges",
-          "group": "navigation",
-          "when": "resourceScheme == ai-code-review"
         }
       ]
     }

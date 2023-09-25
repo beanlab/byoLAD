@@ -1,4 +1,4 @@
-export { displayDiff } from "./displayDiff";
+export { replaceTextAndCompare } from "./replaceTextAndCompare";
 export { doCompletion } from "./doCompletion";
 export { getDocumentTextAfterSelection } from "./getDocumentTextAfterSelection";
 export { getDocumentTextBeforeSelection } from "./getDocumentTextBeforeSelection";

@@ -11,3 +11,4 @@ export const INVALID_USER_INPUT_ERROR_MESSAGE =
 export const CUSTOM_PROMPT_TEMPLATE_PREFIX =
   "You are a coding assistant. Return only the modified code. Avoid returning any code fences or additional explanations. Your primary task: ";
 export const CUSTOM_PROMPT_TEMPLATE_SUFFIX = "\nCode to review:\n";
+export const EMPTY_COMPLETION_ERROR_MESSAGE = "Empty completion returned";

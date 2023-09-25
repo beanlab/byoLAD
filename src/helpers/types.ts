@@ -3,10 +3,6 @@ export enum CompletionProviderType {
   Google = "Google",
 }
 
-export enum TextProviderScheme {
-  AiCodeReview = "ai-code-review",
-}
-
 export enum MessageSeverity {
   Error = "error",
   Warning = "warning",

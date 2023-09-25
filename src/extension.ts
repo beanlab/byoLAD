@@ -3,8 +3,6 @@ import { getReviewFileCodeCommand } from "./commands/getReviewFileCodeCommand";
 import { getReviewSelectedCodeCommand } from "./commands/getReviewSelectedCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
-import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
-import { getApplyProposedChangesCommand } from "./commands/getApplyProposedChangesCommand";
 import { getReviewSelectedCodeCustomPromptCommand } from "./commands/getReviewSelectedCodeCustomPromptCommand";
 import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
 
@@ -27,11 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
     getReviewFileCodeCustomPromptCommand(settingsProvider);
   const reviewSelectedCodeCustomPromptCommand =
     getReviewSelectedCodeCustomPromptCommand(settingsProvider);
-  const applyProposedChangesCommand = getApplyProposedChangesCommand();
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
-  const reviewCodeTextDocumentContentProvider =
-    getReviewCodeTextDocumentContentProvider();
 
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
@@ -39,9 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
     reviewSelectedCodeCommand,
     reviewFileCodeCustomPromptCommand,
     reviewSelectedCodeCustomPromptCommand,
-    applyProposedChangesCommand,
     onDidChangeConfigurationHandler,
-    reviewCodeTextDocumentContentProvider,
   );
 }
 

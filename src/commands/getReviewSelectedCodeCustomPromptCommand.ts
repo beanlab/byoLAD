@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import {
   doCompletion,
-  displayDiff,
+  replaceTextAndCompare,
   getDocumentTextBeforeSelection,
   getDocumentTextAfterSelection,
   getUserPrompt,
@@ -45,16 +45,23 @@ export const getReviewSelectedCodeCustomPromptCommand = (
         modelInstruction,
         progressTitle,
         (completion, activeEditor) => {
+          if (!completion.completion) {
+            vscode.window.showErrorMessage(
+              completion?.errorMessage || "No completion returned",
+            );
+            return;
+          }
+
           const documentTextBeforeSelection =
             getDocumentTextBeforeSelection(activeEditor);
           const documentTextAfterSelection =
             getDocumentTextAfterSelection(activeEditor);
 
-          const diffContent =
+          const newDocText =
             documentTextBeforeSelection +
             completion.completion +
             documentTextAfterSelection;
-          displayDiff(diffContent, activeEditor);
+          replaceTextAndCompare(newDocText, activeEditor);
         },
       );
     },

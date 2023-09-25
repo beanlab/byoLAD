@@ -3,9 +3,10 @@ import {
   CODE_REVIEW_PROGRESS_TITLE,
   CUSTOM_PROMPT_TEMPLATE_PREFIX,
   CUSTOM_PROMPT_TEMPLATE_SUFFIX,
+  EMPTY_COMPLETION_ERROR_MESSAGE,
   INVALID_USER_INPUT_ERROR_MESSAGE,
 } from "./constants";
-import { doCompletion, displayDiff, getUserPrompt } from "../helpers";
+import { doCompletion, replaceTextAndCompare, getUserPrompt } from "../helpers";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 
 /**
@@ -35,8 +36,15 @@ export const getReviewFileCodeCustomPromptCommand = (
         code,
         modelInstruction,
         progressTitle,
-        (completion, activeEditor) =>
-          displayDiff(completion.completion, activeEditor),
+        (completion, activeEditor) => {
+          if (!completion.completion) {
+            vscode.window.showErrorMessage(
+              completion?.errorMessage || EMPTY_COMPLETION_ERROR_MESSAGE,
+            );
+            return;
+          }
+          replaceTextAndCompare(completion.completion, activeEditor);
+        },
       );
     },
   );

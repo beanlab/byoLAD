@@ -2,8 +2,9 @@ import * as vscode from "vscode";
 import {
   CODE_REVIEW_INSTRUCTION,
   CODE_REVIEW_PROGRESS_TITLE,
+  EMPTY_COMPLETION_ERROR_MESSAGE,
 } from "./constants";
-import { doCompletion, displayDiff } from "../helpers";
+import { doCompletion, replaceTextAndCompare } from "../helpers";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 
 /**
@@ -26,8 +27,15 @@ export const getReviewFileCodeCommand = (
         code,
         modelInstruction,
         progressTitle,
-        (completion, activeEditor) =>
-          displayDiff(completion.completion, activeEditor),
+        (completion, activeEditor) => {
+          if (!completion.completion) {
+            vscode.window.showErrorMessage(
+              completion?.errorMessage || EMPTY_COMPLETION_ERROR_MESSAGE,
+            );
+            return;
+          }
+          replaceTextAndCompare(completion.completion, activeEditor);
+        },
       );
     },
   );

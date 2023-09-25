@@ -1,13 +1,14 @@
 import * as vscode from "vscode";
 import {
   doCompletion,
-  displayDiff,
+  replaceTextAndCompare,
   getDocumentTextBeforeSelection,
   getDocumentTextAfterSelection,
 } from "../helpers";
 import {
   CODE_REVIEW_INSTRUCTION,
   CODE_REVIEW_PROGRESS_TITLE,
+  EMPTY_COMPLETION_ERROR_MESSAGE,
 } from "./constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 
@@ -35,16 +36,23 @@ export const getReviewSelectedCodeCommand = (
         modelInstruction,
         progressTitle,
         (completion, activeEditor) => {
+          if (!completion.completion) {
+            vscode.window.showErrorMessage(
+              completion?.errorMessage || EMPTY_COMPLETION_ERROR_MESSAGE,
+            );
+            return;
+          }
+
           const documentTextBeforeSelection =
             getDocumentTextBeforeSelection(activeEditor);
           const documentTextAfterSelection =
             getDocumentTextAfterSelection(activeEditor);
 
-          const diffContent =
+          const newDocText =
             documentTextBeforeSelection +
             completion.completion +
             documentTextAfterSelection;
-          displayDiff(diffContent, activeEditor);
+          replaceTextAndCompare(newDocText, activeEditor);
         },
       );
     },

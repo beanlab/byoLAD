@@ -3,18 +3,32 @@
   "name": "vscode-byolad",
   "displayName": "byoLAD",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.81.0"
   },
   "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beanlab/vs-code-ai-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/beanlab/vs-code-ai-extension/issues"
+  },
   "categories": [
     "Programming Languages",
     "Snippets",
     "Machine Learning",
     "Education"
   ],
+  "keywords": [
+    "ai",
+    "assistant",
+    "code review"
+  ],
   "activationEvents": [],
+  "preview": true,
+  "icon": "byo_LAD.png",
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {

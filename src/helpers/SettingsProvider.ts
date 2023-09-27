@@ -1,5 +1,5 @@
 import { CompletionModel } from "../CompletionModel/CompletionModel";
-import { CompletionProviderType } from "./types";
+import { ApplySuggestionsMode, CompletionProviderType } from "./types";
 import { injectCompletionModel } from "./injectCompletionModel";
 import * as vscode from "vscode";
 
@@ -47,5 +47,9 @@ export class SettingsProvider {
 
   getProvider(): CompletionProviderType {
     return this._config.get("provider") as CompletionProviderType;
+  }
+
+  getApplySuggestionsMode(): ApplySuggestionsMode {
+    return this._config.get("applySuggestions.mode") as ApplySuggestionsMode;
   }
 }

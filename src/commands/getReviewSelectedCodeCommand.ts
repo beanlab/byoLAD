@@ -1,20 +1,19 @@
 import * as vscode from "vscode";
 import {
   doCompletion,
-  replaceTextAndCompare,
   getDocumentTextBeforeSelection,
   getDocumentTextAfterSelection,
 } from "../helpers";
 import {
   CODE_REVIEW_INSTRUCTION,
   CODE_REVIEW_PROGRESS_TITLE,
-  EMPTY_COMPLETION_ERROR_MESSAGE,
 } from "./constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
+import { presentReviewResult } from "../helpers/presentReviewResult";
 
 /**
  * Queries the model for a reviewed, edited version of the currently selected code.
- * Displays a diff of the active editor document and the completion response in context of the overall file.
+ * Presents the suggestions on the selected code (in the context of the whole file) to the user according to their settings.
  */
 export const getReviewSelectedCodeCommand = (
   settingsProvider: SettingsProvider,
@@ -35,14 +34,7 @@ export const getReviewSelectedCodeCommand = (
         code,
         modelInstruction,
         progressTitle,
-        (completion, activeEditor) => {
-          if (!completion.completion) {
-            vscode.window.showErrorMessage(
-              completion?.errorMessage || EMPTY_COMPLETION_ERROR_MESSAGE,
-            );
-            return;
-          }
-
+        async (completion, activeEditor) => {
           const documentTextBeforeSelection =
             getDocumentTextBeforeSelection(activeEditor);
           const documentTextAfterSelection =
@@ -52,7 +44,8 @@ export const getReviewSelectedCodeCommand = (
             documentTextBeforeSelection +
             completion.completion +
             documentTextAfterSelection;
-          replaceTextAndCompare(newDocText, activeEditor);
+
+          await presentReviewResult(newDocText, activeEditor, settingsProvider);
         },
       );
     },

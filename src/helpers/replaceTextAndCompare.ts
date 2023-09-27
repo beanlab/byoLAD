@@ -11,7 +11,7 @@ export async function replaceTextAndCompare(
   activeEditor: vscode.TextEditor,
 ) {
   const doc = activeEditor.document;
-  doc.save(); // save the document so that the comparison is with the most recent version of the file
+  await doc.save(); // save the document so that the comparison is with the most recent version of the file
 
   const edit = new vscode.WorkspaceEdit();
   edit.replace(

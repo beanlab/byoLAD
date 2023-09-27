@@ -69,6 +69,19 @@
           "description": "The prompt to use when reviewing selected code",
           "editPresentation": "multilineText",
           "order": 4
+        },
+        "vscode-byolad.applySuggestions.mode": {
+          "type": "string",
+          "default": "Manual",
+          "enum": [
+            "Manual",
+            "Auto"
+          ],
+          "enumDescriptions": [
+            "See AI-proposed changes and use the 'Revert changes' button in the editor to apply selected changes",
+            "Saves any pending edits you have, then applies AI-proposed changes to the file with the option to revert any back to that saved version"
+          ],
+          "order": 5
         }
       }
     },
@@ -108,11 +121,6 @@
           "dark": "./media/icons8-stars-16-white.png",
           "light": "./media/icons8-stars-16-black.png"
         }
-      },
-      {
-        "command": "vscode-byolad.applyProposedChanges",
-        "title": "Apply Proposed Changes",
-        "category": "byoLAD"
       }
     ],
     "menus": {

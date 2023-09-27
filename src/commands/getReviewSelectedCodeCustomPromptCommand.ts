@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import {
   doCompletion,
-  replaceTextAndCompare,
   getDocumentTextBeforeSelection,
   getDocumentTextAfterSelection,
   getUserPrompt,
@@ -13,10 +12,11 @@ import {
   INVALID_USER_INPUT_ERROR_MESSAGE,
 } from "./constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
+import { presentReviewResult } from "../helpers/presentReviewResult";
 
 /**
  * Collects a user inputted prompt to query the model for a reviewed, edited version of the currently selected code.
- * Displays a diff of the active editor document and the completion response in context of the overall file.
+ * Presents the suggestions on the selected code (in the context of the whole file) to the user according to their settings.
  */
 export const getReviewSelectedCodeCustomPromptCommand = (
   settingsProvider: SettingsProvider,
@@ -44,14 +44,7 @@ export const getReviewSelectedCodeCustomPromptCommand = (
         code,
         modelInstruction,
         progressTitle,
-        (completion, activeEditor) => {
-          if (!completion.completion) {
-            vscode.window.showErrorMessage(
-              completion?.errorMessage || "No completion returned",
-            );
-            return;
-          }
-
+        async (completion, activeEditor) => {
           const documentTextBeforeSelection =
             getDocumentTextBeforeSelection(activeEditor);
           const documentTextAfterSelection =
@@ -61,7 +54,8 @@ export const getReviewSelectedCodeCustomPromptCommand = (
             documentTextBeforeSelection +
             completion.completion +
             documentTextAfterSelection;
-          replaceTextAndCompare(newDocText, activeEditor);
+
+          await presentReviewResult(newDocText, activeEditor, settingsProvider);
         },
       );
     },

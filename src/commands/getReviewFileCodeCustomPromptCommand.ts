@@ -3,15 +3,15 @@ import {
   CODE_REVIEW_PROGRESS_TITLE,
   CUSTOM_PROMPT_TEMPLATE_PREFIX,
   CUSTOM_PROMPT_TEMPLATE_SUFFIX,
-  EMPTY_COMPLETION_ERROR_MESSAGE,
   INVALID_USER_INPUT_ERROR_MESSAGE,
 } from "./constants";
-import { doCompletion, replaceTextAndCompare, getUserPrompt } from "../helpers";
+import { doCompletion, getUserPrompt } from "../helpers";
 import { SettingsProvider } from "../helpers/SettingsProvider";
+import { presentReviewResult } from "../helpers/presentReviewResult";
 
 /**
  * Collects a user inputted prompt to query the model for a reviewed, edited version of the current file contents.
- * Displays a diff of the active editor document and the completion response.
+ * Presents the suggestions to the user according to their settings.
  */
 export const getReviewFileCodeCustomPromptCommand = (
   settingsProvider: SettingsProvider,
@@ -36,15 +36,12 @@ export const getReviewFileCodeCustomPromptCommand = (
         code,
         modelInstruction,
         progressTitle,
-        (completion, activeEditor) => {
-          if (!completion.completion) {
-            vscode.window.showErrorMessage(
-              completion?.errorMessage || EMPTY_COMPLETION_ERROR_MESSAGE,
-            );
-            return;
-          }
-          replaceTextAndCompare(completion.completion, activeEditor);
-        },
+        async (completion, activeEditor) =>
+          await presentReviewResult(
+            completion.completion,
+            activeEditor,
+            settingsProvider,
+          ),
       );
     },
   );

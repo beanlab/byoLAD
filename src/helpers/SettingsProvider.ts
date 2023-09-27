@@ -1,7 +1,12 @@
 import { CompletionModel } from "../CompletionModel/CompletionModel";
-import { CompletionProviderType } from "./types";
+import {
+  ApplyChangesPosition,
+  ApplySuggestionsMode,
+  CompletionProviderType,
+} from "./types";
 import { injectCompletionModel } from "./injectCompletionModel";
 import * as vscode from "vscode";
+import { MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE } from "../commands/constants";
 
 export class SettingsProvider {
   private _completionModel: CompletionModel;
@@ -47,5 +52,40 @@ export class SettingsProvider {
 
   getProvider(): CompletionProviderType {
     return this._config.get("provider") as CompletionProviderType;
+  }
+
+  getApplySuggestionsMode(): ApplySuggestionsMode {
+    return this._config.get("applySuggestions.mode") as ApplySuggestionsMode;
+  }
+
+  /**
+   * Gets the position to show the diff view in. If the user has selected "Use Merge Conflict Setting", then
+   * this method will get the merge-conflict.diffViewPosition setting and use that. If that setting is not
+   * set or is invalid, then the user will be shown an error message and the position will default to "Below".
+   *
+   * @returns The position to show the diff view in.
+   */
+  getDiffViewPosition(): ApplyChangesPosition {
+    let position = this._config.get(
+      "applySuggestions.diffViewPosition",
+    ) as ApplyChangesPosition;
+    if (position === ApplyChangesPosition.UseMergeConflictSetting) {
+      const mergeConflictDiffViewPosition = vscode.workspace
+        .getConfiguration("merge-conflict")
+        .get<string>("diffViewPosition");
+      if (
+        mergeConflictDiffViewPosition &&
+        mergeConflictDiffViewPosition in ApplyChangesPosition
+      ) {
+        position = mergeConflictDiffViewPosition as ApplyChangesPosition;
+      } else {
+        vscode.window.showErrorMessage(
+          MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE,
+        );
+        const defaultPosition = ApplyChangesPosition.Below;
+        position = defaultPosition;
+      }
+    }
+    return position;
   }
 }

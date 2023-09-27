@@ -69,6 +69,37 @@
           "description": "The prompt to use when reviewing selected code",
           "editPresentation": "multilineText",
           "order": 4
+        },
+        "vscode-byolad.applySuggestions.mode": {
+          "type": "string",
+          "default": "Manual",
+          "enum": [
+            "Manual",
+            "Auto"
+          ],
+          "enumDescriptions": [
+            "See AI-proposed changes and apply selected changes manually",
+            "Apply AI-proposed changes with the option to revert selected changes"
+          ],
+          "order": 5
+        },
+        "vscode-byolad.applySuggestions.diffViewPosition": {
+          "type": "string",
+          "default": "Below",
+          "description": "Controls where the diff view should be opened when comparing AI suggestions.",
+          "enum": [
+            "Current",
+            "Beside",
+            "Below",
+            "Use Merge Conflict Setting"
+          ],
+          "enumDescriptions": [
+            "Open the diff view in the current editor group",
+            "Open the diff view next to the current editor group",
+            "Open the diff view below the current editor group",
+            "Use the value of the merge-conflict.diffViewPosition setting to determine where the diff view for AI suggestions should be opened"
+          ],
+          "order": 6
         }
       }
     },
@@ -108,11 +139,6 @@
           "dark": "./media/icons8-stars-16-white.png",
           "light": "./media/icons8-stars-16-black.png"
         }
-      },
-      {
-        "command": "vscode-byolad.applyProposedChanges",
-        "title": "Apply Proposed Changes",
-        "category": "byoLAD"
       }
     ],
     "menus": {

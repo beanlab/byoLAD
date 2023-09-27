@@ -2,14 +2,14 @@ import * as vscode from "vscode";
 import {
   CODE_REVIEW_INSTRUCTION,
   CODE_REVIEW_PROGRESS_TITLE,
-  EMPTY_COMPLETION_ERROR_MESSAGE,
 } from "./constants";
-import { doCompletion, replaceTextAndCompare } from "../helpers";
+import { doCompletion } from "../helpers";
 import { SettingsProvider } from "../helpers/SettingsProvider";
+import { presentReviewResult } from "../helpers/presentReviewResult";
 
 /**
  * Queries the model for a reviewed, edited version of the current file contents.
- * Displays a diff of the active editor document and the completion response.
+ * Presents the suggestions to the user according to their settings.
  */
 export const getReviewFileCodeCommand = (
   settingsProvider: SettingsProvider,
@@ -27,15 +27,12 @@ export const getReviewFileCodeCommand = (
         code,
         modelInstruction,
         progressTitle,
-        (completion, activeEditor) => {
-          if (!completion.completion) {
-            vscode.window.showErrorMessage(
-              completion?.errorMessage || EMPTY_COMPLETION_ERROR_MESSAGE,
-            );
-            return;
-          }
-          replaceTextAndCompare(completion.completion, activeEditor);
-        },
+        async (completion, activeEditor) =>
+          await presentReviewResult(
+            completion.completion,
+            activeEditor,
+            settingsProvider,
+          ),
       );
     },
   );

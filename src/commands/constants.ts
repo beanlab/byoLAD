@@ -17,4 +17,6 @@ export const NO_COMPLETION_ERROR_MESSAGE = "No completion returned from model";
 export const UNKNOWN_COMPLETION_ERROR_MESSAGE =
   "Unknown error occurred while getting the completion from the model";
 export const DIFF_VIEW_TITLE_SUFFIX_MANUAL_MODE = ": AI Suggestions ↔ Current";
+export const DIFF_VIEW_TITLE_SUFFIX_AUTO_MODE =
+  ": Original → Incoming AI Suggestions";
 export const NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented";

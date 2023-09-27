@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
-import { ApplySuggestionsMode, TextProviderScheme } from "./types";
+import {
+  ApplyChangesPosition,
+  ApplySuggestionsMode,
+  TextProviderScheme,
+} from "./types";
 import {
   DIFF_VIEW_TITLE_SUFFIX_AUTO_MODE,
   DIFF_VIEW_TITLE_SUFFIX_MANUAL_MODE,
@@ -9,6 +13,7 @@ import { SettingsProvider } from "./SettingsProvider";
 
 /**
  * Presents the reviewed code to the user according to their settings for applying the suggested changes.
+ * Use of vscode.diff command based heavily on https://github.com/microsoft/vscode/blob/50573340ab343ddfe9756e3cbc3e7da556206fb6/extensions/merge-conflict/src/commandHandler.ts#L85C9-L85C9
  *
  * @param newDocText The text of the document after the suggested changes have been applied.
  * @param activeEditor The active editor.
@@ -43,12 +48,20 @@ export async function presentReviewResult(
     await applySuggestions(activeDoc, newDocText);
   }
 
-  const title = getTitle(originalFileName, applySuggestionsMode);
+  const title = getDiffTitle(originalFileName, applySuggestionsMode);
+
+  const diffViewPosition = settingsProvider.getDiffViewPosition();
   const opts: vscode.TextDocumentShowOptions = {
-    viewColumn: vscode.ViewColumn.Active, // TODO: How to handle this setting? Configurable?
+    viewColumn:
+      diffViewPosition === ApplyChangesPosition.Beside
+        ? vscode.ViewColumn.Beside
+        : vscode.ViewColumn.Active,
   };
 
-  await vscode.commands.executeCommand("workbench.action.newGroupBelow"); // TODO: Make this configurable like in 'merge-conflict' getConfig --> mergeConflictConfig.get<string>('diffViewPosition') or just use that config setting anyway
+  if (diffViewPosition === ApplyChangesPosition.Below) {
+    await vscode.commands.executeCommand("workbench.action.newGroupBelow");
+  }
+
   await vscode.commands.executeCommand(
     "vscode.diff",
     virtualComparisonDoc.uri,
@@ -89,7 +102,7 @@ async function getVirtualComparisonDoc(
  * @param applySuggestionsMode The apply suggestions mode
  * @returns The title for the diff view
  */
-function getTitle(
+function getDiffTitle(
   originalFileName: string,
   applySuggestionsMode: ApplySuggestionsMode,
 ) {

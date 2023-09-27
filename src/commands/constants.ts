@@ -20,3 +20,5 @@ export const DIFF_VIEW_TITLE_SUFFIX_MANUAL_MODE = ": AI Suggestions ↔ Current"
 export const DIFF_VIEW_TITLE_SUFFIX_AUTO_MODE =
   ": Original → Incoming AI Suggestions";
 export const NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented";
+export const MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE =
+  "Error with byoLAD extension setting applySuggestions.diffViewPosition: Could not get merge-conflict.diffViewPosition setting or it doesn't match any of the available options (likely due to a breaking change in that extension). Using the default byoLAD setting.";

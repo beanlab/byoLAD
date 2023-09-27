@@ -17,3 +17,10 @@ export enum ApplySuggestionsMode {
   Manual = "Manual",
   Auto = "Auto",
 }
+
+export enum ApplyChangesPosition {
+  Current = "Current",
+  Beside = "Beside",
+  Below = "Below",
+  UseMergeConflictSetting = "Use Merge Conflict Setting",
+}

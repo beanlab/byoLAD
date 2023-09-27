@@ -78,10 +78,28 @@
             "Auto"
           ],
           "enumDescriptions": [
-            "See AI-proposed changes and use the 'Revert changes' button in the editor to apply selected changes",
-            "Saves any pending edits you have, then applies AI-proposed changes to the file with the option to revert any back to that saved version"
+            "See AI-proposed changes and apply selected changes manually",
+            "Apply AI-proposed changes with the option to revert selected changes"
           ],
           "order": 5
+        },
+        "vscode-byolad.applySuggestions.diffViewPosition": {
+          "type": "string",
+          "default": "Below",
+          "description": "Controls where the diff view should be opened when comparing AI suggestions.",
+          "enum": [
+            "Current",
+            "Beside",
+            "Below",
+            "Use Merge Conflict Setting"
+          ],
+          "enumDescriptions": [
+            "Open the diff view in the current editor group",
+            "Open the diff view next to the current editor group",
+            "Open the diff view below the current editor group",
+            "Use the value of the merge-conflict.diffViewPosition setting to determine where the diff view for AI suggestions should be opened"
+          ],
+          "order": 6
         }
       }
     },

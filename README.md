@@ -33,7 +33,7 @@ After installing the byoLAD extension, configure it with your API key from your 
 - Then under APIKey put in your API key from your provider.
 - Then under Model select your LLM provider's API.
 
-![](SetAPIKey.gif)
+![](SetAPIKey .gif)
 
 > Note: If you want to run the extension locally, go to [contribute.md](contribute.md)
 

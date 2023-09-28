@@ -3,6 +3,11 @@ import {
   CompletionModel,
   CompletionModelResponse,
 } from "../CompletionModel/CompletionModel";
+import {
+  EMPTY_COMPLETION_ERROR_MESSAGE,
+  NO_COMPLETION_ERROR_MESSAGE,
+  UNKNOWN_COMPLETION_ERROR_MESSAGE,
+} from "../commands/constants";
 
 /**
  * Gets a completion from the model given code and instructions, and handles the response.
@@ -51,14 +56,15 @@ export function doCompletion(
     .then(async () => {
       if (completion && completion.success && completion.completion) {
         handleResponse(completion, activeEditor);
-        return;
-      }
-      if (!completion) {
-        vscode.window.showErrorMessage("No response from completion model");
+      } else if (!completion) {
+        vscode.window.showErrorMessage(NO_COMPLETION_ERROR_MESSAGE);
+      } else if (!completion.completion) {
+        vscode.window.showErrorMessage(
+          completion?.errorMessage || EMPTY_COMPLETION_ERROR_MESSAGE,
+        );
       } else {
         vscode.window.showErrorMessage(
-          completion?.errorMessage ||
-            "Unknown error occurred while getting completion",
+          completion?.errorMessage || UNKNOWN_COMPLETION_ERROR_MESSAGE,
         );
       }
     });

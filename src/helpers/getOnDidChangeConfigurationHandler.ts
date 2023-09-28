@@ -5,9 +5,9 @@ export const getOnDidChangeConfigurationHandler = (
   settingsProvider: SettingsProvider,
 ): vscode.Disposable => {
   return vscode.workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration("vs-code-ai-extension")) {
+    if (event.affectsConfiguration("vscode-byolad")) {
       settingsProvider.setConfig(
-        vscode.workspace.getConfiguration("vs-code-ai-extension"),
+        vscode.workspace.getConfiguration("vscode-byolad"),
       );
     }
   });

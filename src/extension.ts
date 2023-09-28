@@ -3,17 +3,16 @@ import { getReviewFileCodeCommand } from "./commands/getReviewFileCodeCommand";
 import { getReviewSelectedCodeCommand } from "./commands/getReviewSelectedCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
+import { getReviewSelectedCodeCustomPromptCommand } from "./commands/getReviewSelectedCodeCustomPromptCommand";
+import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
-import { getApplyProposedChangesCommand } from "./commands/getApplyProposedChangesCommand";
 
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  console.log(
-    'Congratulations, your extension "vs-code-ai-extension" is now active!',
-  );
+  console.log('Congratulations, your extension "vscode-byolad" is now active!');
 
-  const config = vscode.workspace.getConfiguration("vs-code-ai-extension");
+  const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
 
   // For commands that have been defined in the package.json file,
@@ -23,7 +22,10 @@ export function activate(context: vscode.ExtensionContext) {
   const reviewFileCodeCommand = getReviewFileCodeCommand(settingsProvider);
   const reviewSelectedCodeCommand =
     getReviewSelectedCodeCommand(settingsProvider);
-  const applyProposedChangesCommand = getApplyProposedChangesCommand();
+  const reviewFileCodeCustomPromptCommand =
+    getReviewFileCodeCustomPromptCommand(settingsProvider);
+  const reviewSelectedCodeCustomPromptCommand =
+    getReviewSelectedCodeCustomPromptCommand(settingsProvider);
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
   const reviewCodeTextDocumentContentProvider =
@@ -33,7 +35,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     reviewFileCodeCommand,
     reviewSelectedCodeCommand,
-    applyProposedChangesCommand,
+    reviewFileCodeCustomPromptCommand,
+    reviewSelectedCodeCustomPromptCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
   );

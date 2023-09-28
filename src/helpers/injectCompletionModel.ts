@@ -13,9 +13,9 @@ const injectGPTCompletionModel = (
   apiKey?: string,
 ): GPTCompletionModel | UnsetCompletionModel => {
   if (!model || model === "")
-    return injectUnsetCompletionModel("vs-code-ai-extension: Model not set");
+    return injectUnsetCompletionModel("vscode-byolad: Model not set");
   if (!apiKey || apiKey === "")
-    return injectUnsetCompletionModel("vs-code-ai-extension: APIKey not set");
+    return injectUnsetCompletionModel("vscode-byolad: APIKey not set");
 
   return new GPTCompletionModel(model, apiKey);
 };
@@ -25,9 +25,9 @@ const injectPaLMCompletionModel = (
   apiKey?: string,
 ): PaLMCompletionModel | UnsetCompletionModel => {
   if (!model || model === "")
-    return injectUnsetCompletionModel("vs-code-ai-extension: Model not set");
+    return injectUnsetCompletionModel("vscode-byolad: Model not set");
   if (!apiKey || apiKey === "")
-    return injectUnsetCompletionModel("vs-code-ai-extension: APIKey not set");
+    return injectUnsetCompletionModel("vscode-byolad: APIKey not set");
 
   return new PaLMCompletionModel(model, apiKey);
 };
@@ -43,8 +43,6 @@ export const injectCompletionModel = (
     case CompletionProviderType.Google:
       return injectPaLMCompletionModel(model, apiKey);
     default:
-      return injectUnsetCompletionModel(
-        "vs-code-ai-extension: Provider not set",
-      );
+      return injectUnsetCompletionModel("vscode-byolad: Provider not set");
   }
 };

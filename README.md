@@ -31,12 +31,10 @@ After installing the byoLAD extension, configure it with your API key from your 
 - Once in Settings, click on Extensions.
 - Then select byoLAD under Extensions.
 - Then under APIKey put in your API key from your provider.
-- Then under Model select your LLM provider's API.
-
-![](SetAPIKey.gif)
-
+- Then under Model enter the model you desire to use of your LLM provider's API.
+![](SetAPIkey.gif)
 > Note: If you want to run the extension locally, go to [contribute.md](contribute.md)
 
 **Contributions of any kind welcome.**
 
-<img src="bean.jpg"  width="150" height="100">
+<!-- <img src="bean.jpg"  width="150" height="100"> -->

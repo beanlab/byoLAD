@@ -1,8 +1,11 @@
 {
-  "name": "vscode-webview-react",
+  "publisher": "BeanLab",
+  "name": "vscode-byolad",
+  "displayName": "byoLAD",
+  "description": "",
   "version": "0.1.0",
   "engines": {
-    "vscode": "^1.23.0"
+    "vscode": "^1.81.0"
   },
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -24,7 +27,7 @@
     "code review"
   ],
   "preview": true,
-  "icon": "byo_LAD.png",
+  "icon": "media/byo_LAD.png",
   "activationEvents": [],
   "main": "./build/ext-src/extension.js",
   "contributes": {

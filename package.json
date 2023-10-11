@@ -139,7 +139,12 @@
           "dark": "./media/icons8-stars-16-white.png",
           "light": "./media/icons8-stars-16-black.png"
         }
-      }
+      },
+      {
+				"command": "vscode-byolad.openSettingsCommand",
+				"title": "byoLAD — Open Settings",
+				"category": "byoLAD"
+			}
     ],
     "menus": {
       "commandPalette": [
@@ -194,7 +199,23 @@
           "group": "navigation@1"
         }
       ]
-    }
+    },
+    "walkthroughs": [
+			{
+			  "id": "setUp",
+			  "title": "Set Up for byoLAD",
+			  "description": "Make sure to set up your API Key and model in the settings.",
+			  "steps": [
+				{
+				  "id": "apiKey",
+				  "title": "Set Your API Key and Model",
+				  "description": "This step will take you to settings, and show you where you can put in your API key and model. (Note: You have to obtain your own api key from a provider of your choice)\n[Set API key](command:vscode-byolad.openSettingsCommand)",
+				  "media": { "markdown": "walkthrough.md" },
+				  "completionEvents": ["onCommand:vscode-byolad.openSettingsCommand"]
+				}
+			  ]
+			}
+		]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

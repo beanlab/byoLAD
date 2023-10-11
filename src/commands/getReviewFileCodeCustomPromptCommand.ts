@@ -13,11 +13,11 @@ import { presentReviewResult } from "../helpers/presentReviewResult";
  * Collects a user inputted prompt to query the model for a reviewed, edited version of the current file contents.
  * Presents the suggestions to the user according to their settings.
  */
-export const getReviewFileCodeCustomPromptCommand = (
+export const getCustomPromptFileCommand = (
   settingsProvider: SettingsProvider,
 ): vscode.Disposable => {
   const reviewFileCodeCommand = vscode.commands.registerCommand(
-    "vscode-byolad.reviewFileCodeCustomPrompt",
+    "vscode-byolad.customPromptFile",
     async () => {
       const code = vscode.window.activeTextEditor?.document.getText();
       const modelInstruction =

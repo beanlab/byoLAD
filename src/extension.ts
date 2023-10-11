@@ -3,8 +3,8 @@ import { getReviewFileCodeCommand } from "./commands/getReviewFileCodeCommand";
 import { getReviewSelectedCodeCommand } from "./commands/getReviewSelectedCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
-import { getReviewSelectedCodeCustomPromptCommand } from "./commands/getReviewSelectedCodeCustomPromptCommand";
-import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
+import { getCustomPromptSelectedCodeCommand } from "./commands/getReviewSelectedCodeCustomPromptCommand";
+import { getCustomPromptFileCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
 
 // This method is called when the extension is activated
@@ -22,10 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
   const reviewFileCodeCommand = getReviewFileCodeCommand(settingsProvider);
   const reviewSelectedCodeCommand =
     getReviewSelectedCodeCommand(settingsProvider);
-  const reviewFileCodeCustomPromptCommand =
-    getReviewFileCodeCustomPromptCommand(settingsProvider);
-  const reviewSelectedCodeCustomPromptCommand =
-    getReviewSelectedCodeCustomPromptCommand(settingsProvider);
+  const customPromptSelectedCodeCommand =
+    getCustomPromptSelectedCodeCommand(settingsProvider);
+  const customPromptFileCommand = getCustomPromptFileCommand(settingsProvider);
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
   const reviewCodeTextDocumentContentProvider =
@@ -35,8 +34,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     reviewFileCodeCommand,
     reviewSelectedCodeCommand,
-    reviewFileCodeCustomPromptCommand,
-    reviewSelectedCodeCustomPromptCommand,
+    customPromptSelectedCodeCommand,
+    customPromptFileCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
   );

@@ -18,11 +18,11 @@ import { presentReviewResult } from "../helpers/presentReviewResult";
  * Collects a user inputted prompt to query the model for a reviewed, edited version of the currently selected code.
  * Presents the suggestions on the selected code (in the context of the whole file) to the user according to their settings.
  */
-export const getReviewSelectedCodeCustomPromptCommand = (
+export const getCustomPromptSelectedCodeCommand = (
   settingsProvider: SettingsProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    "vscode-byolad.reviewSelectedCodeCustomPrompt",
+    "vscode-byolad.customPromptSelectedCode",
     async () => {
       const code = vscode.window.activeTextEditor?.document.getText(
         vscode.window.activeTextEditor?.selection,

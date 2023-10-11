@@ -12,6 +12,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Node.js
         uses: actions/setup-node@v3
+        # TODO: Using yarn now?
         with:
           node-version: 16.x
       - run: npm install

@@ -80,7 +80,7 @@ And then press F5, in Extension Development Host session, run `Start React Webvi
 
 Things we did on top of Create React App TypeScript template
 
-- We inline `index.html` content in `ext-src/extension.ts` when creating the webview
+- We inline `index.html` content in `src/extension.ts` when creating the webview
 - We set strict security policy for accessing resources in the webview.
   - Only resources in `/build` can be accessed
   - Onlu resources whose scheme is `vscode-resource` can be accessed.

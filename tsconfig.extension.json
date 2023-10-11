@@ -2,12 +2,15 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
-    "outDir": "build",
-    "lib": ["es6", "dom"],
+    "outDir": "out",
+    // "lib": ["es2020", "dom"],
+    // "rootDir": "./src",
     "sourceMap": true,
-    "rootDir": ".",
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
-  "include": ["ext-src"],
-  "exclude": ["node_modules", ".vscode-test"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", ".vscode-test", "**/*.test.ts"]
 }

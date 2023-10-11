@@ -9,8 +9,7 @@
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "preLaunchTask": "${defaultBuildTask}",
-      "sourceMaps": true,
-      "outDir": "${workspaceFolder}/ext-src"
+      "sourceMaps": true
     }
   ]
 }

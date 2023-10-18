@@ -5,7 +5,7 @@
   "description": "",
   "version": "0.1.0",
   "engines": {
-    "vscode": "^1.23.0"
+    "vscode": "^1.81.0"
   },
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -29,7 +29,7 @@
   "preview": true,
   "icon": "media/byo_LAD.png",
   "activationEvents": [],
-  "main": "./build/src/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "title": "byoLAD",
@@ -207,29 +207,31 @@
     "openai": "^4.5.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "terser": "^5.15.0",
-    "vscode": "^1.1.37",
-    "yarn": "^1.22.19"
+    "terser": "^5.15.0"
   },
   "resolutions": {},
   "scripts": {
     "vscode:prepublish": "node ./scripts/build-non-split.js && tsc -p tsconfig.extension.json",
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "start": "react-scripts start",
     "build": "node ./scripts/build-non-split.js && tsc -p tsconfig.extension.json",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "clean": "rm -rf out"
+    "clean": "rm -rf out",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
   },
   "devDependencies": {
     "@types/jest": "^23.3.13",
-    "@types/node": "^10.1.2",
+    "@types/node": "16.x",
     "@types/react": "^16.3.14",
     "@types/react-dom": "^16.0.5",
-    "@types/vscode": "^1.83.0",
+    "@types/vscode": "^1.81.0",
     "react-scripts": "^5.0.1",
     "rewire": "^6.0.0",
-    "typescript": "^5.2.2"
+    "typescript": "^4",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "3.0.3"
   },
   "browserslist": [
     ">0.2%",

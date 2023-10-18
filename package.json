@@ -29,7 +29,7 @@
   "preview": true,
   "icon": "media/byo_LAD.png",
   "activationEvents": [],
-  "main": "./build/src/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "title": "byoLAD",

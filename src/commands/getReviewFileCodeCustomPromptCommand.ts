@@ -4,46 +4,58 @@ import {
   CUSTOM_PROMPT_TEMPLATE_PREFIX,
   CUSTOM_PROMPT_TEMPLATE_SUFFIX,
   INVALID_USER_INPUT_ERROR_MESSAGE,
+  NO_CODE_TO_REVIEW_ERROR_MESSAGE,
 } from "./constants";
-import { doCompletion, getUserPrompt } from "../helpers";
+import {
+  doChat,
+  getInstructionAndCodeChatMessages,
+  getUserPrompt,
+} from "../helpers";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { presentReviewResult } from "../helpers/presentReviewResult";
+import { ChatMessage } from "../ChatModel/ChatModel";
 
 /**
  * Collects a user inputted prompt to query the model for a reviewed, edited version of the current file contents.
  * Presents the suggestions to the user according to their settings.
  */
 export const getReviewFileCodeCustomPromptCommand = (
-  settingsProvider: SettingsProvider,
+  settingsProvider: SettingsProvider
 ): vscode.Disposable => {
-  const reviewFileCodeCommand = vscode.commands.registerCommand(
+  return vscode.commands.registerCommand(
     "vscode-byolad.reviewFileCodeCustomPrompt",
     async () => {
       const code = vscode.window.activeTextEditor?.document.getText();
+      if (!code) {
+        vscode.window.showErrorMessage(NO_CODE_TO_REVIEW_ERROR_MESSAGE);
+        return;
+      }
+
       const modelInstruction =
         CUSTOM_PROMPT_TEMPLATE_PREFIX +
         (await getUserPrompt()) +
         CUSTOM_PROMPT_TEMPLATE_SUFFIX;
-      const progressTitle = CODE_REVIEW_PROGRESS_TITLE;
-
       if (!modelInstruction) {
         vscode.window.showErrorMessage(INVALID_USER_INPUT_ERROR_MESSAGE);
         return;
       }
 
-      doCompletion(
-        settingsProvider.getCompletionModel(),
-        code,
+      const messages: ChatMessage[] = getInstructionAndCodeChatMessages(
         modelInstruction,
-        progressTitle,
-        async (completion, activeEditor) =>
-          await presentReviewResult(
-            completion.completion,
-            activeEditor,
-            settingsProvider,
-          ),
+        code
       );
-    },
+
+      doChat(
+        settingsProvider.getChatModel(),
+        messages,
+        CODE_REVIEW_PROGRESS_TITLE,
+        async (response, activeEditor) =>
+          await presentReviewResult(
+            response.message?.content,
+            activeEditor,
+            settingsProvider
+          )
+      );
+    }
   );
-  return reviewFileCodeCommand;
 };

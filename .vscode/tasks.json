@@ -4,9 +4,8 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "watch",
-      "type": "shell",
-      "command": "yarn run watch",
+      "type": "npm",
+      "script": "watch",
       "problemMatcher": "$tsc-watch",
       "isBackground": true,
       "presentation": {

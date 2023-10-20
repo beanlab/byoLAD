@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
 /**
- * Queries the model for a reviewed, edited version of the current file contents.
- * Presents the suggestions to the user according to their settings.
+ * Opens settings with a search for byoLAD, which should show the fields
+ * for API key and model type.
  */
 export const getOpenSettingsCommand = (): vscode.Disposable => {
   const openSettingsCommand = vscode.commands.registerCommand(

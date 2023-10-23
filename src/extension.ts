@@ -6,6 +6,7 @@ import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConf
 import { getReviewSelectedCodeCustomPromptCommand } from "./commands/getReviewSelectedCodeCustomPromptCommand";
 import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
+import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
@@ -30,6 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
     getOnDidChangeConfigurationHandler(settingsProvider);
   const reviewCodeTextDocumentContentProvider =
     getReviewCodeTextDocumentContentProvider();
+  const openSettingsCommand = getOpenSettingsCommand();
 
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
@@ -39,6 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
     reviewSelectedCodeCustomPromptCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
+    openSettingsCommand,
   );
 }
 

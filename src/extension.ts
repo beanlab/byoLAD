@@ -7,6 +7,7 @@ import { getReviewSelectedCodeCustomPromptCommand } from "./commands/getReviewSe
 import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
+import { HelloWorldPanel } from "./panels/HelloWorldPanel";
 
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
@@ -33,6 +34,13 @@ export function activate(context: vscode.ExtensionContext) {
     getReviewCodeTextDocumentContentProvider();
   const openSettingsCommand = getOpenSettingsCommand();
 
+  const showHelloWorldCommand = vscode.commands.registerCommand(
+    "hello-world.showHelloWorld",
+    () => {
+      HelloWorldPanel.render(context.extensionUri);
+    },
+  );
+
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
     reviewFileCodeCommand,
@@ -42,8 +50,9 @@ export function activate(context: vscode.ExtensionContext) {
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
     openSettingsCommand,
+    showHelloWorldCommand,
   );
 }
 
 // This method is called when the extension is deactivated
-export function deactivate() {}
+// export function deactivate() {}

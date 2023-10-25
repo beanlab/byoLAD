@@ -5,3 +5,117 @@ main {
   align-items: flex-start;
   height: 100%;
 }
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 15vmin;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.App-footer {
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-header {
+  min-height: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-body1 {
+  /* color: white; */
+  font-size: calc(8px + 2vmin);
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.chat-box {
+  min-height: 10vh;
+  width: 85%;
+}
+
+.chat-bar {
+  background-color: #717171;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 60px;
+  padding: 10px 10px;
+}
+
+.chat-bar input{
+  background: transparent;
+  flex: 1;
+  border: 0;
+  outline: none;
+  padding: 5px 20px;
+  font-size: 16px;
+  /* color: #EFEFEF; */
+}
+
+.chat-bar button {
+  background: #313131;
+  border: 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+::placeholder {
+  color: #AAAAAA;
+}
+
+.chat-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  height: 100%;
+  width: 85%;
+}
+
+.chat-wrap2 {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+}
+
+.chat-text {
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: left;
+  /* padding: 10px; */
+  padding-left: 8%;
+  padding-bottom: 5%;
+  padding-top: 3%;
+  border-bottom: 1px solid #717171;
+}
+
+.chat-text2 {
+  padding-left: 5%;
+  padding-top: 10%;
+}
+
+.byoLAD {
+  height: 8vmin;
+  border-radius: 50%;
+}
+
+.App-link {
+  color: #61dafb;
+}

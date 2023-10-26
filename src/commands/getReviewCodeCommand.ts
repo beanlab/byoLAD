@@ -4,7 +4,6 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { TextBlock } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/conversationManager";
 import { sendMessage } from "../helpers/sendMessage";
-import { getCodeReferenceIfUserWants } from "../helpers/getCodeReferenceIfUserWants";
 import { getCodeReference } from "../helpers/getCodeReference";
 
 /**
@@ -13,7 +12,7 @@ import { getCodeReference } from "../helpers/getCodeReference";
  */
 export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager
+  conversationManager: ConversationManager,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     "vscode-byolad.reviewCode",
@@ -36,8 +35,8 @@ export const getReviewCodeCommand = (
         textBlock,
         codeReference,
         settingsProvider,
-        conversationManager
+        conversationManager,
       );
-    }
+    },
   );
 };

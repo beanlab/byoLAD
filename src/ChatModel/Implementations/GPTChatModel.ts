@@ -6,8 +6,6 @@ import {
   ChatModelResponse,
   ChatRole,
   ChatMessageFinishReason,
-  TextBlock,
-  CodeBlock,
   ChatMessage,
 } from "../ChatModel";
 import OpenAI from "openai";
@@ -15,7 +13,7 @@ import {
   messageBlocksToString,
   stringToMessageBlocks,
 } from "../../Conversation/messageBlockHelpers";
-import { Conversation } from "../../Conversation/conversation";
+import { Conversation } from "../ChatModel";
 import { getExampleMessages } from "../../Conversation/getExampleMessages";
 
 export class GPTChatModel implements ChatModel {
@@ -42,7 +40,7 @@ export class GPTChatModel implements ChatModel {
             message: {
               role: completion.choices[0].message.role as ChatRole,
               content: stringToMessageBlocks(
-                completion.choices[0].message.content as string
+                completion.choices[0].message.content as string,
               ),
               finish_reason: completion.choices[0]
                 .finish_reason as ChatMessageFinishReason,

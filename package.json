@@ -105,7 +105,7 @@
     },
     "commands": [
       {
-        "command": "vscode-byolad.startConversation",
+        "command": "vscode-byolad.newConversation",
         "title": "byoLAD — Start Conversation",
         "category": "byoLAD"
       },
@@ -155,7 +155,7 @@
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.startConversation",
+          "command": "vscode-byolad.newConversation",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
@@ -169,7 +169,7 @@
       "editor/context": [
         {
           "when": "editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.startConversation",
+          "command": "vscode-byolad.newConversation",
           "group": "1_modification"
         },
         {

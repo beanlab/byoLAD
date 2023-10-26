@@ -1,3 +1,7 @@
+// TODO: There's a better way to share these types between the main extension and the webview
+// We don't even have to use the same types necessarily, but there should be a way to convert
+// between them easily and safely
+
 export interface ChatModel {
   chat: (request: ChatModelRequest) => Promise<ChatModelResponse>;
 }

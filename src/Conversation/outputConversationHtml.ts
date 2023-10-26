@@ -6,10 +6,10 @@ import {
   MessageBlock,
 } from "../ChatModel/ChatModel";
 import { ConversationManager } from "./conversationManager";
-import { Conversation } from "./conversation";
+import { Conversation } from "../ChatModel/ChatModel";
 
 export function outputConversationHtml(
-  conversationManager: ConversationManager
+  conversationManager: ConversationManager,
 ) {
   // <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';"> -->
   // <!--
@@ -26,7 +26,7 @@ export function outputConversationHtml(
     conversationManager.getConversation(activeConversationId);
   if (!conversation) {
     vscode.window.showErrorMessage(
-      "Conversation with id " + activeConversationId + " not found"
+      "Conversation with id " + activeConversationId + " not found",
     );
     return;
   }
@@ -103,7 +103,7 @@ function getMessageBlocksHtml(messageBlock: MessageBlock[]): string {
       case "text":
         html += `<p>${block.content}</p>`;
         break;
-      case "code":
+      case "code": {
         const codeBlock = block as CodeBlock;
         if (codeBlock.languageId) {
           html += `<p>Language: ${codeBlock.languageId}</p>`;
@@ -113,6 +113,7 @@ function getMessageBlocksHtml(messageBlock: MessageBlock[]): string {
         }
         html += `<pre>${block.content}</pre>`;
         break;
+      }
       default:
         html += `<p>Unknown message block type ${block.type}</p>`;
         break;

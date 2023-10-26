@@ -1,4 +1,4 @@
-import { Conversation } from "./conversation";
+import { Conversation } from "../ChatModel/ChatModel";
 import { ExtensionContext } from "vscode";
 import { ChatMessage } from "../ChatModel/ChatModel";
 import { CONTEXT_INSTRUCTION } from "../commands/constants";
@@ -43,7 +43,6 @@ export class ConversationManager {
   }
 
   set activeConversationId(value: number | null) {
-    const conversationIds = this.conversationIds;
     if (value && !this.conversationIds.includes(value)) {
       throw new Error("Conversation ID does not exist");
     }
@@ -95,7 +94,7 @@ export class ConversationManager {
     } catch (error) {
       // Rollback the first operation
       this.conversations = this.conversations.filter(
-        (c) => c.id !== conversation.id
+        (c) => c.id !== conversation.id,
       );
       throw error;
     }
@@ -115,7 +114,7 @@ export class ConversationManager {
    */
   private createConversation(
     name: string,
-    messages?: ChatMessage[]
+    messages?: ChatMessage[],
   ): Conversation {
     let newId: number;
     if (this.conversationIds.length > 0) {
@@ -160,7 +159,7 @@ export class ConversationManager {
   deleteConversation(id: number) {
     const oldConversations = this.conversations;
     this.conversations = this.conversations.filter(
-      (conversation) => conversation.id !== id
+      (conversation) => conversation.id !== id,
     );
     try {
       if (this.conversationIds.includes(id)) {

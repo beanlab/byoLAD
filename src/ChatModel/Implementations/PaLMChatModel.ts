@@ -11,15 +11,12 @@ import {
   CodeBlock,
   TextBlock,
 } from "../ChatModel";
-import {
-  CONTEXT_INSTRUCTION,
-  NO_RESPONSE_ERROR_MESSAGE,
-} from "../../commands/constants";
+import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import {
   messageBlocksToString,
   stringToMessageBlocks,
 } from "../../Conversation/messageBlockHelpers";
-import { Conversation } from "../../Conversation/conversation";
+import { Conversation } from "../ChatModel";
 
 export class PaLMChatModel implements ChatModel {
   private client: DiscussServiceClient;
@@ -47,7 +44,7 @@ export class PaLMChatModel implements ChatModel {
             message: {
               role: ChatRole.Assistant,
               content: stringToMessageBlocks(
-                palmResponse.candidates[0].content
+                palmResponse.candidates[0].content,
               ),
             },
           };
@@ -129,7 +126,7 @@ export class PaLMChatModel implements ChatModel {
     chatMessages.splice(0, 0, assistantMessage);
 
     // Convert system messages to user messages so that PaLM can handle it (only supports two authors)
-    let messagesWithAcceptedAuthorship: ChatMessage[] = [];
+    const messagesWithAcceptedAuthorship: ChatMessage[] = [];
     for (const message of chatMessages) {
       if (message.role === ChatRole.System) {
         messagesWithAcceptedAuthorship.push({
@@ -142,7 +139,7 @@ export class PaLMChatModel implements ChatModel {
     }
 
     // Combine adjacent messages with the same author so that PaLM can handle it (only supports alternating authors)
-    let mergedMessages: ChatMessage[] = [];
+    const mergedMessages: ChatMessage[] = [];
     for (const message of messagesWithAcceptedAuthorship) {
       if (
         mergedMessages.length > 0 &&
@@ -162,7 +159,7 @@ export class PaLMChatModel implements ChatModel {
         ({
           author: message.role,
           content: messageBlocksToString(message.content),
-        }) as PalMMessage
+        }) as PalMMessage,
     );
   }
 

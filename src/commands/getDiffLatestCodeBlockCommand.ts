@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { CodeBlock } from "../ChatModel/ChatModel";
-import { Conversation } from "../Conversation/conversation";
+import { Conversation } from "../ChatModel/ChatModel";
 
 import { ConversationManager } from "../Conversation/conversationManager";
 import {
@@ -20,7 +20,7 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
  */
 export const getDiffLatestCodeBlockCommand = (
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager
+  conversationManager: ConversationManager,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     "vscode-byolad.diffLatestCodeBlock",
@@ -28,7 +28,7 @@ export const getDiffLatestCodeBlockCommand = (
       const activeEditor = vscode.window.activeTextEditor;
       if (!activeEditor) {
         vscode.window.showErrorMessage(
-          "No active editor, cannot display diff."
+          "No active editor, cannot display diff.",
         );
         return;
       }
@@ -36,7 +36,7 @@ export const getDiffLatestCodeBlockCommand = (
       const conversation = conversationManager.getActiveConversation();
       if (!conversation) {
         vscode.window.showErrorMessage(
-          "No active conversation, cannot retrieve code block."
+          "No active conversation, cannot retrieve code block.",
         );
         return;
       }
@@ -44,7 +44,7 @@ export const getDiffLatestCodeBlockCommand = (
       const codeBlock = getLatestCodeBlock(conversation);
       if (!codeBlock) {
         vscode.window.showErrorMessage(
-          "No code block found in the most recent message."
+          "No code block found in the most recent message.",
         );
         return;
       }
@@ -52,14 +52,14 @@ export const getDiffLatestCodeBlockCommand = (
       const selection = getSelectionFromCodeBlock(codeBlock);
       if (!selection) {
         vscode.window.showErrorMessage(
-          "No code block lines found in the most recent code block."
+          "No code block lines found in the most recent code block.",
         );
         return;
       }
 
       const newDocText = getNewDocumentText(activeEditor, selection, codeBlock);
       await displayDiff(newDocText, activeEditor, settingsProvider);
-    }
+    },
   );
 };
 
@@ -88,7 +88,7 @@ function getLatestCodeBlock(conversation: Conversation): CodeBlock | null {
  * @returns Selection or null if the code block's lines in the user source file are not defined.
  */
 function getSelectionFromCodeBlock(
-  codeBlock: CodeBlock
+  codeBlock: CodeBlock,
 ): vscode.Selection | null {
   const codeBlockStartLine = codeBlock.linesInUserSourceFile?.start;
   const codeBlockEndLine = codeBlock.linesInUserSourceFile?.end;
@@ -97,7 +97,7 @@ function getSelectionFromCodeBlock(
   }
   return new vscode.Selection(
     new vscode.Position(codeBlockStartLine, 0),
-    new vscode.Position(codeBlockEndLine, 0)
+    new vscode.Position(codeBlockEndLine, 0),
   );
 }
 
@@ -112,15 +112,15 @@ function getSelectionFromCodeBlock(
 function getNewDocumentText(
   activeEditor: vscode.TextEditor,
   selection: vscode.Selection,
-  codeBlock: CodeBlock
+  codeBlock: CodeBlock,
 ): string {
   const documentTextBeforeSelection = getDocumentTextBeforeSelection(
     activeEditor,
-    selection
+    selection,
   );
   const documentTextAfterSelection = getDocumentTextAfterSelection(
     activeEditor,
-    selection
+    selection,
   );
   return (
     documentTextBeforeSelection + codeBlock.content + documentTextAfterSelection

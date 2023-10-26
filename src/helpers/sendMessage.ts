@@ -6,7 +6,7 @@ import {
   CodeBlock,
   TextBlock,
 } from "../ChatModel/ChatModel";
-import { Conversation } from "../Conversation/conversation";
+import { Conversation } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/conversationManager";
 import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
@@ -15,7 +15,7 @@ export async function sendMessage(
   messageText: TextBlock,
   codeReference: CodeBlock | null,
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager
+  conversationManager: ConversationManager,
 ) {
   const conversation = conversationManager.getActiveConversation();
   if (!conversation) {
@@ -42,17 +42,17 @@ export async function sendMessage(
         response = await settingsProvider.getChatModel().chat({
           conversation,
         });
-      }
+      },
     )
     .then(async () => {
       if (response.success && response.message) {
         handleSuccessfulResponse(
           response.message,
           conversation,
-          conversationManager
+          conversationManager,
         );
       } else {
-        handleErrorResponse(response, conversation, conversationManager);
+        handleErrorResponse(response);
       }
     });
 }
@@ -67,12 +67,14 @@ export async function sendMessage(
 function handleSuccessfulResponse(
   responseMessage: ChatMessage,
   conversation: Conversation,
-  conversationManager: ConversationManager
+  conversationManager: ConversationManager,
 ): void {
   vscode.window.showInformationMessage("Successful response!"); // TODO: DELETE ME
   conversation.messages.push(responseMessage);
   conversationManager.updateConversation(conversation);
+
   outputConversationHtml(conversationManager); // TODO: Change to updating the webview instead
+  vscode.commands.executeCommand("vscode-byolad.refreshChatView"); // TODO: Use constants?
 }
 
 /**
@@ -84,8 +86,8 @@ function handleSuccessfulResponse(
  */
 function handleErrorResponse(
   response: ChatModelResponse,
-  conversation: Conversation,
-  conversationManager: ConversationManager
+  // conversation: Conversation,
+  // conversationManager: ConversationManager,
 ): void {
   if (!response.success) {
     if (response.errorMessage) {
@@ -95,7 +97,7 @@ function handleErrorResponse(
     }
   } else if (!response.message) {
     vscode.window.showErrorMessage(
-      "Response marked successful, but no message was returned"
+      "Response marked successful, but no message was returned",
     );
   } else {
     vscode.window.showErrorMessage("Unknown error");

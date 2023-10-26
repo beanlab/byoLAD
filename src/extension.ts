@@ -5,12 +5,13 @@ import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConf
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
 import { ConversationManager } from "./Conversation/conversationManager";
 import { getSendMessageCommand } from "./commands/getSendMessageCommand";
-import { getStartConversationCommand } from "./commands/getStartConversationCommand";
+import { getNewConversationCommand } from "./commands/getNewConversationCommand";
 import { getClearConversationsCommand } from "./commands/getClearConversationsCommand";
 import { getDiffLatestCodeBlockCommand } from "./commands/getDiffLatestCodeBlockCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatViewProvider } from "./providers/ChatViewProvider";
+import { getRefreshChatViewCommand } from "./commands/getUpdateChatViewCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
@@ -23,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
     webviewProvider,
   );
 
-  const startConversationCommand = getStartConversationCommand(
+  const newConversationCommand = getNewConversationCommand(
     settingsProvider,
     conversationManager,
   );
@@ -45,6 +46,10 @@ export function activate(context: vscode.ExtensionContext) {
     settingsProvider,
     conversationManager,
   );
+  const refreshChatViewCommand = getRefreshChatViewCommand(
+    webviewProvider,
+    conversationManager,
+  );
   const openSettingsCommand = getOpenSettingsCommand();
 
   const onDidChangeConfigurationHandler =
@@ -54,12 +59,13 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
-    startConversationCommand,
+    newConversationCommand,
     clearConversationsCommand,
     reviewFileCodeCommand,
     explainCodeCommand,
     sendMessageCommand,
     diffLatestCodeBlockCommand,
+    refreshChatViewCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,

@@ -7,11 +7,11 @@ import { ConversationManager } from "./Conversation/conversationManager";
 import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
 import { getNewConversationCommand } from "./commands/getNewConversationCommand";
 import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConversationsCommand";
-import { getDiffCodeBlockCommand } from "./commands/getDiffCodBlockCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
 import { getRefreshChatViewCommand } from "./commands/getRefreshChatViewCommand";
+import { getDiffCodeBlockCommand } from "./commands/getDiffCodeBlockCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");

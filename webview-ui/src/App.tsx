@@ -2,69 +2,17 @@ import "./App.css";
 import byo_LAD from "./circle_byo_LAD.png";
 import { useState } from "react";
 import React from "react";
-import { vscode } from "./utilities/vscode";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { CodeBlock, Conversation } from "./utilities/ChatModel";
+import { Conversation } from "./utilities/ChatModel";
 import {
   ExtensionToWebviewMessage,
   RefreshChatMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
+import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 
 enum MessageType {
   User,
   AI,
-}
-
-/**
- * Sends messages to the extension context.
- */
-class ExtensionMessenger {
-  reviewCode() {
-    vscode.postMessage({
-      messageType: "reviewCode",
-    });
-  }
-
-  explainCode() {
-    vscode.postMessage({
-      messageType: "explainCode",
-    });
-  }
-
-  sendChatMessage(userInput: string, useCodeReference: boolean) {
-    vscode.postMessage({
-      messageType: "sendChatMessage",
-      params: {
-        userInput: userInput,
-        useCodeReference: useCodeReference,
-      },
-    });
-  }
-
-  diffClodeBlock() {
-    const demoCodeBlock = {
-      content:
-        "TODO: his is just a demo code block and is otherwise useless. This will actually need to use the code block the user has selected.",
-    } as CodeBlock;
-    vscode.postMessage({
-      messageType: "diffCodeBlock",
-      params: {
-        codeBlock: demoCodeBlock,
-      },
-    });
-  }
-
-  deleteAllConversations() {
-    vscode.postMessage({
-      messageType: "deleteAllConversations",
-    });
-  }
-
-  newConversaiton() {
-    vscode.postMessage({
-      messageType: "newConversation",
-    });
-  }
 }
 
 class Message {

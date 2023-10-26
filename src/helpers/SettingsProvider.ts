@@ -1,36 +1,41 @@
-import { CompletionModel } from "../CompletionModel/CompletionModel";
 import {
   ApplyChangesPosition,
   ApplySuggestionsMode,
-  CompletionProviderType,
+  LLMProvider,
 } from "./types";
-import { injectCompletionModel } from "./injectCompletionModel";
+import { injectChatModel } from "./injectChatModel";
 import * as vscode from "vscode";
 import { MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE } from "../commands/constants";
+import { ChatModel } from "../ChatModel/ChatModel";
 
 export class SettingsProvider {
-  private _completionModel: CompletionModel;
+  private _chatModel: ChatModel;
   private _config: vscode.WorkspaceConfiguration;
 
   constructor(config: vscode.WorkspaceConfiguration) {
     this._config = config;
-    this._completionModel = injectCompletionModel(
+    this._chatModel = injectChatModel(
       this.getProvider(),
       this.getModel(),
-      this.getAPIKey(),
+      this.getAPIKey()
+    );
+    this._chatModel = injectChatModel(
+      this.getProvider(),
+      this.getModel(),
+      this.getAPIKey()
     );
   }
 
-  getCompletionModel(): CompletionModel {
-    return this._completionModel;
+  getChatModel(): ChatModel {
+    return this._chatModel;
   }
 
   setConfig(config: vscode.WorkspaceConfiguration) {
     this._config = config;
-    this._completionModel = injectCompletionModel(
+    this._chatModel = injectChatModel(
       this.getProvider(),
       this.getModel(),
-      this.getAPIKey(),
+      this.getAPIKey()
     );
   }
 
@@ -50,8 +55,8 @@ export class SettingsProvider {
     return this._config.get("model") as string;
   }
 
-  getProvider(): CompletionProviderType {
-    return this._config.get("provider") as CompletionProviderType;
+  getProvider(): LLMProvider {
+    return this._config.get("provider") as LLMProvider;
   }
 
   getApplySuggestionsMode(): ApplySuggestionsMode {
@@ -67,7 +72,7 @@ export class SettingsProvider {
    */
   getDiffViewPosition(): ApplyChangesPosition {
     let position = this._config.get(
-      "applySuggestions.diffViewPosition",
+      "applySuggestions.diffViewPosition"
     ) as ApplyChangesPosition;
     if (position === ApplyChangesPosition.UseMergeConflictSetting) {
       const mergeConflictDiffViewPosition = vscode.workspace
@@ -80,7 +85,7 @@ export class SettingsProvider {
         position = mergeConflictDiffViewPosition as ApplyChangesPosition;
       } else {
         vscode.window.showErrorMessage(
-          MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE,
+          MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE
         );
         const defaultPosition = ApplyChangesPosition.Below;
         position = defaultPosition;

@@ -109,8 +109,18 @@
         "title": "Hello World (React + Vite): Show"
       },
       {
-        "command": "vscode-byolad.reviewFileCode",
-        "title": "byoLAD — Review Code File",
+        "command": "vscode-byolad.startConversation",
+        "title": "byoLAD — Start Conversation",
+        "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.clearConversations",
+        "title": "byoLAD — Clear Conversations",
+        "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.reviewCode",
+        "title": "byoLAD — Review Code",
         "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
@@ -118,31 +128,19 @@
         }
       },
       {
-        "command": "vscode-byolad.reviewSelectedCode",
-        "title": "byoLAD — Review Selected Code",
-        "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
+        "command": "vscode-byolad.explainCode",
+        "title": "byoLAD — Explain Code",
+        "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.reviewFileCodeCustomPrompt",
-        "title": "byoLAD — Review Code File (Custom Prompt)",
-        "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
+        "command": "vscode-byolad.sendMessage",
+        "title": "byoLAD — Send Message",
+        "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
-        "title": "byoLAD — Review Selected Code (Custom Prompt)",
-        "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
+        "command": "vscode-byolad.diffLatestCodeBlock",
+        "title": "byoLAD — Diff Latest Code Block",
+        "category": "byoLAD"
       },
       {
         "command": "vscode-byolad.openSettingsCommand",
@@ -153,53 +151,46 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "vscode-byolad.reviewFileCode",
+          "command": "vscode-byolad.reviewCode",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.reviewSelectedCode",
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections"
-        },
-        {
-          "command": "vscode-byolad.reviewFileCodeCustomPrompt",
+          "command": "vscode-byolad.explainCode",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor"
+          "command": "vscode-byolad.startConversation",
+          "when": "!editorReadonly && !isInDiffEditor"
+        },
+        {
+          "command": "vscode-byolad.clearConversations"
+        },
+        {
+          "command": "vscode-byolad.diffLatestCodeBlock",
+          "when": "!editorReadonly && !isInDiffEditor"
         }
       ],
       "editor/context": [
         {
-          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewFileCode",
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.startConversation",
           "group": "1_modification"
         },
         {
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
-          "command": "vscode-byolad.reviewSelectedCode",
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.reviewCode",
           "group": "1_modification"
         },
         {
-          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewFileCodeCustomPrompt",
-          "group": "1_modification"
-        },
-        {
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
-          "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.explainCode",
           "group": "1_modification"
         }
       ],
       "editor/title": [
         {
-          "when": "!editorHasSelection && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewFileCode",
-          "group": "navigation@1"
-        },
-        {
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewSelectedCode",
+          "when": "!editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.reviewCode",
           "group": "navigation@1"
         }
       ]

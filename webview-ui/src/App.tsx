@@ -3,19 +3,19 @@ import "./App.css";
 import byo_LAD from "./circle_byo_LAD.png";
 import { useState } from "react";
 import React from "react";
-// import { IconCommentLine } from "@instructure/ui-icons";
-// import { IconUserLine } from "@instructure/ui-icons";
+import { IconCommentLine } from "@instructure/ui-icons";
+import { IconUserLine } from "@instructure/ui-icons";
 
-// class MyIcon extends React.Component {
-//   render() {
-//     // return <IconCommentLine color="primary-inverse" title="Send" />;
-//   }
-// }
-// class UserIcon extends React.Component {
-//   render() {
-//     // return <IconUserLine color="primary-inverse" height="12vmin" title="User" />;
-//   }
-// }
+class SendIcon extends React.Component {
+  render() {
+    return <IconCommentLine color="primary-inverse" title="Send" />;
+  }
+}
+class UserIcon extends React.Component {
+  render() {
+    return <IconUserLine color="primary-inverse" height="12vmin" title="User" />;
+  }
+}
 
 enum MessageType {
   User,
@@ -36,7 +36,7 @@ function createChatText(message: string, type: MessageType) {
   if (type === MessageType.User) {
     return (
       <div key={message} className="chat-text">
-        {/* <UserIcon /> */}
+        {<UserIcon />}
         <div className="chat-text2">
           {message}
         </div>
@@ -138,7 +138,7 @@ function App() {
               placeholder="Ask a question to the AI"
             />
             <button type="submit"onClick={(e) => {newUserMessage(e);}}>
-              {/* <MyIcon /> */}
+              {<SendIcon/>}
             </button>
           </form>
         </div>

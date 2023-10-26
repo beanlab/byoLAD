@@ -105,10 +105,6 @@
     },
     "commands": [
       {
-        "command": "hello-world.showHelloWorld",
-        "title": "Hello World (React + Vite): Show"
-      },
-      {
         "command": "vscode-byolad.startConversation",
         "title": "byoLAD — Start Conversation",
         "category": "byoLAD"
@@ -192,6 +188,26 @@
           "when": "!editorReadonly && !isInDiffEditor",
           "command": "vscode-byolad.reviewCode",
           "group": "navigation@1"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "byoLAD",
+          "title": "byoLAD",
+          "icon": "media/icons8-stars-16-white.png"
+        }
+      ]
+    },
+    "views": {
+      "byoLAD": [
+        {
+          "id": "vscode-byolad.chat",
+          "name": "byoLAD",
+          "type": "webview",
+          "contextualTitle": "byoLAD",
+          "icon": "media/icons8-stars-16-white.png"
         }
       ]
     },

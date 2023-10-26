@@ -9,13 +9,19 @@ import { getStartConversationCommand } from "./commands/getStartConversationComm
 import { getClearConversationsCommand } from "./commands/getClearConversationsCommand";
 import { getDiffLatestCodeBlockCommand } from "./commands/getDiffLatestCodeBlockCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
-import { HelloWorldPanel } from "./panels/HelloWorldPanel";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
+import { ChatViewProvider } from "./providers/ChatViewProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
   const conversationManager = new ConversationManager(context);
+  const webviewProvider = new ChatViewProvider(context.extensionUri);
+
+  const chatViewDisposable = vscode.window.registerWebviewViewProvider(
+    ChatViewProvider.viewType,
+    webviewProvider,
+  );
 
   const startConversationCommand = getStartConversationCommand(
     settingsProvider,
@@ -39,19 +45,12 @@ export function activate(context: vscode.ExtensionContext) {
     settingsProvider,
     conversationManager,
   );
+  const openSettingsCommand = getOpenSettingsCommand();
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
   const reviewCodeTextDocumentContentProvider =
     getReviewCodeTextDocumentContentProvider();
-  const openSettingsCommand = getOpenSettingsCommand();
-
-  const showHelloWorldCommand = vscode.commands.registerCommand(
-    "hello-world.showHelloWorld",
-    () => {
-      HelloWorldPanel.render(context.extensionUri);
-    },
-  );
 
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
@@ -61,10 +60,10 @@ export function activate(context: vscode.ExtensionContext) {
     explainCodeCommand,
     sendMessageCommand,
     diffLatestCodeBlockCommand,
+    openSettingsCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
-    openSettingsCommand,
-    showHelloWorldCommand,
+    chatViewDisposable,
   );
 }
 

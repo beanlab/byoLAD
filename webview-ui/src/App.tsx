@@ -9,6 +9,21 @@ import {
   RefreshChatMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
+import { IconCommentLine } from "@instructure/ui-icons";
+import { IconUserLine } from "@instructure/ui-icons";
+
+class SendIcon extends React.Component {
+  render() {
+    return <IconCommentLine color="primary-inverse" title="Send" />;
+  }
+}
+class UserIcon extends React.Component {
+  render() {
+    return (
+      <IconUserLine color="primary-inverse" height="12vmin" title="User" />
+    );
+  }
+}
 
 enum MessageType {
   User,

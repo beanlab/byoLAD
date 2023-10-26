@@ -11,7 +11,7 @@ import { getDiffCodeBlockCommand } from "./commands/getDiffCodBlockCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
-import { getRefreshChatViewCommand } from "./commands/getUpdateChatViewCommand";
+import { getRefreshChatViewCommand } from "./commands/getRefreshChatViewCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");

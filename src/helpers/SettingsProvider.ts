@@ -17,12 +17,12 @@ export class SettingsProvider {
     this._chatModel = injectChatModel(
       this.getProvider(),
       this.getModel(),
-      this.getAPIKey()
+      this.getAPIKey(),
     );
     this._chatModel = injectChatModel(
       this.getProvider(),
       this.getModel(),
-      this.getAPIKey()
+      this.getAPIKey(),
     );
   }
 
@@ -35,16 +35,16 @@ export class SettingsProvider {
     this._chatModel = injectChatModel(
       this.getProvider(),
       this.getModel(),
-      this.getAPIKey()
+      this.getAPIKey(),
     );
   }
 
-  getReviewFileCodePrompt(): string {
-    return this._config.get("reviewFileCodePrompt") as string;
+  getReviewCodePrompt(): string {
+    return this._config.get("reviewCodePrompt") as string;
   }
 
-  getReviewSelectedCodePrompt(): string {
-    return this._config.get("reviewSelectedCodePrompt") as string;
+  getExplainCodePrompt(): string {
+    return this._config.get("explainCodePrompt") as string;
   }
 
   getAPIKey(): string {
@@ -72,7 +72,7 @@ export class SettingsProvider {
    */
   getDiffViewPosition(): ApplyChangesPosition {
     let position = this._config.get(
-      "applySuggestions.diffViewPosition"
+      "applySuggestions.diffViewPosition",
     ) as ApplyChangesPosition;
     if (position === ApplyChangesPosition.UseMergeConflictSetting) {
       const mergeConflictDiffViewPosition = vscode.workspace
@@ -85,7 +85,7 @@ export class SettingsProvider {
         position = mergeConflictDiffViewPosition as ApplyChangesPosition;
       } else {
         vscode.window.showErrorMessage(
-          MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE
+          MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE,
         );
         const defaultPosition = ApplyChangesPosition.Below;
         position = defaultPosition;

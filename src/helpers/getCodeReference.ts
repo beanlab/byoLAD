@@ -3,7 +3,7 @@ import { CodeBlock } from "../ChatModel/ChatModel";
 
 /**
  * Gets the code block that the user has selected in the active editor.
- * If nothing is selected, the whole document is selected.
+ * If nothing is selected, the whole document is used.
  *
  * @param activeEditor
  * @returns

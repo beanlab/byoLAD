@@ -25,8 +25,7 @@ export const getReviewCodeCommand = (
 
       const textBlock = {
         type: "text",
-        content:
-          "Please review this code, fixing any bugs, adding any code comments as needed, improving naming decisions, etc.", // TODO: Get this from settings, change default to not provide the overall formatting instructions
+        content: settingsProvider.getReviewCodePrompt(),
       } as TextBlock;
 
       const codeReference = getCodeReference(activeEditor);

@@ -18,8 +18,7 @@ export const getExplainCodeCommand = (
 
     const textBlock = {
       type: "text",
-      content:
-        "Please explain the following code to me. Tell it to me in a way that I can easily understand without using too many words. You may explain it piece by piece with appropriate code references if that's useful.", // TODO: Get this from settings, change default to not provide the overall formatting instructions
+      content: settingsProvider.getExplainCodePrompt(),
     } as TextBlock;
 
     const codeReference = getCodeReference(activeEditor);

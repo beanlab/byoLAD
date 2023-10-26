@@ -2,18 +2,31 @@ import "./App.css";
 import byo_LAD from "./circle_byo_LAD.png";
 import { useState } from "react";
 import React from "react";
-import {
-  ExplainCodeRequest,
-  ExtensionToWebviewMessage,
-  RefreshChatRequest,
-  ReviewCodeRequest,
-} from "./utilities/WebviewExtensionMessages";
 import { vscode } from "./utilities/vscode";
 import { VSCodeButton, VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react";
+import { Conversation } from "./utilities/ChatModel";
+import {
+  ExtensionToWebviewMessage,
+  RefreshChatMessageParams,
+} from "./utilities/ExtensionToWebviewMessage";
 
 enum MessageType {
   User,
   AI,
+}
+
+class ExtensionMessenger {
+  reviewCode() {
+    vscode.postMessage({
+      messageType: "reviewCode",
+    });
+  }
+
+  explainCode() {
+    vscode.postMessage({
+      messageType: "explainCode",
+    });
+  }
 }
 
 class Message {
@@ -58,23 +71,7 @@ function App() {
   const [messageNumber, setMessageNumber] = useState(0);
   const [includeCode] = useState(true);
 
-  window.addEventListener("message", (event) => {
-    switch ((event.data as ExtensionToWebviewMessage).command) {
-      case "refreshChat": {
-        const request = event.data as RefreshChatRequest;
-        console.log("refreshChat", request); // TODO: Do something with this though
-        const conversation = request.conversation;
-        const lastMessage =
-          conversation.messages[conversation.messages.length - 1];
-        newAIMessage(history, messageNumber, JSON.stringify(lastMessage));
-        break;
-      }
-      default:
-        // TODO: How to handle?
-        console.log("Unknown command. Event received: ", event);
-        break;
-    }
-  });
+  const extensionMessenger = new ExtensionMessenger();
 
   const change = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newval = event.target.value;
@@ -132,24 +129,31 @@ function App() {
     setMessageNumber(nextHistory.length);
   }
 
-  function reviewCode() {
-    // TODO: There is a better way to send different types of messages. This is just a placeholder.
-    vscode.postMessage({
-      command: "reviewCode",
-    } as ReviewCodeRequest);
-  }
-
-  function explainCode() {
-    // TODO: There is a better way to send different types of messages. This is just a placeholder.
-    vscode.postMessage({
-      command: "explainCode",
-    } as ExplainCodeRequest);
-  }
-
   const messages = history.map((message, position) => {
     console.log(position);
     const retVal = createChatText(message.message, message.type);
     return retVal;
+  });
+
+  /**
+   * Handle messages sent from the extension to the webview
+   */
+  window.addEventListener("message", (event) => {
+    const message = event.data as ExtensionToWebviewMessage;
+    switch (message.messageType) {
+      case "refreshChat": {
+        const params = message.params as RefreshChatMessageParams;
+        const conversation = params.activeConversation as Conversation;
+        console.log(conversation);
+        // TODO: Handle refresh request (which contains the contents of the active conversation, including any messages that have just been received)
+        // Display the new messages from the model or completely change the chat history in line with the provided active conversation
+        break;
+      }
+      default:
+        // TODO: How to handle?
+        console.log("Unknown event 'message' received: ", event);
+        break;
+    }
   });
 
   return (
@@ -165,10 +169,14 @@ function App() {
             generating new code. The best is to ask the AI to explain, review,
             or generate code.
           </p>
-          <VSCodeButton onClick={reviewCode}>Review Code</VSCodeButton>
+          <VSCodeButton onClick={extensionMessenger.reviewCode}>
+            Review Code
+          </VSCodeButton>
           <br />
           {/* TODO: Use React or vscode-webview-ui-toolkit stuff (or CSS I guess) to format this */}
-          <VSCodeButton onClick={explainCode}>Explain Code</VSCodeButton>
+          <VSCodeButton onClick={extensionMessenger.explainCode}>
+            Explain Code
+          </VSCodeButton>
           <div className="chat-wrap">
             <div className="chat-wrap2">{messages}</div>
           </div>

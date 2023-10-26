@@ -1,8 +1,4 @@
 import * as vscode from "vscode";
-import {
-  SendMessageRequest,
-  WebviewToExtensionMessage,
-} from "./WebviewExtensionMessage";
 
 export class ChatViewMessageListener {
   constructor() {}
@@ -10,10 +6,10 @@ export class ChatViewMessageListener {
   /**
    * Handles messages sent from the webview view context
    *
-   * @param message The message sent from the webview view context. Its type and contents must be coordinated with the webview view context.
+   * @param message The message sent from the webview view context. Its parameters must be coordinated with the webview view context.
    */
-  public static receive(message: unknown) {
-    switch ((message as WebviewToExtensionMessage).command) {
+  public static handleMessage(message: WebviewToExtensionMessage) {
+    switch (message.messageType) {
       case "newConversation":
         vscode.commands.executeCommand("vscode-byolad.newConversation");
         break;
@@ -27,11 +23,11 @@ export class ChatViewMessageListener {
         vscode.commands.executeCommand("vscode-byolad.explainCode");
         break;
       case "sendMessage": {
-        const sendMessageRequest = message as SendMessageRequest;
+        const params = message.params as SendMessageParams;
         vscode.commands.executeCommand(
           "vscode-byolad.sendMessage",
-          sendMessageRequest.userInput,
-          sendMessageRequest.useCodeReference,
+          params.userInput,
+          params.useCodeReference,
         );
         break;
       }
@@ -41,9 +37,21 @@ export class ChatViewMessageListener {
       default:
         // TODO: How to handle?
         vscode.window.showErrorMessage(
-          `Unknown command. Message received: ${message}`,
+          `Unknown message type received from webview: ${message.messageType}`,
         );
         break;
     }
   }
+}
+
+interface WebviewToExtensionMessage {
+  messageType: string;
+  params: WebviewToExtensionMessageParams;
+}
+
+interface WebviewToExtensionMessageParams {}
+
+interface SendMessageParams extends WebviewToExtensionMessageParams {
+  userInput: string;
+  useCodeReference: boolean;
 }

@@ -3,7 +3,6 @@ import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageListener } from "./ChatViewMessageListener";
 import { Conversation } from "../ChatModel/ChatModel";
-import { RefreshChatRequest } from "./WebviewExtensionMessage";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -52,17 +51,19 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
   }
 
   /**
-   * Refreshes the webview view
+   * Sends a message to the webview view context to refresh the chat with the active conversation
    */
-  public refresh(conversation: Conversation) {
+  public refresh(activeConversation: Conversation) {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;
     }
     this._webviewView.webview.postMessage({
-      command: "refreshChat",
-      conversation: conversation,
-    } as RefreshChatRequest);
+      messageType: "refreshChat",
+      params: {
+        activeConversation: activeConversation,
+      },
+    });
   }
 
   /**
@@ -123,7 +124,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
     webviewView.webview.onDidReceiveMessage((message) =>
-      ChatViewMessageListener.receive(message),
+      ChatViewMessageListener.handleMessage(message),
     );
   }
 }

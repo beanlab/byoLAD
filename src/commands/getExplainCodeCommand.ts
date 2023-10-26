@@ -2,12 +2,12 @@ import * as vscode from "vscode";
 import { TextBlock } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/conversationManager";
 import { getCodeReference } from "../helpers/getCodeReference";
-import { sendMessage } from "../helpers/sendMessage";
+import { sendChatMessage } from "../helpers/sendChatMessage";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 
 export const getExplainCodeCommand = (
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager
+  conversationManager: ConversationManager,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.explainCode", async () => {
     const activeEditor = vscode.window.activeTextEditor;
@@ -24,10 +24,10 @@ export const getExplainCodeCommand = (
 
     const codeReference = getCodeReference(activeEditor);
 
-    await sendMessage(
+    await sendChatMessage(
       textBlock,
       codeReference,
       settingsProvider,
-      conversationManager
+      conversationManager,
     );
   });

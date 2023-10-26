@@ -3,8 +3,8 @@ import byo_LAD from "./circle_byo_LAD.png";
 import { useState } from "react";
 import React from "react";
 import { vscode } from "./utilities/vscode";
-import { VSCodeButton, VSCodeCheckbox } from "@vscode/webview-ui-toolkit/react";
-import { Conversation } from "./utilities/ChatModel";
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { CodeBlock, Conversation } from "./utilities/ChatModel";
 import {
   ExtensionToWebviewMessage,
   RefreshChatMessageParams,
@@ -15,6 +15,9 @@ enum MessageType {
   AI,
 }
 
+/**
+ * Sends messages to the extension context.
+ */
 class ExtensionMessenger {
   reviewCode() {
     vscode.postMessage({
@@ -25,6 +28,41 @@ class ExtensionMessenger {
   explainCode() {
     vscode.postMessage({
       messageType: "explainCode",
+    });
+  }
+
+  sendChatMessage(userInput: string, useCodeReference: boolean) {
+    vscode.postMessage({
+      messageType: "sendChatMessage",
+      params: {
+        userInput: userInput,
+        useCodeReference: useCodeReference,
+      },
+    });
+  }
+
+  diffClodeBlock() {
+    const demoCodeBlock = {
+      content:
+        "TODO: his is just a demo code block and is otherwise useless. This will actually need to use the code block the user has selected.",
+    } as CodeBlock;
+    vscode.postMessage({
+      messageType: "diffCodeBlock",
+      params: {
+        codeBlock: demoCodeBlock,
+      },
+    });
+  }
+
+  deleteAllConversations() {
+    vscode.postMessage({
+      messageType: "deleteAllConversations",
+    });
+  }
+
+  newConversaiton() {
+    vscode.postMessage({
+      messageType: "newConversation",
     });
   }
 }
@@ -61,7 +99,7 @@ function getResponse(userPrompt: string) {
   // TODO: get message from AI
   let message = userPrompt;
   message =
-    "Welcome! byoLAD is happy to help you. Ask me anything about your code.";
+    "Welcome! byoLAD is happy to help you. Ask me anything about your code. TODO: Responses from the extension context are just being logged to the webview dev console right now.";
   return message;
 }
 
@@ -69,7 +107,6 @@ function App() {
   const [userPrompt, setUserPrompt] = useState("");
   const [history, setHistory] = useState(Array<Message>());
   const [messageNumber, setMessageNumber] = useState(0);
-  const [includeCode] = useState(true);
 
   const extensionMessenger = new ExtensionMessenger();
 
@@ -91,6 +128,8 @@ function App() {
       | React.FormEvent<HTMLFormElement>
       | React.KeyboardEvent<HTMLInputElement>,
   ) {
+    extensionMessenger.sendChatMessage(userPrompt, true); // TODO: identify if they want to use the selected code/whole file as a code reference to the model
+
     e.preventDefault();
     const nextHistory = [
       ...history.slice(0, messageNumber),
@@ -143,10 +182,11 @@ function App() {
     switch (message.messageType) {
       case "refreshChat": {
         const params = message.params as RefreshChatMessageParams;
-        const conversation = params.activeConversation as Conversation;
-        console.log(conversation);
+        const conversation = params.activeConversation as Conversation | null;
+        console.log("Active Conversation: ", conversation);
         // TODO: Handle refresh request (which contains the contents of the active conversation, including any messages that have just been received)
         // Display the new messages from the model or completely change the chat history in line with the provided active conversation
+        // How should we display there being no active conversation? Should that even be an option or should there always have to be something?
         break;
       }
       default:
@@ -169,14 +209,31 @@ function App() {
             generating new code. The best is to ask the AI to explain, review,
             or generate code.
           </p>
-          <VSCodeButton onClick={extensionMessenger.reviewCode}>
-            Review Code
-          </VSCodeButton>
-          <br />
-          {/* TODO: Use React or vscode-webview-ui-toolkit stuff (or CSS I guess) to format this */}
-          <VSCodeButton onClick={extensionMessenger.explainCode}>
-            Explain Code
-          </VSCodeButton>
+          <div>
+            {/*
+              TODO: This is just showing how it all connects. The way to call the extenionMessenger will obviously be different for some of these buttons.
+              TODO: Use React or vscode-webview-ui-toolkit stuff (or CSS I guess) to format this
+            */}
+            <VSCodeButton onClick={extensionMessenger.reviewCode}>
+              Review Code
+            </VSCodeButton>
+            <br />
+            <VSCodeButton onClick={extensionMessenger.explainCode}>
+              Explain Code
+            </VSCodeButton>
+            <br />
+            <VSCodeButton onClick={extensionMessenger.newConversaiton}>
+              New Conversation
+            </VSCodeButton>
+            <br />
+            <VSCodeButton onClick={extensionMessenger.deleteAllConversations}>
+              Delete All Conversations
+            </VSCodeButton>
+            <br />
+            <VSCodeButton onClick={extensionMessenger.diffClodeBlock}>
+              Diff Code Block
+            </VSCodeButton>
+          </div>
           <div className="chat-wrap">
             <div className="chat-wrap2">{messages}</div>
           </div>
@@ -185,11 +242,7 @@ function App() {
 
       <footer className="App-footer">
         <div className="chat-box">
-          <VSCodeCheckbox checked={includeCode} value={includeCode.toString()}>
-            Include Code Reference
-          </VSCodeCheckbox>
           <form className="chat-bar" name="chatbox">
-            {/* TODO: There's a better way for the user to include their selected code or the document or not use it as additional context. */}
             <input
               onChange={change}
               value={userPrompt}

@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { TextBlock } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/conversationManager";
-import { sendMessage } from "../helpers/sendMessage";
+import { sendChatMessage } from "../helpers/sendChatMessage";
 import { getCodeReference } from "../helpers/getCodeReference";
 
 /**
@@ -31,7 +31,7 @@ export const getReviewCodeCommand = (
 
       const codeReference = getCodeReference(activeEditor);
 
-      await sendMessage(
+      await sendChatMessage(
         textBlock,
         codeReference,
         settingsProvider,

@@ -110,8 +110,8 @@
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.clearConversations",
-        "title": "byoLAD — Clear Conversations",
+        "command": "vscode-byolad.deleteAllConversations",
+        "title": "byoLAD — Delete All Conversations",
         "category": "byoLAD"
       },
       {
@@ -126,16 +126,6 @@
       {
         "command": "vscode-byolad.explainCode",
         "title": "byoLAD — Explain Code",
-        "category": "byoLAD"
-      },
-      {
-        "command": "vscode-byolad.sendMessage",
-        "title": "byoLAD — Send Message",
-        "category": "byoLAD"
-      },
-      {
-        "command": "vscode-byolad.diffLatestCodeBlock",
-        "title": "byoLAD — Diff Latest Code Block",
         "category": "byoLAD"
       },
       {
@@ -159,11 +149,7 @@
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.clearConversations"
-        },
-        {
-          "command": "vscode-byolad.diffLatestCodeBlock",
-          "when": "!editorReadonly && !isInDiffEditor"
+          "command": "vscode-byolad.deleteAllConversations"
         }
       ],
       "editor/context": [

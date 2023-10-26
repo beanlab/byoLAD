@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
-import { ChatViewMessageListener } from "./ChatViewMessageListener";
+import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
 import { Conversation } from "../ChatModel/ChatModel";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
@@ -10,7 +10,7 @@ import { Conversation } from "../ChatModel/ChatModel";
 // Also takes inspiration from the vscode-webview-ui-toolkit-samples > frameworks > hello-world-react-vite
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/frameworks/hello-world-react-vite/src/panels/HelloWorldPanel.ts
 
-export class ChatViewProvider implements vscode.WebviewViewProvider {
+export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
 
@@ -52,8 +52,10 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
 
   /**
    * Sends a message to the webview view context to refresh the chat with the active conversation
+   *
+   * @param activeConversation The active conversation. Null if there is no active conversation.
    */
-  public refresh(activeConversation: Conversation) {
+  public refresh(activeConversation: Conversation | null) {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;
@@ -124,7 +126,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
     webviewView.webview.onDidReceiveMessage((message) =>
-      ChatViewMessageListener.handleMessage(message),
+      ChatViewMessageHandler.handleMessage(message),
     );
   }
 }

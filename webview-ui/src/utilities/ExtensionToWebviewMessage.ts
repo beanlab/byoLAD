@@ -8,5 +8,5 @@ export interface ExtensionToWebviewMessage {
 export interface ExtensionToWebviewMessageParams {}
 
 export interface RefreshChatMessageParams {
-  activeConversation: Conversation;
+  activeConversation?: Conversation;
 }

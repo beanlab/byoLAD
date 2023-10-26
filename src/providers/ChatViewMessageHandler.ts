@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
+import { CodeBlock } from "../ChatModel/ChatModel";
 
-export class ChatViewMessageListener {
+export class ChatViewMessageHandler {
   constructor() {}
 
   /**
@@ -13,8 +14,8 @@ export class ChatViewMessageListener {
       case "newConversation":
         vscode.commands.executeCommand("vscode-byolad.newConversation");
         break;
-      case "clearConversations":
-        vscode.commands.executeCommand("vscode-byolad.clearConversations");
+      case "deleteAllConversations":
+        vscode.commands.executeCommand("vscode-byolad.deleteAllConversations");
         break;
       case "reviewCode":
         vscode.commands.executeCommand("vscode-byolad.reviewCode");
@@ -22,18 +23,23 @@ export class ChatViewMessageListener {
       case "explainCode":
         vscode.commands.executeCommand("vscode-byolad.explainCode");
         break;
-      case "sendMessage": {
-        const params = message.params as SendMessageParams;
+      case "sendChatMessage": {
+        const params = message.params as SendChatMessageMessageParams;
         vscode.commands.executeCommand(
-          "vscode-byolad.sendMessage",
+          "vscode-byolad.sendChatMessage",
           params.userInput,
           params.useCodeReference,
         );
         break;
       }
-      case "diffLatestCodeBlock":
-        vscode.commands.executeCommand("vscode-byolad.diffLatestCodeBlock");
+      case "diffCodeBlock": {
+        const params = message.params as DiffCodeBlockParams;
+        vscode.commands.executeCommand(
+          "vscode-byolad.diffCodeBlock",
+          params.codeBlock,
+        );
         break;
+      }
       default:
         // TODO: How to handle?
         vscode.window.showErrorMessage(
@@ -51,7 +57,11 @@ interface WebviewToExtensionMessage {
 
 interface WebviewToExtensionMessageParams {}
 
-interface SendMessageParams extends WebviewToExtensionMessageParams {
+interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
   userInput: string;
   useCodeReference: boolean;
+}
+
+interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
+  codeBlock: CodeBlock;
 }

@@ -11,7 +11,7 @@ import { ConversationManager } from "../Conversation/conversationManager";
 import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
 
-export async function sendMessage(
+export async function sendChatMessage(
   messageText: TextBlock,
   codeReference: CodeBlock | null,
   settingsProvider: SettingsProvider,

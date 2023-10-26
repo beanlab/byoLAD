@@ -3,15 +3,15 @@ import { CodeBlock, TextBlock } from "../ChatModel/ChatModel";
 
 import { ConversationManager } from "../Conversation/conversationManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { sendMessage } from "../helpers/sendMessage";
+import { sendChatMessage } from "../helpers/sendChatMessage";
 import { getCodeReference } from "../helpers/getCodeReference";
 
-export const getSendMessageCommand = (
+export const getSendChatMessageCommand = (
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    "vscode-byolad.sendMessage",
+    "vscode-byolad.sendChatMessage",
     async (userInput: string, useCodeReference: boolean) => {
       let codeReference: CodeBlock | null = null;
       if (useCodeReference) {
@@ -27,7 +27,7 @@ export const getSendMessageCommand = (
         content: userInput,
       } as TextBlock;
 
-      await sendMessage(
+      await sendChatMessage(
         messageTextBlock,
         codeReference,
         settingsProvider,

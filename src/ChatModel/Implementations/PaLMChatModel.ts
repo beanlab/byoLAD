@@ -37,22 +37,21 @@ export class PaLMChatModel implements ChatModel {
         prompt: this.convertToPaLMPrompt(request.conversation),
       })
       .then((response) => {
-        const palmResponse = this.convertToPaLMResponse(response);
-        if (palmResponse.candidates && palmResponse.candidates.length > 0) {
+        const candidates = response[0] as PalMMessage[];
+        const filters = response[1] as PaLMContentFilter[];
+        if (candidates && candidates.length > 0) {
           return {
             success: true,
             message: {
               role: ChatRole.Assistant,
-              content: stringToMessageBlocks(
-                palmResponse.candidates[0].content,
-              ),
+              content: stringToMessageBlocks(candidates[0].content),
             },
           };
         } else {
-          if (palmResponse.filters && palmResponse.filters.length > 0) {
+          if (filters && filters.length > 0) {
             return {
               success: false,
-              errorMessage: this.getFilterErrorMessage(palmResponse.filters),
+              errorMessage: this.getFilterErrorMessage(filters),
               finish_reason: ChatMessageFinishReason.ContentFilter,
             };
           } else {
@@ -163,19 +162,6 @@ export class PaLMChatModel implements ChatModel {
     );
   }
 
-  /**
-   * Converts the response object from the PaLM API to a PaLMResponse object (a format we can better work with).
-   *
-   * @param response The response object from the PaLM API call
-   * @returns PaLMResponse object
-   */
-  convertToPaLMResponse(response: any): PaLMResponse {
-    return {
-      candidates: response[0].candidates as PalMMessage[],
-      filters: response[0].filters as PaLMContentFilter[],
-    };
-  }
-
   getFormattedExamples(): PaLMExample[] {
     const inputContent: MessageBlock[] = [
       {
@@ -223,11 +209,6 @@ interface PaLMPrompt {
 interface PalMMessage {
   author?: ChatRole;
   content: string;
-}
-
-interface PaLMResponse {
-  candidates: PalMMessage[];
-  filters: PaLMContentFilter[];
 }
 
 interface PaLMContentFilter {

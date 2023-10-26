@@ -108,9 +108,6 @@ function getMessageBlocksHtml(messageBlock: MessageBlock[]): string {
         if (codeBlock.languageId) {
           html += `<p>Language: ${codeBlock.languageId}</p>`;
         }
-        if (codeBlock.linesInUserSourceFile) {
-          html += `<p>Lines ${codeBlock.linesInUserSourceFile.start} - ${codeBlock.linesInUserSourceFile.end}</p>`;
-        }
         html += `<pre>${block.content}</pre>`;
         break;
       }

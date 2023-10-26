@@ -4,32 +4,35 @@ import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
 import { ConversationManager } from "./Conversation/conversationManager";
-import { getSendMessageCommand } from "./commands/getSendMessageCommand";
+import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
 import { getNewConversationCommand } from "./commands/getNewConversationCommand";
-import { getClearConversationsCommand } from "./commands/getClearConversationsCommand";
-import { getDiffLatestCodeBlockCommand } from "./commands/getDiffLatestCodeBlockCommand";
+import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConversationsCommand";
+import { getDiffCodeBlockCommand } from "./commands/getDiffCodBlockCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
-import { ChatViewProvider } from "./providers/ChatViewProvider";
+import { ChatWebviewProvider } from "./providers/ChatViewProvider";
 import { getRefreshChatViewCommand } from "./commands/getUpdateChatViewCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
   const conversationManager = new ConversationManager(context);
-  const webviewProvider = new ChatViewProvider(context.extensionUri);
+  const chatWebviewProvider = new ChatWebviewProvider(context.extensionUri);
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
-    ChatViewProvider.viewType,
-    webviewProvider,
+    ChatWebviewProvider.viewType,
+    chatWebviewProvider,
   );
 
   const newConversationCommand = getNewConversationCommand(
     settingsProvider,
     conversationManager,
+    chatWebviewProvider,
   );
-  const clearConversationsCommand =
-    getClearConversationsCommand(conversationManager);
+  const deleteAllConversationsCommand = getDeleteAllConversationsCommand(
+    conversationManager,
+    chatWebviewProvider,
+  );
   const reviewFileCodeCommand = getReviewCodeCommand(
     settingsProvider,
     conversationManager,
@@ -38,16 +41,16 @@ export function activate(context: vscode.ExtensionContext) {
     settingsProvider,
     conversationManager,
   );
-  const sendMessageCommand = getSendMessageCommand(
+  const sendChatMessageCommand = getSendChatMessageCommand(
     settingsProvider,
     conversationManager,
   );
-  const diffLatestCodeBlockCommand = getDiffLatestCodeBlockCommand(
+  const diffCodeBlockCommand = getDiffCodeBlockCommand(
     settingsProvider,
     conversationManager,
   );
   const refreshChatViewCommand = getRefreshChatViewCommand(
-    webviewProvider,
+    chatWebviewProvider,
     conversationManager,
   );
   const openSettingsCommand = getOpenSettingsCommand();
@@ -60,11 +63,11 @@ export function activate(context: vscode.ExtensionContext) {
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
     newConversationCommand,
-    clearConversationsCommand,
+    deleteAllConversationsCommand,
     reviewFileCodeCommand,
     explainCodeCommand,
-    sendMessageCommand,
-    diffLatestCodeBlockCommand,
+    sendChatMessageCommand,
+    diffCodeBlockCommand,
     refreshChatViewCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,

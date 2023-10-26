@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
-import { ChatViewProvider } from "../providers/ChatViewProvider";
+import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { ConversationManager } from "../Conversation/conversationManager";
 
 export const getRefreshChatViewCommand = (
-  provider: ChatViewProvider,
+  provider: ChatWebviewProvider,
   conversationManager: ConversationManager,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.refreshChatView", () => {

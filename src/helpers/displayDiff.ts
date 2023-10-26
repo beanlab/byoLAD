@@ -22,12 +22,12 @@ import { SettingsProvider } from "./SettingsProvider";
 export async function displayDiff(
   newDocText: string | undefined,
   activeEditor: vscode.TextEditor,
-  settingsProvider: SettingsProvider
+  settingsProvider: SettingsProvider,
 ) {
   const activeDoc = activeEditor.document;
   const originalDocPath = activeDoc.uri.path;
   const originalFileName = originalDocPath.substring(
-    originalDocPath.lastIndexOf("/") + 1
+    originalDocPath.lastIndexOf("/") + 1,
   );
   const applySuggestionsMode = settingsProvider.getApplySuggestionsMode();
   if (
@@ -41,7 +41,7 @@ export async function displayDiff(
   const virtualComparisonDoc = await getVirtualComparisonDoc(
     newDocText,
     activeDoc,
-    applySuggestionsMode
+    applySuggestionsMode,
   );
 
   if (applySuggestionsMode == ApplySuggestionsMode.Auto) {
@@ -67,7 +67,7 @@ export async function displayDiff(
     virtualComparisonDoc.uri,
     activeDoc.uri,
     title,
-    opts
+    opts,
   );
 }
 
@@ -85,7 +85,7 @@ export async function displayDiff(
 async function getVirtualComparisonDoc(
   newDocText: string | undefined,
   activeDoc: vscode.TextDocument,
-  applySuggestionsMode: ApplySuggestionsMode
+  applySuggestionsMode: ApplySuggestionsMode,
 ) {
   if (applySuggestionsMode == ApplySuggestionsMode.Manual) {
     return await createVirtualDoc(newDocText, activeDoc.fileName);
@@ -104,7 +104,7 @@ async function getVirtualComparisonDoc(
  */
 function getDiffTitle(
   originalFileName: string,
-  applySuggestionsMode: ApplySuggestionsMode
+  applySuggestionsMode: ApplySuggestionsMode,
 ) {
   if (applySuggestionsMode == ApplySuggestionsMode.Manual) {
     return originalFileName + DIFF_VIEW_TITLE_SUFFIX_MANUAL_MODE;
@@ -124,10 +124,10 @@ function getDiffTitle(
  */
 async function createVirtualDoc(
   textContent: string | undefined,
-  originalDocFileName: string
+  originalDocFileName: string,
 ) {
   const uri = vscode.Uri.parse(
-    TextProviderScheme.AiCodeReview + ":" + originalDocFileName
+    TextProviderScheme.AiCodeReview + ":" + originalDocFileName,
   );
   const virtualDoc = await vscode.workspace.openTextDocument(uri); // calls back into the custom TextDocumentContentProvider for the scheme
   const edit = new vscode.WorkspaceEdit();
@@ -135,9 +135,9 @@ async function createVirtualDoc(
     uri,
     new vscode.Range(
       new vscode.Position(0, 0),
-      virtualDoc.lineAt(virtualDoc.lineCount - 1).range.end
+      virtualDoc.lineAt(virtualDoc.lineCount - 1).range.end,
     ),
-    textContent ?? ""
+    textContent ?? "",
   );
   await vscode.workspace.applyEdit(edit);
   return virtualDoc;
@@ -151,16 +151,16 @@ async function createVirtualDoc(
  */
 async function applySuggestions(
   activeDoc: vscode.TextDocument,
-  newDocText: string | undefined
+  newDocText: string | undefined,
 ) {
   const edit = new vscode.WorkspaceEdit();
   edit.replace(
     activeDoc.uri,
     new vscode.Range(
       new vscode.Position(0, 0),
-      activeDoc.lineAt(activeDoc.lineCount - 1).range.end
+      activeDoc.lineAt(activeDoc.lineCount - 1).range.end,
     ),
-    newDocText ?? ""
+    newDocText ?? "",
   );
   await vscode.workspace.applyEdit(edit);
 }

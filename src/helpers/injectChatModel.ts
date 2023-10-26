@@ -21,7 +21,7 @@ import { ChatModel } from "../ChatModel/ChatModel";
 export const injectChatModel = (
   provider?: LLMProvider,
   model?: string,
-  apiKey?: string
+  apiKey?: string,
 ): ChatModel => {
   switch (provider) {
     case LLMProvider.OpenAI:
@@ -39,7 +39,7 @@ const injectUnsetChatModel = (message: string): UnsetChatModel => {
 
 const injectGPTChatModel = (
   model?: string,
-  apiKey?: string
+  apiKey?: string,
 ): GPTChatModel | UnsetChatModel => {
   if (!model || model === "")
     return injectUnsetChatModel(MODEL_NOT_SET_ERROR_MESSAGE);
@@ -51,7 +51,7 @@ const injectGPTChatModel = (
 
 const injectPaLMChatModel = (
   model?: string,
-  apiKey?: string
+  apiKey?: string,
 ): PaLMChatModel | UnsetChatModel => {
   if (!model || model === "")
     return injectUnsetChatModel(MODEL_NOT_SET_ERROR_MESSAGE);

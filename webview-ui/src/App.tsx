@@ -44,7 +44,7 @@ function createChatText(message: string, type: MessageType) {
   if (type === MessageType.User) {
     return (
       <div key={message} className="chat-text">
-        {/* <UserIcon /> */}
+        <UserIcon />
         <div className="chat-text2">{message}</div>
       </div>
     );
@@ -218,7 +218,7 @@ function App() {
                 newUserMessage(e);
               }}
             >
-              {/* <MyIcon /> */}
+              <SendIcon />
             </button>
           </form>
         </div>

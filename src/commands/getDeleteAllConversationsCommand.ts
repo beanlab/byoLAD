@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ConversationManager } from "../Conversation/conversationManager";
+import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 export const getDeleteAllConversationsCommand = (
@@ -10,7 +10,6 @@ export const getDeleteAllConversationsCommand = (
     "vscode-byolad.deleteAllConversations",
     () => {
       conversationManager.clearAllConversations();
-      vscode.window.showInformationMessage("Cleared all conversations"); // TODO: Delete
       chatWebviewProvider.refresh(null);
     },
   );

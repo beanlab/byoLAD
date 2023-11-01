@@ -7,9 +7,9 @@ import {
   TextBlock,
 } from "../ChatModel/ChatModel";
 import { Conversation } from "../ChatModel/ChatModel";
-import { ConversationManager } from "../Conversation/conversationManager";
 import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
+import { ConversationManager } from "../Conversation/ConversationManager";
 
 export async function sendChatMessage(
   messageText: TextBlock,

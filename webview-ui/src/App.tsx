@@ -41,21 +41,16 @@ class Message {
 }
 
 function createChatText(message: string, type: MessageType) {
-  if (type === MessageType.User) {
-    return (
-      <div key={message} className="chat-text">
+  return (
+    <div key={message} className="chat-text">
+      {type === MessageType.User ? (
         <UserIcon />
-        <div className="chat-text2">{message}</div>
-      </div>
-    );
-  } else {
-    return (
-      <div key={message} className="chat-text">
+      ) : (
         <img className="byoLAD" src={byo_LAD} alt="byoLAD" />
-        <div className="chat-text2">{message}</div>
-      </div>
-    );
-  }
+      )}
+      <div className="chat-text2">{message}</div>
+    </div>
+  );
 }
 
 function getResponse(userPrompt: string) {

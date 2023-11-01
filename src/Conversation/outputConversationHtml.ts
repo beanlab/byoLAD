@@ -5,18 +5,12 @@ import {
   CodeBlock,
   MessageBlock,
 } from "../ChatModel/ChatModel";
-import { ConversationManager } from "./conversationManager";
 import { Conversation } from "../ChatModel/ChatModel";
+import { ConversationManager } from "./ConversationManager";
 
 export function outputConversationHtml(
   conversationManager: ConversationManager,
 ) {
-  // <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';"> -->
-  // <!--
-  //     <link href="${styleResetUri}" rel="stylesheet">
-  //     <link href="${styleVSCodeUri}" rel="stylesheet">
-  //     <link href="${styleMainUri}" rel="stylesheet"> -->
-  //     <!-- <script nonce="${nonce}" src="${scriptUri}"></script> -->
   const activeConversationId = conversationManager.activeConversationId;
   if (!activeConversationId) {
     vscode.window.showErrorMessage("No active conversation");

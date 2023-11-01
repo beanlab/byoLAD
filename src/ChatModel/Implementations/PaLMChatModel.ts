@@ -17,6 +17,34 @@ import {
   stringToMessageBlocks,
 } from "../../Conversation/messageBlockHelpers";
 import { Conversation } from "../ChatModel";
+import { getExampleMessages } from "../../Conversation/getExampleMessages";
+
+interface PaLMPrompt {
+  context?: string;
+  examples?: PaLMExample[];
+  messages: PalMMessage[];
+}
+
+interface PalMMessage {
+  author?: ChatRole;
+  content: string;
+}
+
+interface PaLMContentFilter {
+  reason: PaLMContentBlockedReason;
+  message?: string;
+}
+
+interface PaLMExample {
+  input: PalMMessage;
+  output: PalMMessage;
+}
+
+enum PaLMContentBlockedReason {
+  BLOCKED_REASON_UNSPECIFIED = "Blocked reason unspecified",
+  SAFETY = "Safety",
+  OTHER = "Other",
+}
 
 export class PaLMChatModel implements ChatModel {
   private client: DiscussServiceClient;
@@ -33,7 +61,6 @@ export class PaLMChatModel implements ChatModel {
     return await this.client
       .generateMessage({
         model: this.model,
-        temperature: 0.5,
         prompt: this.convertToPaLMPrompt(request.conversation),
       })
       .then((response) => {
@@ -48,7 +75,7 @@ export class PaLMChatModel implements ChatModel {
             },
           };
         } else {
-          if (filters && filters.length > 0) {
+          if (filters.length > 0) {
             return {
               success: false,
               errorMessage: this.getFilterErrorMessage(filters),
@@ -91,13 +118,13 @@ export class PaLMChatModel implements ChatModel {
    * @returns One error message string.
    */
   getFilterErrorMessage(filters: PaLMContentFilter[]): string {
-    let filterErrorMessage = "Failed Request (content filtered): "; // TODO: Const/func/enum/something?
+    let filterErrorMessage = "Failed Request (content filtered): ";
     let filterMessage = "";
     for (const filter of filters) {
       filterMessage = filter.message ? filter.message : "no details";
       filterErrorMessage += `${filter.reason}: ${filterMessage}\n`;
       if (filter.reason == PaLMContentBlockedReason.OTHER && !filter.message) {
-        filterErrorMessage += "- try shorter input"; // TODO: Const/func/enum/something? TODO: What is the problem with large input??
+        filterErrorMessage += "- try shorter input";
       }
     }
     return filterErrorMessage;
@@ -112,17 +139,9 @@ export class PaLMChatModel implements ChatModel {
    * @returns Array of PaLM messages
    */
   convertToPaLMMessages(chatMessages: ChatMessage[]): PalMMessage[] {
-    // Add a message from the assistant to the beginning of the conversation
-    const assistantMessage: ChatMessage = {
-      role: ChatRole.Assistant,
-      content: [
-        {
-          type: "text",
-          content: "Hi, I'm your coding assistant. How can I help you today?",
-        } as TextBlock,
-      ],
-    };
-    chatMessages.splice(0, 0, assistantMessage);
+    // Add messages to the beginning of the conversation history to provide examples/set the stage
+    const introMessages: ChatMessage[] = getExampleMessages();
+    chatMessages.splice(0, 0, ...introMessages);
 
     // Convert system messages to user messages so that PaLM can handle it (only supports two authors)
     const messagesWithAcceptedAuthorship: ChatMessage[] = [];
@@ -198,31 +217,4 @@ export class PaLMChatModel implements ChatModel {
       } as PaLMExample,
     ];
   }
-}
-
-interface PaLMPrompt {
-  context?: string;
-  examples?: PaLMExample[];
-  messages: PalMMessage[];
-}
-
-interface PalMMessage {
-  author?: ChatRole;
-  content: string;
-}
-
-interface PaLMContentFilter {
-  reason: PaLMContentBlockedReason;
-  message?: string;
-}
-
-interface PaLMExample {
-  input: PalMMessage;
-  output: PalMMessage;
-}
-
-enum PaLMContentBlockedReason {
-  BLOCKED_REASON_UNSPECIFIED = "Blocked reason unspecified",
-  SAFETY = "Safety",
-  OTHER = "Other",
 }

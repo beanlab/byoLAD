@@ -24,6 +24,12 @@ export const MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE =
   "Error with byoLAD extension setting applySuggestions.diffViewPosition: Could not get merge-conflict.diffViewPosition setting or it doesn't match any of the available options (likely due to a breaking change in that extension). Using the default byoLAD setting.";
 export const NO_CODE_TO_REVIEW_ERROR_MESSAGE = "No code to review";
 
+// ConversationManager Keys
+export const CONVERSATIONS_KEY = "conversations";
+export const CONVERSATION_IDS_KEY = "conversationIds";
+export const ACTIVE_CONVERSATION_ID_KEY = "activeConversationId";
+export const NEXT_ID_KEY = "nextId";
+
 // Settings/configuration error messages
 export const MODEL_NOT_SET_ERROR_MESSAGE =
   "Model not set. Please set a model for the byoLAD extension.";

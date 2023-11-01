@@ -1,10 +1,9 @@
 import { Conversation } from "../ChatModel/ChatModel";
 import { ExtensionContext } from "vscode";
 import { ChatMessage } from "../ChatModel/ChatModel";
-import { CONTEXT_INSTRUCTION } from "../commands/constants";
+import * as constants from "../commands/constants";
 
 export class ConversationManager {
-  // TODO: Use constants where needed
   private readonly context: ExtensionContext;
 
   constructor(context: ExtensionContext) {
@@ -13,7 +12,9 @@ export class ConversationManager {
 
   get conversations(): Conversation[] {
     return (
-      this.context.workspaceState.get<Conversation[]>("conversations") || []
+      this.context.workspaceState.get<Conversation[]>(
+        constants.CONVERSATIONS_KEY,
+      ) || []
     );
   }
 
@@ -22,23 +23,29 @@ export class ConversationManager {
     if (new Set(ids).size !== ids.length) {
       throw new Error("Duplicate ids");
     }
-    this.context.workspaceState.update("conversations", value);
+    this.context.workspaceState.update(constants.CONVERSATIONS_KEY, value);
   }
 
   get conversationIds(): number[] {
-    return this.context.workspaceState.get<number[]>("conversationIds") || [];
+    return (
+      this.context.workspaceState.get<number[]>(
+        constants.CONVERSATION_IDS_KEY,
+      ) || []
+    );
   }
 
   set conversationIds(value: number[]) {
     if (new Set(value).size !== value.length) {
       throw new Error("Duplicate ids");
     }
-    this.context.workspaceState.update("conversationIds", value);
+    this.context.workspaceState.update(constants.CONVERSATION_IDS_KEY, value);
   }
 
   get activeConversationId(): number | null {
     return (
-      this.context.workspaceState.get<number>("activeConversationId") || null
+      this.context.workspaceState.get<number>(
+        constants.ACTIVE_CONVERSATION_ID_KEY,
+      ) || null
     );
   }
 
@@ -46,7 +53,18 @@ export class ConversationManager {
     if (value && !this.conversationIds.includes(value)) {
       throw new Error("Conversation ID does not exist");
     }
-    this.context.workspaceState.update("activeConversationId", value);
+    this.context.workspaceState.update(
+      constants.ACTIVE_CONVERSATION_ID_KEY,
+      value,
+    );
+  }
+
+  get nextId(): number {
+    return this.context.workspaceState.get<number>(constants.NEXT_ID_KEY) || 1;
+  }
+
+  set nextId(value: number) {
+    this.context.workspaceState.update(constants.NEXT_ID_KEY, value);
   }
 
   getConversation(id: number): Conversation | undefined {
@@ -86,7 +104,8 @@ export class ConversationManager {
    */
   startConversation(name: string, messages?: ChatMessage[]): Conversation {
     const conversation = this.createConversation(name, messages);
-    this.conversations = [...this.conversations, conversation];
+    // this.conversations = [...this.conversations, conversation];
+    this.conversations.push(conversation);
     try {
       if (!this.conversationIds.includes(conversation.id)) {
         this.conversationIds = [...this.conversationIds, conversation.id];
@@ -116,17 +135,13 @@ export class ConversationManager {
     name: string,
     messages?: ChatMessage[],
   ): Conversation {
-    let newId: number;
-    if (this.conversationIds.length > 0) {
-      newId = Math.max(...this.conversationIds) + 1;
-    } else {
-      newId = 1;
-    }
+    const newId = this.nextId;
+    this.nextId = newId + 1;
     const conversation: Conversation = {
       id: newId,
       name,
       messages: messages ?? [],
-      contextInstruction: CONTEXT_INSTRUCTION,
+      contextInstruction: constants.CONTEXT_INSTRUCTION,
     };
     return conversation;
   }

@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import {
   ChatModel,
@@ -89,10 +88,6 @@ export class GPTChatModel implements ChatModel {
         content: messageBlocksToString(message.content),
       });
     }
-
-    vscode.window
-      .createOutputChannel("vscode-byolad: Request Content")
-      .append(JSON.stringify(gptMessages)); // TODO: DELETE ME
 
     return gptMessages;
   }

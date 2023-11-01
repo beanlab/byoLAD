@@ -1,4 +1,4 @@
-export enum CompletionProviderType {
+export enum LLMProvider {
   OpenAI = "OpenAI",
   Google = "Google",
 }

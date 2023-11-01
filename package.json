@@ -41,32 +41,32 @@
             "Google"
           ],
           "default": "OpenAI",
-          "markdownDescription": "You are billed by the provider according to their API usage policies.",
+          "markdownDescription": "**Required**\n\nYou are billed by the provider according to their API usage policies.",
           "order": 0
         },
         "vscode-byolad.model": {
           "type": "string",
           "default": "",
-          "markdownDescription": "For OpenAI, format your input like 'gpt-4-32k' or 'gpt-3.5-turbo'. See all available models [here](https://platform.openai.com/docs/models/).\n\nFor Google, format your input like 'text-bison-001' or 'chat-bison-001'. See all available models [here](https://developers.generativeai.google/models/language).",
+          "markdownDescription": "**Required**\n\nFor OpenAI, format your input like 'gpt-4-32k' or 'gpt-3.5-turbo'. See all available models [here](https://platform.openai.com/docs/models/).\n\nFor Google, format your input like 'text-bison-001' or 'chat-bison-001'. See all available models [here](https://developers.generativeai.google/models/language).",
           "order": 1
         },
         "vscode-byolad.APIKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Get an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
+          "markdownDescription": "**Required**\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
           "order": 2
         },
-        "vscode-byolad.reviewFileCodePrompt": {
+        "vscode-byolad.reviewCodePrompt": {
           "type": "string",
-          "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
-          "description": "The prompt to use when reviewing a file",
+          "default": "Review the provided code. Return code that reflects the following improvements:\n- fix bugs\n- improve code quality, best practices, readability\n- improve performance\n- provide code comments as necessary\n- add missing documentation",
+          "description": "The prompt to use to review code.",
           "editPresentation": "multilineText",
           "order": 3
         },
-        "vscode-byolad.reviewSelectedCodePrompt": {
+        "vscode-byolad.explainCodePrompt": {
           "type": "string",
-          "default": "You are acting as GitHub Copilot. Return only code. Review the code and fix any bugs, then return the code.",
-          "description": "The prompt to use when reviewing selected code",
+          "default": "Explain the following code to me in a way that I can easily understand without using too many words. You may explain it piece by piece with appropriate code references if that's useful.",
+          "description": "The prompt to use to explain code.",
           "editPresentation": "multilineText",
           "order": 4
         },
@@ -105,12 +105,18 @@
     },
     "commands": [
       {
-        "command": "hello-world.showHelloWorld",
-        "title": "Hello World (React + Vite): Show"
+        "command": "vscode-byolad.newConversation",
+        "title": "byoLAD — Start Conversation",
+        "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.reviewFileCode",
-        "title": "byoLAD — Review Code File",
+        "command": "vscode-byolad.deleteAllConversations",
+        "title": "byoLAD — Delete All Conversations",
+        "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.reviewCode",
+        "title": "byoLAD — Review Code",
         "category": "byoLAD",
         "icon": {
           "dark": "./media/icons8-stars-16-white.png",
@@ -118,31 +124,9 @@
         }
       },
       {
-        "command": "vscode-byolad.reviewSelectedCode",
-        "title": "byoLAD — Review Selected Code",
-        "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
-      },
-      {
-        "command": "vscode-byolad.reviewFileCodeCustomPrompt",
-        "title": "byoLAD — Review Code File (Custom Prompt)",
-        "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
-      },
-      {
-        "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
-        "title": "byoLAD — Review Selected Code (Custom Prompt)",
-        "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
+        "command": "vscode-byolad.explainCode",
+        "title": "byoLAD — Explain Code",
+        "category": "byoLAD"
       },
       {
         "command": "vscode-byolad.openSettingsCommand",
@@ -153,54 +137,63 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "vscode-byolad.reviewFileCode",
+          "command": "vscode-byolad.reviewCode",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.reviewSelectedCode",
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections"
-        },
-        {
-          "command": "vscode-byolad.reviewFileCodeCustomPrompt",
+          "command": "vscode-byolad.explainCode",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor"
+          "command": "vscode-byolad.newConversation",
+          "when": "!editorReadonly && !isInDiffEditor"
+        },
+        {
+          "command": "vscode-byolad.deleteAllConversations"
         }
       ],
       "editor/context": [
         {
-          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewFileCode",
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.newConversation",
           "group": "1_modification"
         },
         {
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
-          "command": "vscode-byolad.reviewSelectedCode",
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.reviewCode",
           "group": "1_modification"
         },
         {
-          "when": "!editorHasSelection && editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewFileCodeCustomPrompt",
-          "group": "1_modification"
-        },
-        {
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor && !editorHasMultipleSelections",
-          "command": "vscode-byolad.reviewSelectedCodeCustomPrompt",
+          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.explainCode",
           "group": "1_modification"
         }
       ],
       "editor/title": [
         {
-          "when": "!editorHasSelection && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewFileCode",
+          "when": "!editorReadonly && !isInDiffEditor",
+          "command": "vscode-byolad.reviewCode",
           "group": "navigation@1"
-        },
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
         {
-          "when": "editorHasSelection && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewSelectedCode",
-          "group": "navigation@1"
+          "id": "byoLAD",
+          "title": "byoLAD",
+          "icon": "media/icons8-stars-16-white.png"
+        }
+      ]
+    },
+    "views": {
+      "byoLAD": [
+        {
+          "id": "vscode-byolad.chat",
+          "name": "byoLAD",
+          "type": "webview",
+          "contextualTitle": "byoLAD",
+          "icon": "media/icons8-stars-16-white.png"
         }
       ]
     },

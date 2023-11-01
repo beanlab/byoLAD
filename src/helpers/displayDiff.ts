@@ -19,7 +19,7 @@ import { SettingsProvider } from "./SettingsProvider";
  * @param activeEditor The active editor.
  * @param settingsProvider The extension settings provider.
  */
-export async function presentReviewResult(
+export async function displayDiff(
   newDocText: string | undefined,
   activeEditor: vscode.TextEditor,
   settingsProvider: SettingsProvider,

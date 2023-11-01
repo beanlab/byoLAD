@@ -6,7 +6,7 @@ import {
   MessageBlock,
 } from "../ChatModel/ChatModel";
 import { Conversation } from "../ChatModel/ChatModel";
-import { ConversationManager } from "./temp";
+import { ConversationManager } from "./ConversationManager";
 
 export function outputConversationHtml(
   conversationManager: ConversationManager,

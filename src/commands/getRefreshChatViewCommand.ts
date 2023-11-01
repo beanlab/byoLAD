@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { ConversationManager } from "../Conversation/temp";
+import { ConversationManager } from "../Conversation/ConversationManager";
 
 export const getRefreshChatViewCommand = (
   provider: ChatWebviewProvider,

@@ -4,7 +4,7 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { TextBlock } from "../ChatModel/ChatModel";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { getCodeReference } from "../helpers/getCodeReference";
-import { ConversationManager } from "../Conversation/temp";
+import { ConversationManager } from "../Conversation/ConversationManager";
 
 /**
  * Queries the model for a reviewed, edited version of the current file contents.

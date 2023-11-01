@@ -3,7 +3,7 @@ import { getReviewCodeCommand } from "./commands/getReviewCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
-import { ConversationManager } from "./Conversation/temp";
+import { ConversationManager } from "./Conversation/ConversationManager";
 import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
 import { getNewConversationCommand } from "./commands/getNewConversationCommand";
 import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConversationsCommand";

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { TextBlock } from "../ChatModel/ChatModel";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ConversationManager } from "../Conversation/temp";
 import { getCodeReference } from "../helpers/getCodeReference";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { SettingsProvider } from "../helpers/SettingsProvider";

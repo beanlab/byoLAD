@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 import { CodeBlock } from "../ChatModel/ChatModel";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ConversationManager } from "../Conversation/temp";
 import {
   getDocumentTextAfterSelection,
   getDocumentTextBeforeSelection,

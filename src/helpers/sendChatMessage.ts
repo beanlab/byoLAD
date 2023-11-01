@@ -9,7 +9,7 @@ import {
 import { Conversation } from "../ChatModel/ChatModel";
 import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ConversationManager } from "../Conversation/temp";
 
 export async function sendChatMessage(
   messageText: TextBlock,

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ConversationManager } from "../Conversation/temp";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 

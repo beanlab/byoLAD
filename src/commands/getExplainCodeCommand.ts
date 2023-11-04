@@ -16,6 +16,11 @@ export const getExplainCodeCommand = (
       return;
     }
 
+    // This causes the sidebar of our extension to open with the new conversation started
+    // TODO: create a new conversation and refresh the view
+    // TODO: make it open the byoLAD view even if already open
+    vscode.commands.executeCommand('workbench.view.byoLAD');
+
     const textBlock = {
       type: "text",
       content: settingsProvider.getExplainCodePrompt(),

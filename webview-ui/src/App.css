@@ -11,7 +11,8 @@ main {
 }
 
 .App-logo {
-  height: 15vmin;
+  padding-top: 5vmin;
+  height: 10vmin;
   pointer-events: none;
   border-radius: 50%;
 }
@@ -25,7 +26,7 @@ main {
 }
 
 .App-header {
-  min-height: 20vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,6 +61,7 @@ main {
   outline: none;
   padding: 5px 20px;
   font-size: 16px;
+  color: #AAAAAA;
   /* color: #EFEFEF; */
 }
 
@@ -96,23 +98,24 @@ main {
 
 .chat-text {
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
   align-items: left;
   justify-content: left;
   /* padding: 10px; */
-  padding-left: 8%;
+  /* padding-left: 8%;
   padding-bottom: 5%;
-  padding-top: 3%;
-  border-bottom: 1px solid #717171;
+  padding-top: 3%; */
+  /* border-bottom: 1px solid #717171; */
 }
 
 .chat-text2 {
   padding-left: 5%;
   padding-top: 10%;
+  text-align: left;
 }
 
 .byoLAD {
-  height: 8vmin;
+  height: 7vmin;
   border-radius: 50%;
 }
 

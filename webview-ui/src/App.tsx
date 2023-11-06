@@ -9,49 +9,9 @@ import {
   RefreshChatMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
-import { IconCommentLine } from "@instructure/ui-icons";
-import { IconUserLine } from "@instructure/ui-icons";
-
-class SendIcon extends React.Component {
-  render() {
-    return <IconCommentLine color="primary-inverse" title="Send" />;
-  }
-}
-class UserIcon extends React.Component {
-  render() {
-    return (
-      <IconUserLine color="primary-inverse" height="12vmin" title="User" />
-    );
-  }
-}
-
-enum MessageType {
-  User,
-  AI,
-}
-
-class Message {
-  message: string;
-  type: MessageType;
-
-  constructor(message: string, type: MessageType) {
-    this.message = message;
-    this.type = type;
-  }
-}
-
-function createChatText(message: string, type: MessageType) {
-  return (
-    <div key={message} className="chat-text">
-      {type === MessageType.User ? (
-        <UserIcon />
-      ) : (
-        <img className="byoLAD" src={byo_LAD} alt="byoLAD" />
-      )}
-      <div className="chat-text2">{message}</div>
-    </div>
-  );
-}
+import { SendIcon } from "./components/SendIcon";
+import { MessageType, Message } from "./types";
+import { ChatMessage } from "./components/ChatMessage";
 
 function getResponse(userPrompt: string) {
   // TODO: get message from AI
@@ -68,7 +28,7 @@ function App() {
 
   const extensionMessenger = new ExtensionMessenger();
 
-  const change = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newval = event.target.value;
     setUserPrompt(newval);
   };
@@ -80,18 +40,25 @@ function App() {
     completedAIMessage(prevHistory, curmessageNumber, message);
   }
 
-  function newUserMessage(
+  const handleSubmit = (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.FormEvent<HTMLFormElement>
       | React.KeyboardEvent<HTMLInputElement>,
-  ) {
+  ) => {
+    e.preventDefault();
+    newUserMessage();
+  };
+
+  function newUserMessage() {
     extensionMessenger.sendChatMessage(userPrompt, true); // TODO: identify if they want to use the selected code/whole file as a code reference to the model
 
-    e.preventDefault();
     const nextHistory = [
       ...history.slice(0, messageNumber),
-      new Message(userPrompt, MessageType.User),
+      {
+        message: userPrompt,
+        type: MessageType.User,
+      },
     ];
     setHistory(nextHistory);
     setMessageNumber(nextHistory.length);
@@ -108,7 +75,10 @@ function App() {
     // console.log(history);
     const nextHistory = [
       ...prevHistory.slice(0, curmessageNumber),
-      new Message(message, MessageType.AI),
+      {
+        message: message,
+        type: MessageType.AI,
+      },
     ];
     setHistory(nextHistory);
   }
@@ -120,7 +90,10 @@ function App() {
   ) {
     const nextHistory = [
       ...prevHistory.slice(0, curmessageNumber),
-      new Message(message, MessageType.AI),
+      {
+        message: message,
+        type: MessageType.AI,
+      },
     ];
     setHistory(nextHistory);
     setMessageNumber(nextHistory.length);
@@ -128,7 +101,7 @@ function App() {
 
   const messages = history.map((message, position) => {
     console.log(position);
-    const retVal = createChatText(message.message, message.type);
+    const retVal = <ChatMessage chatMessage={message} />;
     return retVal;
   });
 
@@ -202,7 +175,7 @@ function App() {
         <div className="chat-box">
           <form className="chat-bar" name="chatbox">
             <input
-              onChange={change}
+              onChange={handleInputOnChange}
               value={userPrompt}
               type="text"
               placeholder="Ask a question to the AI"
@@ -210,7 +183,7 @@ function App() {
             <button
               type="submit"
               onClick={(e) => {
-                newUserMessage(e);
+                handleSubmit(e);
               }}
             >
               <SendIcon />

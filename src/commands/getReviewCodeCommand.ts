@@ -35,6 +35,7 @@ export const getReviewCodeCommand = (
         codeReference,
         settingsProvider,
         conversationManager,
+        null,
       );
     },
   );

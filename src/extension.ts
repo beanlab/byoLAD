@@ -17,7 +17,10 @@ export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
   const conversationManager = new ConversationManager(context);
-  const chatWebviewProvider = new ChatWebviewProvider(context.extensionUri);
+  const chatWebviewProvider = new ChatWebviewProvider(
+    context.extensionUri,
+    conversationManager,
+  );
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
     ChatWebviewProvider.viewType,
@@ -44,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
   const sendChatMessageCommand = getSendChatMessageCommand(
     settingsProvider,
     conversationManager,
+    chatWebviewProvider,
   );
   const diffCodeBlockCommand = getDiffCodeBlockCommand(
     settingsProvider,

@@ -28,5 +28,6 @@ export const getExplainCodeCommand = (
       codeReference,
       settingsProvider,
       conversationManager,
+      null,
     );
   });

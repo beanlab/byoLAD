@@ -46,9 +46,15 @@ export class ExtensionMessenger {
     });
   }
 
-  newConversaiton() {
+  newConversation() {
     vscode.postMessage({
       messageType: "newConversation",
+    });
+  }
+
+  getConversations() {
+    vscode.postMessage({
+      messageType: "getConversations",
     });
   }
 }

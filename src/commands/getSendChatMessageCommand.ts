@@ -5,10 +5,12 @@ import { ConversationManager } from "../Conversation/ConversationManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { getCodeReference } from "../helpers/getCodeReference";
+import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 export const getSendChatMessageCommand = (
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
+  currentPanel: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     "vscode-byolad.sendChatMessage",
@@ -32,6 +34,7 @@ export const getSendChatMessageCommand = (
         codeReference,
         settingsProvider,
         conversationManager,
+        currentPanel,
       );
     },
   );

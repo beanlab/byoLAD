@@ -10,12 +10,14 @@ import { Conversation } from "../ChatModel/ChatModel";
 import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
 import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 export async function sendChatMessage(
   messageText: TextBlock,
   codeReference: CodeBlock | null,
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
+  currentPanel: ChatWebviewProvider | null,
 ) {
   const conversation = conversationManager.getActiveConversation();
   if (!conversation) {
@@ -50,6 +52,7 @@ export async function sendChatMessage(
           response.message,
           conversation,
           conversationManager,
+          currentPanel,
         );
       } else {
         handleErrorResponse(response);
@@ -68,13 +71,19 @@ function handleSuccessfulResponse(
   responseMessage: ChatMessage,
   conversation: Conversation,
   conversationManager: ConversationManager,
+  currentPanel: ChatWebviewProvider | null,
 ): void {
   vscode.window.showInformationMessage("Successful response!"); // TODO: DELETE ME
   conversation.messages.push(responseMessage);
   conversationManager.updateConversation(conversation);
 
+  if (!currentPanel) {
+    return;
+  }
+
+  currentPanel.updateConversation(conversationManager.conversations, null);
   outputConversationHtml(conversationManager); // TODO: Change to updating the webview instead
-  vscode.commands.executeCommand("vscode-byolad.refreshChatView"); // TODO: Use constants?
+  //vscode.commands.executeCommand("vscode-byolad.refreshChatView"); // TODO: Use constants?
 }
 
 /**

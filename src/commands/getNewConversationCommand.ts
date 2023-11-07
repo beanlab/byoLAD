@@ -13,7 +13,11 @@ export const getNewConversationCommand = (
     async () => {
       const activeConversation =
         conversationManager.startConversation("Code Chat"); // TODO: How to name?
-      chatViewProvider.refresh(activeConversation);
+      //chatViewProvider.refresh(activeConversation);
+      chatViewProvider.updateConversation(
+        conversationManager.conversations,
+        activeConversation,
+      );
     },
   );
 };

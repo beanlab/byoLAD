@@ -3,6 +3,7 @@ import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
 import { Conversation } from "../ChatModel/ChatModel";
+import { ConversationManager } from "../Conversation/ConversationManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -13,8 +14,14 @@ import { Conversation } from "../ChatModel/ChatModel";
 export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
+  private conversationManager: ConversationManager;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(
+    private readonly _extensionUri: vscode.Uri,
+    conversationManager: ConversationManager,
+  ) {
+    this.conversationManager = conversationManager;
+  }
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -63,6 +70,23 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     this._webviewView.webview.postMessage({
       messageType: "refreshChat",
       params: {
+        activeConversation: activeConversation,
+      },
+    });
+  }
+
+  public updateConversation(
+    conversations: Conversation[],
+    activeConversation: Conversation | null,
+  ) {
+    if (!this._webviewView) {
+      vscode.window.showErrorMessage("No active webview view"); // How to handle?
+      return;
+    }
+    this._webviewView.webview.postMessage({
+      messageType: "updateConversation",
+      params: {
+        conversations: conversations,
         activeConversation: activeConversation,
       },
     });
@@ -125,8 +149,9 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
    * @param webviewView
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
+    const handler = new ChatViewMessageHandler(this.conversationManager, this);
     webviewView.webview.onDidReceiveMessage((message) =>
-      ChatViewMessageHandler.handleMessage(message),
+      handler.handleMessage(message),
     );
   }
 }

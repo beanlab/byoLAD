@@ -10,3 +10,8 @@ export interface ExtensionToWebviewMessageParams {}
 export interface RefreshChatMessageParams {
   activeConversation?: Conversation;
 }
+
+export interface UpdateConversationMessageParams {
+  conversations: Conversation[];
+  activeConversation?: Conversation;
+}

@@ -53,7 +53,7 @@ main {
   padding: 10px 10px;
 }
 
-.chat-bar input{
+.chat-bar input {
   background: transparent;
   flex: 1;
   border: 0;
@@ -74,7 +74,7 @@ main {
 }
 
 ::placeholder {
-  color: #AAAAAA;
+  color: #aaaaaa;
 }
 
 .chat-wrap {
@@ -109,11 +109,6 @@ main {
 .chat-text2 {
   padding-left: 5%;
   padding-top: 10%;
-}
-
-.byoLAD {
-  height: 8vmin;
-  border-radius: 50%;
 }
 
 .App-link {

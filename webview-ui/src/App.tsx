@@ -12,17 +12,11 @@ import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { IconCommentLine } from "@instructure/ui-icons";
 import { IconUserLine } from "@instructure/ui-icons";
 
-class SendIcon extends React.Component {
-  render() {
-    return <IconCommentLine color="primary-inverse" title="Send" />;
-  }
+function SendIcon() {
+  return <IconCommentLine color="primary-inverse" title="Send" />;
 }
-class UserIcon extends React.Component {
-  render() {
-    return (
-      <IconUserLine color="primary-inverse" height="12vmin" title="User" />
-    );
-  }
+function UserIcon() {
+  return <IconUserLine color="primary-inverse" height="12vmin" title="User" />;
 }
 
 enum MessageType {
@@ -43,12 +37,13 @@ class Message {
 function createChatText(message: string, type: MessageType) {
   return (
     <div key={message} className="chat-text">
+      {" "}
       {type === MessageType.User ? (
         <UserIcon />
       ) : (
         <img className="byoLAD" src={byo_LAD} alt="byoLAD" />
-      )}
-      <div className="chat-text2">{message}</div>
+      )}{" "}
+      <div className="chat-text2">{message}</div>{" "}
     </div>
   );
 }
@@ -89,39 +84,22 @@ function App() {
     extensionMessenger.sendChatMessage(userPrompt, true); // TODO: identify if they want to use the selected code/whole file as a code reference to the model
 
     e.preventDefault();
-    const nextHistory = [
-      ...history.slice(0, messageNumber),
-      new Message(userPrompt, MessageType.User),
-    ];
+    const nextHistory = [...history.slice(0, messageNumber), new Message(userPrompt, MessageType.User)];
     setHistory(nextHistory);
     setMessageNumber(nextHistory.length);
     setUserPrompt("");
     askAI(nextHistory, nextHistory.length);
   }
 
-  function newAIMessage(
-    prevHistory: Message[],
-    curmessageNumber: number,
-    message: string,
-  ) {
+  function newAIMessage(prevHistory: Message[], curmessageNumber: number, message: string) {
     // console.log(messageNumber);
     // console.log(history);
-    const nextHistory = [
-      ...prevHistory.slice(0, curmessageNumber),
-      new Message(message, MessageType.AI),
-    ];
+    const nextHistory = [...prevHistory.slice(0, curmessageNumber), new Message(message, MessageType.AI)];
     setHistory(nextHistory);
   }
 
-  function completedAIMessage(
-    prevHistory: Message[],
-    curmessageNumber: number,
-    message: string,
-  ) {
-    const nextHistory = [
-      ...prevHistory.slice(0, curmessageNumber),
-      new Message(message, MessageType.AI),
-    ];
+  function completedAIMessage(prevHistory: Message[], curmessageNumber: number, message: string) {
+    const nextHistory = [...prevHistory.slice(0, curmessageNumber), new Message(message, MessageType.AI)];
     setHistory(nextHistory);
     setMessageNumber(nextHistory.length);
   }

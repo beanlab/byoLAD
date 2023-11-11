@@ -32,6 +32,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [
         vscode.Uri.joinPath(this._extensionUri, "out"),
         vscode.Uri.joinPath(this._extensionUri, "webview-ui/build"),
+        vscode.Uri.joinPath(this._extensionUri, "media"),
       ],
     };
 
@@ -98,6 +99,10 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       "index.js",
     ]);
 
+    // The image file from the React build output
+    const onDiskPath = vscode.Uri.joinPath(this._extensionUri, "media", "circle_byolad.png");
+    const imageUri = webview.asWebviewUri(onDiskPath as vscode.Uri);
+
     const nonce = getNonce();
 
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
@@ -107,11 +112,12 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
           <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
             <link rel="stylesheet" type="text/css" href="${stylesUri}">
             <title>Hello World</title>
           </head>
           <body>
+          <img src="${imageUri}" width="50%"/>
             <div id="root"></div>
             <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
           </body>

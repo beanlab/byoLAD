@@ -1,5 +1,5 @@
 import "./App.css";
-import byo_LAD from "./circle_byo_LAD.png";
+import byo_LAD from "../../media/circle_byolad.png";
 import { useState } from "react";
 import React from "react";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
@@ -156,16 +156,12 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={byo_LAD} className="App-logo" alt="logo" />
-      </header>
       <div className="App-body">
         <div className="App-body1">
           <p>
             Here you can chat with the AI about your code. You can ask whatever
             you want, but the best is to ask question about your code or
-            generating new code. The best is to ask the AI to explain, review,
-            or generate code.
+            generating new code.
           </p>
           <div>
             {/*

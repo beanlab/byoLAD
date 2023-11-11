@@ -54,7 +54,7 @@ main {
   padding: 10px 10px;
 }
 
-.chat-bar input{
+.chat-bar input {
   background: transparent;
   flex: 1;
   border: 0;
@@ -76,7 +76,7 @@ main {
 }
 
 ::placeholder {
-  color: #AAAAAA;
+  color: #aaaaaa;
 }
 
 .chat-wrap {

@@ -100,7 +100,11 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     ]);
 
     // The image file from the React build output
-    const onDiskPath = vscode.Uri.joinPath(this._extensionUri, "media", "circle_byolad.png");
+    const onDiskPath = vscode.Uri.joinPath(
+      this._extensionUri,
+      "media",
+      "circle_byolad.png",
+    );
     const imageUri = webview.asWebviewUri(onDiskPath as vscode.Uri);
 
     const nonce = getNonce();

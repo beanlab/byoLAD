@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TextBlock } from "../ChatModel/ChatModel";
+import { ChatRole, TextBlock } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { getCodeReference } from "../helpers/getCodeReference";
 import { sendChatMessage } from "../helpers/sendChatMessage";
@@ -23,11 +23,10 @@ export const getExplainCodeCommand = (
 
     const codeReference = getCodeReference(activeEditor);
 
-    await sendChatMessage(
-      textBlock,
-      codeReference,
-      settingsProvider,
-      conversationManager,
-      null,
-    );
+    const message = {
+      role: ChatRole.User,
+      content: codeReference ? [textBlock, codeReference] : [textBlock],
+    };
+
+    await sendChatMessage(message, settingsProvider, conversationManager, null);
   });

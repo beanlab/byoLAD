@@ -1,7 +1,8 @@
 import "./App.css";
 import { useState } from "react";
-import { Conversation } from "./utilities/ChatModel";
+import { ChatRole, Conversation, MessageBlock } from "./utilities/ChatModel";
 import {
+  AddCodeBlockMessageParams,
   ExtensionToWebviewMessage,
   RefreshChatMessageParams,
   UpdateConversationMessageParams,
@@ -27,7 +28,6 @@ function App() {
    */
   window.addEventListener("message", (event) => {
     const message = event.data as ExtensionToWebviewMessage;
-    console.log(message);
     switch (message.messageType) {
       case "refreshChat": {
         const params = message.params as RefreshChatMessageParams;
@@ -52,6 +52,48 @@ function App() {
           if (newActiveChat) {
             setActiveChat(newActiveChat);
           }
+        }
+        break;
+      }
+      case "addCodeBlock": {
+        const params = message.params as AddCodeBlockMessageParams;
+        const codeBlock = params.codeBlock;
+        if (activeChat && codeBlock) {
+          const newActiveChat = { ...activeChat };
+          let lastMessage;
+
+          if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
+            newActiveChat.messages = [];
+            const newMessage = {
+              role: ChatRole.User,
+              content: [] as MessageBlock[],
+            };
+            newActiveChat.messages.push(newMessage);
+            lastMessage = newMessage;
+          } else {
+            lastMessage =
+              newActiveChat.messages[newActiveChat.messages.length - 1];
+          }
+
+          if (lastMessage.role === ChatRole.User) {
+            lastMessage.content.push(codeBlock);
+          } else {
+            const newMessage = {
+              role: ChatRole.User,
+              content: [codeBlock as MessageBlock],
+            };
+            newActiveChat.messages.push(newMessage);
+          }
+
+          setActiveChat(newActiveChat);
+          const newChatList = chatList.map((conversation) => {
+            if (conversation.id === newActiveChat.id) {
+              return newActiveChat;
+            } else {
+              return conversation;
+            }
+          });
+          setChatList(newChatList);
         }
         break;
       }

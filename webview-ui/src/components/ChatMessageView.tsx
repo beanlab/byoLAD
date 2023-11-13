@@ -17,9 +17,9 @@ export const ChatMessageView = ({
         <img className="byoLAD" src={byo_LAD} alt="byoLAD" />
       )}
       <div className="chat-text2">
-        {content.map((curr) => (
-          <div>{curr.content}</div>
-        ))}
+        {content.map((curr) => {
+          return <div>{curr.content}</div>;
+        })}
       </div>
     </div>
   );

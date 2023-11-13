@@ -1,5 +1,5 @@
 import { vscode } from "./vscode";
-import { CodeBlock } from "./ChatModel";
+import { ChatMessage, CodeBlock } from "./ChatModel";
 
 /**
  * Sends messages to the extension context.
@@ -17,7 +17,7 @@ export class ExtensionMessenger {
     });
   }
 
-  sendChatMessage(userInput: string, useCodeReference: boolean) {
+  sendChatMessage(userInput: ChatMessage, useCodeReference: boolean) {
     vscode.postMessage({
       messageType: "sendChatMessage",
       params: {
@@ -55,6 +55,12 @@ export class ExtensionMessenger {
   getConversations() {
     vscode.postMessage({
       messageType: "getConversations",
+    });
+  }
+
+  getCodeBlock() {
+    vscode.postMessage({
+      messageType: "getCodeBlock",
     });
   }
 }

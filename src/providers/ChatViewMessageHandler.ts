@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { CodeBlock } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
+import { getCodeReference } from "../helpers/getCodeReference";
 
 export class ChatViewMessageHandler {
   conversationManager: ConversationManager;
@@ -55,6 +56,15 @@ export class ChatViewMessageHandler {
           "vscode-byolad.diffCodeBlock",
           params.codeBlock,
         );
+        break;
+      }
+      case "getCodeBlock": {
+        const activeEditor = vscode.window.activeTextEditor;
+        if (activeEditor) {
+          this.chatViewProvider.addCodeBlock(
+            getCodeReference(activeEditor) as CodeBlock | null,
+          );
+        }
         break;
       }
       default:

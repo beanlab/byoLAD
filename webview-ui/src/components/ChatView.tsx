@@ -28,25 +28,52 @@ export const ChatView = ({ activeChat, setActiveChat }: ChatViewProps) => {
       | React.KeyboardEvent<HTMLInputElement>,
   ) => {
     e.preventDefault();
-    extensionMessenger.sendChatMessage(userPrompt, true); // TODO: identify if they want to use the selected code/whole file as a code reference to the model
-    const newUserMessage = {
-      content: [
-        {
+    const newActiveChat = { ...activeChat };
+    if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
+      newActiveChat.messages = [];
+      const newUserMessage = {
+        content: [
+          {
+            type: "text",
+            content: userPrompt,
+          } as TextBlock,
+        ],
+        role: ChatRole.User,
+      };
+      newActiveChat.messages.push(newUserMessage);
+    } else {
+      const lastMessage =
+        newActiveChat.messages[newActiveChat.messages.length - 1];
+      if (lastMessage.role === ChatRole.User) {
+        lastMessage.content.push({
           type: "text",
           content: userPrompt,
-        } as TextBlock,
-      ],
-      role: ChatRole.User,
-    };
-    const updatedChat = { ...activeChat };
-    updatedChat.messages.push(newUserMessage);
-    setActiveChat(updatedChat);
+        } as TextBlock);
+      } else {
+        const newUserMessage = {
+          content: [
+            {
+              type: "text",
+              content: userPrompt,
+            } as TextBlock,
+          ],
+          role: ChatRole.User,
+        };
+        newActiveChat.messages.push(newUserMessage);
+      }
+    }
+    setActiveChat(newActiveChat);
     setUserPrompt("");
+    extensionMessenger.sendChatMessage(
+      newActiveChat.messages[newActiveChat.messages.length - 1],
+      true,
+    );
   };
 
   return (
     <div className="App">
       <header className="App-header">
+        <button onClick={() => setActiveChat(null)}>Back</button>
         <img src={byo_LAD} className="App-logo" alt="logo" />
       </header>
       <div className="App-body">
@@ -80,6 +107,10 @@ export const ChatView = ({ activeChat, setActiveChat }: ChatViewProps) => {
             <br />
             <VSCodeButton onClick={extensionMessenger.diffClodeBlock}>
               Diff Code Block
+            </VSCodeButton>
+            <br />
+            <VSCodeButton onClick={extensionMessenger.getCodeBlock}>
+              Add Code
             </VSCodeButton>
           </div>
           <div className="chat-wrap">

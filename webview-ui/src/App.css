@@ -109,6 +109,7 @@ main {
 .message {
   padding-top: 10px;
   padding-bottom: 10px;
+  font-size: 0.9rem;
 }
 
 .role-name {

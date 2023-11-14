@@ -109,7 +109,9 @@ export const ChatView = ({ activeChat, setActiveChat }: ChatViewProps) => {
               Diff Code Block
             </VSCodeButton>
             <br />
-            <VSCodeButton onClick={extensionMessenger.getCodeBlock}>
+            <VSCodeButton
+              onClick={() => extensionMessenger.getCodeBlock(activeChat.id)}
+            >
               Add Code
             </VSCodeButton>
           </div>

@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
-import { CodeBlock, Conversation } from "../ChatModel/ChatModel";
+import { Conversation } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/ConversationManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
@@ -88,19 +88,6 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       params: {
         conversations: conversations,
         activeConversation: activeConversation,
-      },
-    });
-  }
-
-  public addCodeBlock(codeBlock: CodeBlock | null) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
-    }
-    this._webviewView.webview.postMessage({
-      messageType: "addCodeBlock",
-      params: {
-        codeBlock: codeBlock,
       },
     });
   }

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { CodeBlock } from "../ChatModel/ChatModel";
+import { ChatRole, CodeBlock, MessageBlock } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
 import { getCodeReference } from "../helpers/getCodeReference";
@@ -59,11 +59,55 @@ export class ChatViewMessageHandler {
         break;
       }
       case "getCodeBlock": {
-        const activeEditor = vscode.window.activeTextEditor;
-        if (activeEditor) {
-          this.chatViewProvider.addCodeBlock(
-            getCodeReference(activeEditor) as CodeBlock | null,
-          );
+        const params = message.params as GetCodeBlockParams;
+        const activeConversation = this.conversationManager.getConversation(
+          params.chatId,
+        );
+        if (activeConversation) {
+          const activeEditor = vscode.window.activeTextEditor;
+          if (activeEditor) {
+            const codeBlock = getCodeReference(
+              activeEditor,
+            ) as CodeBlock | null;
+            if (codeBlock) {
+              const updatedConversation = { ...activeConversation };
+              let lastMessage;
+
+              if (
+                !updatedConversation.messages ||
+                updatedConversation.messages.length === 0
+              ) {
+                updatedConversation.messages = [];
+                const newMessage = {
+                  role: ChatRole.User,
+                  content: [] as MessageBlock[],
+                };
+                updatedConversation.messages.push(newMessage);
+                lastMessage = newMessage;
+              } else {
+                lastMessage =
+                  updatedConversation.messages[
+                    updatedConversation.messages.length - 1
+                  ];
+              }
+
+              if (lastMessage.role === ChatRole.User) {
+                lastMessage.content.push(codeBlock);
+              } else {
+                const newMessage = {
+                  role: ChatRole.User,
+                  content: [codeBlock] as MessageBlock[],
+                };
+                updatedConversation.messages.push(newMessage);
+              }
+
+              this.conversationManager.updateConversation(updatedConversation);
+              this.chatViewProvider.updateConversation(
+                this.conversationManager.conversations,
+                updatedConversation,
+              );
+            }
+          }
         }
         break;
       }
@@ -91,4 +135,8 @@ interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
 
 interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
   codeBlock: CodeBlock;
+}
+
+interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
+  chatId: number;
 }

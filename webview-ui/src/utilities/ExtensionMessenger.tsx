@@ -58,9 +58,12 @@ export class ExtensionMessenger {
     });
   }
 
-  getCodeBlock() {
+  getCodeBlock(chatId: number) {
     vscode.postMessage({
       messageType: "getCodeBlock",
+      params: {
+        chatId: chatId,
+      },
     });
   }
 }

@@ -24,6 +24,7 @@ export const getSendChatMessageCommand = (
       }
 
       const messageTextBlock = {
+        type: "text",
         content: userInput,
       } as TextBlock;
 

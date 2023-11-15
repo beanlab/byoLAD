@@ -14,36 +14,32 @@ export const Message: React.FC<MessageProps> = ({
   role,
   messageBlocks,
   extensionMessenger,
-}) => {
-  return (
-    <div>
-      <VSCodeDivider role="separator" />
-      <div className="message">
-        <MessageHeader role={role} />
-        <div className="message-block">
-          {messageBlocks.map((messageBlock) => {
-            if (messageBlock.type === "text") {
-              return (
-                <TextMessageBlock>{messageBlock.content}</TextMessageBlock>
-              );
-            } else if (messageBlock.type === "code") {
-              return (
-                <CodeMessageBlock
-                  languageId={(messageBlock as CodeBlock).languageId}
-                  extensionMessenger={extensionMessenger}
-                >
-                  {messageBlock.content}
-                </CodeMessageBlock>
-              );
-            } else {
-              throw new Error("Unknown message block type");
-            }
-          })}
-        </div>
+}) => (
+  <div>
+    <VSCodeDivider role="separator" />
+    <div className="message">
+      <MessageHeader role={role} />
+      <div className="message-block">
+        {messageBlocks.map((messageBlock) => {
+          if (messageBlock.type === "text") {
+            return <TextMessageBlock>{messageBlock.content}</TextMessageBlock>;
+          } else if (messageBlock.type === "code") {
+            return (
+              <CodeMessageBlock
+                languageId={(messageBlock as CodeBlock).languageId}
+                extensionMessenger={extensionMessenger}
+              >
+                {messageBlock.content}
+              </CodeMessageBlock>
+            );
+          } else {
+            throw new Error("Unknown message block type");
+          }
+        })}
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 interface TextMessageBlockProps {
   children: string;

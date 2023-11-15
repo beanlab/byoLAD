@@ -8,14 +8,12 @@ import {
   RefreshChatMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
-import { SendIcon } from "./components/SendIcon";
 import { ChatMessage } from "./utilities/ChatModel";
 import { Message } from "./components/Message";
 
 function App() {
   const [userPrompt, setUserPrompt] = useState("");
   const [history, setHistory] = useState(Array<ChatMessage>());
-  // const [messageNumber, setMessageNumber] = useState(0);
 
   const extensionMessenger = new ExtensionMessenger();
 
@@ -24,13 +22,11 @@ function App() {
     setUserPrompt(newval);
   };
 
-  const handleSubmit = (
-    e:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.FormEvent<HTMLFormElement>
-      | React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (userPrompt === "") {
+      return;
+    }
     newUserMessage();
   };
 
@@ -61,6 +57,7 @@ function App() {
         const params = message.params as RefreshChatMessageParams;
         const conversation = params.activeConversation as Conversation | null;
         setHistory(conversation?.messages ?? []);
+        setUserPrompt("");
         // TODO: Handle refresh request (which contains the contents of the active conversation, including any messages that have just been received)
         // Display the new messages from the model or completely change the chat history in line with the provided active conversation
         // How should we display there being no active conversation? Should that even be an option or should there always have to be something?
@@ -110,16 +107,25 @@ function App() {
 
       <footer className="App-footer">
         <div className="chat-box">
-          <form className="chat-bar" name="chatbox">
+          <form
+            className="chat-bar"
+            name="chatbox"
+            onSubmit={(e) => handleSubmit(e)}
+          >
             <input
               onChange={handleInputOnChange}
               value={userPrompt}
               type="text"
               placeholder="Ask a question to the AI"
             />
-            <button type="submit" onClick={(e) => handleSubmit(e)}>
-              <SendIcon />
-            </button>
+            <VSCodeButton
+              type="submit"
+              appearance="icon"
+              aria-label="Send message"
+              title="Send message"
+            >
+              <span className="codicon codicon-send"></span>
+            </VSCodeButton>
           </form>
         </div>
       </footer>

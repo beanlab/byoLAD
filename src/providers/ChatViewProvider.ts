@@ -27,22 +27,20 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     context: vscode.WebviewViewResolveContext,
     token: vscode.CancellationToken,
   ) {
-    // Store a reference to the webview view
     this._webviewView = webviewView;
 
-    // Allow scripts in the webview
     this._webviewView.webview.options = {
       // Enable JavaScript in the webview
       enableScripts: true,
-      // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
+      // Restrict the webview to only load resources from certain directories
       localResourceRoots: [
         vscode.Uri.joinPath(this._extensionUri, "out"),
         vscode.Uri.joinPath(this._extensionUri, "webview-ui/build"),
+        vscode.Uri.joinPath(this._extensionUri, "media"),
         vscode.Uri.joinPath(
           this._extensionUri,
           "webview-ui/node_modules/@vscode/codicons/dist",
         ),
-        vscode.Uri.joinPath(this._extensionUri, "media"),
       ],
     };
 
@@ -117,14 +115,11 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       "dist",
       "codicon.css",
     ]);
-
     // The image file from the React build output
-    const onDiskPath = vscode.Uri.joinPath(
-      this._extensionUri,
+    const imageUri = getUri(webview, extensionUri, [
       "media",
       "circle_byolad.png",
-    );
-    const imageUri = webview.asWebviewUri(onDiskPath as vscode.Uri);
+    ]);
 
     const nonce = getNonce();
 
@@ -135,7 +130,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
           <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; font-src ${webview.cspSource}; img-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
             <link rel="stylesheet" type="text/css" href="${stylesUri}">
             <link rel="stylesheet" type="text/css" href="${codiconsUri}">
           </head>

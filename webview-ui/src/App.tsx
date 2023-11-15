@@ -1,5 +1,4 @@
 import "./App.css";
-import byo_LAD from "../../media/circle_byolad.png";
 import { useState } from "react";
 import React from "react";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
@@ -13,14 +12,6 @@ import { SendIcon } from "./components/SendIcon";
 import { ChatMessage } from "./utilities/ChatModel";
 import { Message } from "./components/Message";
 
-// function getResponse(userPrompt: string) {
-//   // TODO: get message from AI
-//   let message = userPrompt;
-//   message =
-//     "Welcome! byoLAD is happy to help you. Ask me anything about your code. TODO: Responses from the extension context are just being logged to the webview dev console right now.";
-//   return message;
-// }
-
 function App() {
   const [userPrompt, setUserPrompt] = useState("");
   const [history, setHistory] = useState(Array<ChatMessage>());
@@ -32,13 +23,6 @@ function App() {
     const newval = event.target.value;
     setUserPrompt(newval);
   };
-
-  // function askAI(prevHistory: ChatMessage[], curmessageNumber: number) {
-  //   let message = "Loading...";
-  //   newAIMessage(prevHistory, curmessageNumber, message);
-  //   message = getResponse(userPrompt);
-  //   completedAIMessage(prevHistory, curmessageNumber, message);
-  // }
 
   const handleSubmit = (
     e:
@@ -52,68 +36,7 @@ function App() {
 
   function newUserMessage() {
     extensionMessenger.sendChatMessage(userPrompt, true); // TODO: identify if they want to use the selected code/whole file as a code reference to the model
-    // const nextHistory = [
-    //   ...history.slice(0, messageNumber),
-    //   {
-    //     content: [
-    //       {
-    //         type: "text",
-    //         content: userPrompt,
-    //       } as TextBlock,
-    //     ],
-    //     role: ChatRole.User,
-    //   } as ChatMessage,
-    // ];
-    // setHistory(nextHistory);
-    // setMessageNumber(nextHistory.length);
-    // setUserPrompt("");
-    // askAI(nextHistory, nextHistory.length);
   }
-
-  // function newAIMessage(
-  //   prevHistory: ChatMessage[],
-  //   curmessageNumber: number,
-  //   message: string,
-  // ) {
-  //   console.log("In `newAIMessage` function"); // TODO: DELETE ME
-  //   // console.log(messageNumber);
-  //   // console.log(history);
-  //   const nextHistory = [
-  //     ...prevHistory.slice(0, curmessageNumber),
-  //     {
-  //       content: [
-  //         {
-  //           type: "text",
-  //           content: message,
-  //         } as TextBlock,
-  //       ],
-  //       role: ChatRole.Assistant,
-  //     } as ChatMessage,
-  //   ];
-  //   setHistory(nextHistory);
-  // }
-
-  // function completedAIMessage(
-  //   prevHistory: ChatMessage[],
-  //   curmessageNumber: number,
-  //   message: string,
-  // ) {
-  //   console.log("In `completedAIMessage` function"); // TODO: DELETE ME
-  //   const nextHistory = [
-  //     ...prevHistory.slice(0, curmessageNumber),
-  //     {
-  //       content: [
-  //         {
-  //           type: "text",
-  //           content: message,
-  //         } as TextBlock,
-  //       ],
-  //       role: ChatRole.Assistant,
-  //     } as ChatMessage,
-  //   ];
-  //   setHistory(nextHistory);
-  //   setMessageNumber(nextHistory.length);
-  // }
 
   const messages = history.map((message, position) => {
     console.log(position);
@@ -194,12 +117,7 @@ function App() {
               type="text"
               placeholder="Ask a question to the AI"
             />
-            <button
-              type="submit"
-              onClick={(e) => {
-                handleSubmit(e);
-              }}
-            >
+            <button type="submit" onClick={(e) => handleSubmit(e)}>
               <SendIcon />
             </button>
           </form>

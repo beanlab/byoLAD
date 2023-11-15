@@ -3,111 +3,129 @@ import byo_LAD from "../../media/circle_byolad.png";
 import { useState } from "react";
 import React from "react";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { Conversation } from "./utilities/ChatModel";
+import { ChatRole, Conversation } from "./utilities/ChatModel";
 import {
   ExtensionToWebviewMessage,
   RefreshChatMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
-import { IconCommentLine } from "@instructure/ui-icons";
-import { IconUserLine } from "@instructure/ui-icons";
+import { SendIcon } from "./components/SendIcon";
+import { ChatMessage } from "./utilities/ChatModel";
+import { Message } from "./components/Message";
 
-function SendIcon() {
-  return <IconCommentLine color="primary-inverse" title="Send" />;
-}
-function UserIcon() {
-  return <IconUserLine color="primary-inverse" height="12vmin" title="User" />;
-}
-
-enum MessageType {
-  User,
-  AI,
-}
-
-class Message {
-  message: string;
-  type: MessageType;
-
-  constructor(message: string, type: MessageType) {
-    this.message = message;
-    this.type = type;
-  }
-}
-
-function createChatText(message: string, type: MessageType) {
-  return (
-    <div key={message} className="chat-text">
-      {" "}
-      {type === MessageType.User ? (
-        <UserIcon />
-      ) : (
-        <img className="byoLAD" src={byo_LAD} alt="byoLAD" />
-      )}{" "}
-      <div className="chat-text2">{message}</div>{" "}
-    </div>
-  );
-}
-
-function getResponse(userPrompt: string) {
-  // TODO: get message from AI
-  let message = userPrompt;
-  message =
-    "Welcome! byoLAD is happy to help you. Ask me anything about your code. TODO: Responses from the extension context are just being logged to the webview dev console right now.";
-  return message;
-}
+// function getResponse(userPrompt: string) {
+//   // TODO: get message from AI
+//   let message = userPrompt;
+//   message =
+//     "Welcome! byoLAD is happy to help you. Ask me anything about your code. TODO: Responses from the extension context are just being logged to the webview dev console right now.";
+//   return message;
+// }
 
 function App() {
   const [userPrompt, setUserPrompt] = useState("");
-  const [history, setHistory] = useState(Array<Message>());
-  const [messageNumber, setMessageNumber] = useState(0);
+  const [history, setHistory] = useState(Array<ChatMessage>());
+  // const [messageNumber, setMessageNumber] = useState(0);
 
   const extensionMessenger = new ExtensionMessenger();
 
-  const change = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newval = event.target.value;
     setUserPrompt(newval);
   };
 
-  function askAI(prevHistory: Message[], curmessageNumber: number) {
-    let message = "Loading...";
-    newAIMessage(prevHistory, curmessageNumber, message);
-    message = getResponse(userPrompt);
-    completedAIMessage(prevHistory, curmessageNumber, message);
-  }
+  // function askAI(prevHistory: ChatMessage[], curmessageNumber: number) {
+  //   let message = "Loading...";
+  //   newAIMessage(prevHistory, curmessageNumber, message);
+  //   message = getResponse(userPrompt);
+  //   completedAIMessage(prevHistory, curmessageNumber, message);
+  // }
 
-  function newUserMessage(
+  const handleSubmit = (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.FormEvent<HTMLFormElement>
       | React.KeyboardEvent<HTMLInputElement>,
-  ) {
-    extensionMessenger.sendChatMessage(userPrompt, true); // TODO: identify if they want to use the selected code/whole file as a code reference to the model
-
+  ) => {
     e.preventDefault();
-    const nextHistory = [...history.slice(0, messageNumber), new Message(userPrompt, MessageType.User)];
-    setHistory(nextHistory);
-    setMessageNumber(nextHistory.length);
-    setUserPrompt("");
-    askAI(nextHistory, nextHistory.length);
+    newUserMessage();
+  };
+
+  function newUserMessage() {
+    extensionMessenger.sendChatMessage(userPrompt, true); // TODO: identify if they want to use the selected code/whole file as a code reference to the model
+    // const nextHistory = [
+    //   ...history.slice(0, messageNumber),
+    //   {
+    //     content: [
+    //       {
+    //         type: "text",
+    //         content: userPrompt,
+    //       } as TextBlock,
+    //     ],
+    //     role: ChatRole.User,
+    //   } as ChatMessage,
+    // ];
+    // setHistory(nextHistory);
+    // setMessageNumber(nextHistory.length);
+    // setUserPrompt("");
+    // askAI(nextHistory, nextHistory.length);
   }
 
-  function newAIMessage(prevHistory: Message[], curmessageNumber: number, message: string) {
-    // console.log(messageNumber);
-    // console.log(history);
-    const nextHistory = [...prevHistory.slice(0, curmessageNumber), new Message(message, MessageType.AI)];
-    setHistory(nextHistory);
-  }
+  // function newAIMessage(
+  //   prevHistory: ChatMessage[],
+  //   curmessageNumber: number,
+  //   message: string,
+  // ) {
+  //   console.log("In `newAIMessage` function"); // TODO: DELETE ME
+  //   // console.log(messageNumber);
+  //   // console.log(history);
+  //   const nextHistory = [
+  //     ...prevHistory.slice(0, curmessageNumber),
+  //     {
+  //       content: [
+  //         {
+  //           type: "text",
+  //           content: message,
+  //         } as TextBlock,
+  //       ],
+  //       role: ChatRole.Assistant,
+  //     } as ChatMessage,
+  //   ];
+  //   setHistory(nextHistory);
+  // }
 
-  function completedAIMessage(prevHistory: Message[], curmessageNumber: number, message: string) {
-    const nextHistory = [...prevHistory.slice(0, curmessageNumber), new Message(message, MessageType.AI)];
-    setHistory(nextHistory);
-    setMessageNumber(nextHistory.length);
-  }
+  // function completedAIMessage(
+  //   prevHistory: ChatMessage[],
+  //   curmessageNumber: number,
+  //   message: string,
+  // ) {
+  //   console.log("In `completedAIMessage` function"); // TODO: DELETE ME
+  //   const nextHistory = [
+  //     ...prevHistory.slice(0, curmessageNumber),
+  //     {
+  //       content: [
+  //         {
+  //           type: "text",
+  //           content: message,
+  //         } as TextBlock,
+  //       ],
+  //       role: ChatRole.Assistant,
+  //     } as ChatMessage,
+  //   ];
+  //   setHistory(nextHistory);
+  //   setMessageNumber(nextHistory.length);
+  // }
 
   const messages = history.map((message, position) => {
     console.log(position);
-    const retVal = createChatText(message.message, message.type);
-    return retVal;
+    if (message.role != ChatRole.System) {
+      return (
+        <Message
+          role={message.role}
+          messageBlocks={message.content}
+          extensionMessenger={extensionMessenger}
+        />
+      );
+    }
   });
 
   /**
@@ -119,7 +137,7 @@ function App() {
       case "refreshChat": {
         const params = message.params as RefreshChatMessageParams;
         const conversation = params.activeConversation as Conversation | null;
-        console.log("Active Conversation: ", conversation);
+        setHistory(conversation?.messages ?? []);
         // TODO: Handle refresh request (which contains the contents of the active conversation, including any messages that have just been received)
         // Display the new messages from the model or completely change the chat history in line with the provided active conversation
         // How should we display there being no active conversation? Should that even be an option or should there always have to be something?
@@ -162,13 +180,8 @@ function App() {
               Delete All Conversations
             </VSCodeButton>
             <br />
-            <VSCodeButton onClick={extensionMessenger.diffClodeBlock}>
-              Diff Code Block
-            </VSCodeButton>
           </div>
-          <div className="chat-wrap">
-            <div className="chat-wrap2">{messages}</div>
-          </div>
+          <div>{messages}</div>
         </div>
       </div>
 
@@ -176,7 +189,7 @@ function App() {
         <div className="chat-box">
           <form className="chat-bar" name="chatbox">
             <input
-              onChange={change}
+              onChange={handleInputOnChange}
               value={userPrompt}
               type="text"
               placeholder="Ask a question to the AI"
@@ -184,7 +197,7 @@ function App() {
             <button
               type="submit"
               onClick={(e) => {
-                newUserMessage(e);
+                handleSubmit(e);
               }}
             >
               <SendIcon />

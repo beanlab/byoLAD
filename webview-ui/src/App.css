@@ -108,6 +108,42 @@ main {
   /* border-bottom: 1px solid #717171; */
 }
 
+.message {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.role-name {
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+.message-block {
+  text-align: left;
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+}
+
+.code-block-container {
+  border: solid 1px;
+  border-color: var(--vscode-menu-border);
+}
+
+.code-button-container {
+  border: solid 1px;
+  border-color: var(--vscode-menu-border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
 .chat-text2 {
   padding-left: 5%;
   padding-top: 10%;

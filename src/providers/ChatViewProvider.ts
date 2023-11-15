@@ -3,6 +3,7 @@ import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
 import { Conversation } from "../ChatModel/ChatModel";
+import { SettingsProvider } from "../helpers/SettingsProvider";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -13,8 +14,13 @@ import { Conversation } from "../ChatModel/ChatModel";
 export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
+  private readonly _extensionUri: vscode.Uri;
+  private readonly _settingsProvider: SettingsProvider;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(extensionUri: vscode.Uri, settingsProvider: SettingsProvider) {
+    this._extensionUri = extensionUri;
+    this._settingsProvider = settingsProvider;
+  }
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -32,6 +38,10 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [
         vscode.Uri.joinPath(this._extensionUri, "out"),
         vscode.Uri.joinPath(this._extensionUri, "webview-ui/build"),
+        vscode.Uri.joinPath(
+          this._extensionUri,
+          "webview-ui/node_modules/@vscode/codicons/dist",
+        ),
         vscode.Uri.joinPath(this._extensionUri, "media"),
       ],
     };
@@ -98,6 +108,15 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       "assets",
       "index.js",
     ]);
+    // The VS Codicon CSS reference (as used in the CatCodicons sample @ https://github.com/microsoft/vscode-extension-samples/tree/22d5639ff5c1d88f144c057fc3d29cc9dfd99d62/webview-codicons-sample)
+    const codiconsUri = getUri(webview, extensionUri, [
+      "webview-ui",
+      "node_modules",
+      "@vscode",
+      "codicons",
+      "dist",
+      "codicon.css",
+    ]);
 
     // The image file from the React build output
     const onDiskPath = vscode.Uri.joinPath(
@@ -118,13 +137,13 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
             <link rel="stylesheet" type="text/css" href="${stylesUri}">
-            <title>Hello World</title>
+            <link rel="stylesheet" type="text/css" href="${codiconsUri}">
           </head>
           <body>
           <img src="${imageUri}" width="50%"/>
             <div id="root"></div>
             <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
-          </body>
+          </body> 
         </html>
       `;
   }
@@ -135,8 +154,11 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
    * @param webviewView
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
-    webviewView.webview.onDidReceiveMessage((message) =>
-      ChatViewMessageHandler.handleMessage(message),
-    );
+    webviewView.webview.onDidReceiveMessage(async (message) => {
+      const chatViewMessageHandler = new ChatViewMessageHandler(
+        this._settingsProvider,
+      );
+      await chatViewMessageHandler.handleMessage(message);
+    });
   }
 }

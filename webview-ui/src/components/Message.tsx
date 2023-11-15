@@ -1,10 +1,9 @@
-import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
-import Markdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { darcula } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
 import { ChatRole, CodeBlock, MessageBlock } from "../utilities/ChatModel";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { ImagePaths } from "../types";
+import { CodeMessageBlock } from "./MessageBlock";
+import { TextMessageBlock } from "./MessageBlock";
 
 interface MessageProps {
   role: ChatRole;
@@ -36,78 +35,14 @@ export const Message: React.FC<MessageProps> = ({
               </CodeMessageBlock>
             );
           } else {
-            throw new Error("Unknown message block type");
+            console.log(`Unknown message block type: ${messageBlock.type}`);
+            return <></>;
           }
         })}
       </div>
     </div>
   </div>
 );
-
-interface TextMessageBlockProps {
-  children: string;
-}
-const TextMessageBlock: React.FC<TextMessageBlockProps> = ({ children }) => {
-  return <Markdown>{children}</Markdown>;
-};
-
-interface CodeMessageBlockProps {
-  languageId: string | undefined;
-  children: string;
-  extensionMessenger: ExtensionMessenger;
-}
-const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
-  languageId,
-  children,
-  extensionMessenger,
-}) => {
-  const content: string = children;
-  const noMargin = {
-    margin: 0,
-  };
-
-  return (
-    <div className="code-block-container">
-      {languageId ? (
-        <SyntaxHighlighter
-          language={languageId}
-          style={darcula}
-          customStyle={noMargin}
-        >
-          {content}
-        </SyntaxHighlighter>
-      ) : (
-        <Markdown>{"```" + languageId + "\n" + content + "\n```"}</Markdown>
-      )}
-      <div className="code-button-container">
-        <VSCodeButton
-          appearance="icon"
-          aria-label="Copy to clipboard"
-          title="Copy to clipboard"
-          onClick={() => extensionMessenger.copyToClipboard(content)}
-        >
-          <span className="codicon codicon-copy"></span>
-        </VSCodeButton>
-        <VSCodeButton
-          appearance="icon"
-          aria-label="Insert at cursor"
-          title="Insert at cursor"
-          onClick={() => extensionMessenger.insertCodeBlock(content)}
-        >
-          <span className="codicon codicon-insert"></span>
-        </VSCodeButton>
-        <VSCodeButton
-          appearance="icon"
-          aria-label="View diff in editor"
-          title="View diff in editor"
-          onClick={() => extensionMessenger.diffClodeBlock(content)}
-        >
-          <span className="codicon codicon-diff"></span>
-        </VSCodeButton>
-      </div>
-    </div>
-  );
-};
 
 interface MessageHeaderProps {
   role: ChatRole;
@@ -137,8 +72,9 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
         </div>
       );
     case ChatRole.System:
-      throw new Error("System messages should not be displayed");
+      console.log("System messages should not be displayed");
+      return <></>;
     default:
-      return null;
+      return <></>;
   }
 };

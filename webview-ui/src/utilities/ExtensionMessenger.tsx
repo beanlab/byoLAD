@@ -64,4 +64,10 @@ export class ExtensionMessenger {
       messageType: "newConversation",
     });
   }
+
+  getByoladMessageIcon() {
+    vscode.postMessage({
+      messageType: "getByoladMessageIcon",
+    });
+  }
 }

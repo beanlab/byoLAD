@@ -115,13 +115,19 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       "dist",
       "codicon.css",
     ]);
-    // The image file from the React build output
-    const imageUri = getUri(webview, extensionUri, [
-      "media",
-      "circle_byolad.png",
-    ]);
 
     const nonce = getNonce();
+
+    const imagePaths = {
+      byoLadCircleImageUri: getUri(webview, extensionUri, [
+        "media",
+        "circle_byolad.png",
+      ]).toString(),
+      byoladIconUri: getUri(webview, extensionUri, [
+        "media",
+        "byolad_bw_zoom_24x24.svg",
+      ]).toString(),
+    };
 
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
     return /*html*/ `
@@ -130,13 +136,19 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
           <head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; font-src ${webview.cspSource}; img-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${
+              webview.cspSource
+            }; font-src ${webview.cspSource}; img-src ${
+              webview.cspSource
+            }; script-src 'nonce-${nonce}';">
             <link rel="stylesheet" type="text/css" href="${stylesUri}">
             <link rel="stylesheet" type="text/css" href="${codiconsUri}">
           </head>
           <body>
-          <img src="${imageUri}" width="50%"/>
             <div id="root"></div>
+            <script nonce="${nonce}"> <!-- Provides the React app access to the properly formatted resource URIs -->
+              window.initialState = ${JSON.stringify({ imagePaths })};
+            </script>
             <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
           </body> 
         </html>

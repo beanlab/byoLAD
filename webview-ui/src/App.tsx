@@ -10,12 +10,13 @@ import {
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ChatMessage } from "./utilities/ChatModel";
 import { Message } from "./components/Message";
+import { ImagePaths } from "./types";
 
 function App() {
   const [userPrompt, setUserPrompt] = useState("");
-  const [history, setHistory] = useState(Array<ChatMessage>());
-
+  const [history, setHistory] = useState<Array<ChatMessage>>([]);
   const extensionMessenger = new ExtensionMessenger();
+  const imagePaths: ImagePaths = window.initialState?.imagePaths;
 
   const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newval = event.target.value;
@@ -42,6 +43,7 @@ function App() {
           role={message.role}
           messageBlocks={message.content}
           extensionMessenger={extensionMessenger}
+          imagePaths={imagePaths}
         />
       );
     }
@@ -72,6 +74,7 @@ function App() {
 
   return (
     <div className="App">
+      <img src={imagePaths.byoLadCircleImageUri} width="50%" />
       <div className="App-body">
         <div className="App-body1">
           <p>

@@ -4,21 +4,24 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { ChatRole, CodeBlock, MessageBlock } from "../utilities/ChatModel";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
+import { ImagePaths } from "../types";
 
 interface MessageProps {
   role: ChatRole;
   messageBlocks: MessageBlock[];
   extensionMessenger: ExtensionMessenger;
+  imagePaths?: ImagePaths;
 }
 export const Message: React.FC<MessageProps> = ({
   role,
   messageBlocks,
   extensionMessenger,
+  imagePaths,
 }) => (
   <div>
     <VSCodeDivider role="separator" />
     <div className="message">
-      <MessageHeader role={role} />
+      <MessageHeader role={role} assistantIconUri={imagePaths?.byoladIconUri} />
       <div className="message-block">
         {messageBlocks.map((messageBlock) => {
           if (messageBlock.type === "text") {
@@ -108,8 +111,12 @@ const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
 
 interface MessageHeaderProps {
   role: ChatRole;
+  assistantIconUri?: string;
 }
-const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
+const MessageHeader: React.FC<MessageHeaderProps> = ({
+  role,
+  assistantIconUri,
+}) => {
   switch (role) {
     case ChatRole.User:
       return (
@@ -121,7 +128,11 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
     case ChatRole.Assistant:
       return (
         <div className="message-header">
-          <i className="codicon codicon-hubot"></i>
+          {assistantIconUri ? (
+            <img src={assistantIconUri} alt="Assistant Icon" />
+          ) : (
+            <i className="codicon codicon-hubot"></i>
+          )}
           <div className="role-name">byoLAD</div>
         </div>
       );

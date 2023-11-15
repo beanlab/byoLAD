@@ -26,9 +26,27 @@ export class ExtensionMessenger {
     });
   }
 
+  copyToClipboard(content: string): void {
+    vscode.postMessage({
+      messageType: "copyToClipboard",
+      params: {
+        content: content,
+      },
+    });
+  }
+
   diffClodeBlock(code: string) {
     vscode.postMessage({
       messageType: "diffCodeBlock",
+      params: {
+        code: code,
+      },
+    });
+  }
+
+  insertCodeBlock(code: string) {
+    vscode.postMessage({
+      messageType: "insertCodeBlock",
       params: {
         code: code,
       },

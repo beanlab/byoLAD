@@ -12,9 +12,8 @@ import { SettingsProvider } from "./SettingsProvider";
  * If nothing is selected, the diff will be against an insertion at the present cursor position.
  * Throws an error if there is no active editor, no active conversation, or no code block in the conversation.
  *
+ * @param content
  * @param settingsProvider
- * @param conversationManager
- * @returns
  */
 export async function diffCode(
   content: string,

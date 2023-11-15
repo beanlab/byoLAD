@@ -85,7 +85,7 @@ const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Copy to clipboard"
           title="Copy to clipboard"
-          onClick={() => copyToClipboard(content, extensionMessenger)}
+          onClick={() => extensionMessenger.copyToClipboard(content)}
         >
           <span className="codicon codicon-copy"></span>
         </VSCodeButton>
@@ -93,7 +93,7 @@ const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Insert at cursor"
           title="Insert at cursor"
-          onClick={() => insertIntoEditor(content, extensionMessenger)}
+          onClick={() => extensionMessenger.insertCodeBlock(content)}
         >
           <span className="codicon codicon-insert"></span>
         </VSCodeButton>
@@ -101,7 +101,7 @@ const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="View diff in editor"
           title="View diff in editor"
-          onClick={() => diffInEditor(content, extensionMessenger)}
+          onClick={() => extensionMessenger.diffClodeBlock(content)}
         >
           <span className="codicon codicon-diff"></span>
         </VSCodeButton>
@@ -135,30 +135,3 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
       return null;
   }
 };
-
-function copyToClipboard(
-  content: string,
-  extensionMessenger: ExtensionMessenger,
-): void {
-  console.log(extensionMessenger); // TODO: DELETE ME
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(content);
-  } else {
-    console.log("Clipboard API not available"); // TODO: Handle
-  }
-}
-
-function insertIntoEditor(
-  content: string,
-  extensionMessenger: ExtensionMessenger,
-): void {
-  console.log(extensionMessenger); // TODO: DELETE ME
-  console.log(content); // TODO: DELETE ME
-}
-
-function diffInEditor(
-  content: string,
-  extensionMessenger: ExtensionMessenger,
-): void {
-  extensionMessenger.diffClodeBlock(content);
-}

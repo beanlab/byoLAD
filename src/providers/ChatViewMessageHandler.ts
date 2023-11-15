@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { diffCode } from "../helpers/diffCode";
+import { insertCode } from "../helpers/insertCode";
+import { copyToClipboard } from "../helpers/copyToClipboard";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
@@ -37,9 +39,19 @@ export class ChatViewMessageHandler {
         );
         break;
       }
+      case "copyToClipboard": {
+        const params = message.params as CopyToClipboardMessageParams;
+        await copyToClipboard(params.content);
+        break;
+      }
       case "diffCodeBlock": {
         const params = message.params as DiffCodeBlockParams;
         await diffCode(params.code, this.settingsProvider);
+        break;
+      }
+      case "insertCodeBlock": {
+        const params = message.params as InsertCodeBlockParams;
+        await insertCode(params.code);
         break;
       }
       default:
@@ -66,4 +78,12 @@ interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
 
 interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
   code: string;
+}
+
+interface InsertCodeBlockParams extends WebviewToExtensionMessageParams {
+  code: string;
+}
+
+interface CopyToClipboardMessageParams extends WebviewToExtensionMessageParams {
+  content: string;
 }

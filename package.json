@@ -63,13 +63,6 @@
           "editPresentation": "multilineText",
           "order": 3
         },
-        "vscode-byolad.explainCodePrompt": {
-          "type": "string",
-          "default": "Explain the following code to me in a way that I can easily understand without using too many words. You may explain it piece by piece with appropriate code references if that's useful.",
-          "description": "The prompt to use to explain code.",
-          "editPresentation": "multilineText",
-          "order": 4
-        },
         "vscode-byolad.applySuggestions.mode": {
           "type": "string",
           "default": "Manual",
@@ -81,7 +74,7 @@
             "See AI-proposed changes and apply selected changes manually",
             "Apply AI-proposed changes with the option to revert selected changes"
           ],
-          "order": 5
+          "order": 4
         },
         "vscode-byolad.applySuggestions.diffViewPosition": {
           "type": "string",

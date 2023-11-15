@@ -16,9 +16,7 @@ export const EMPTY_RESPONSE_ERROR_MESSAGE =
 export const NO_RESPONSE_ERROR_MESSAGE = "No response returned from model";
 export const UNKNOWN_RESPONSE_ERROR_MESSAGE =
   "Unknown error occurred while getting the response from the model";
-export const DIFF_VIEW_TITLE_SUFFIX_MANUAL_MODE = ": AI Suggestions ↔ Current";
-export const DIFF_VIEW_TITLE_SUFFIX_AUTO_MODE =
-  ": Original → Incoming AI Suggestions";
+export const DIFF_VIEW_TITLE_SUFFIX = ": AI Suggestions ↔ Current";
 export const NOT_IMPLEMENTED_ERROR_MESSAGE = "Not implemented";
 export const MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE =
   "Error with byoLAD extension setting applySuggestions.diffViewPosition: Could not get merge-conflict.diffViewPosition setting or it doesn't match any of the available options (likely due to a breaking change in that extension). Using the default byoLAD setting.";

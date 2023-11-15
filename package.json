@@ -111,10 +111,7 @@
         "command": "vscode-byolad.reviewCode",
         "title": "byoLAD — Review Code",
         "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
+        "icon": "media/byolad_bw_zoom_margin_16x16.svg"
       },
       {
         "command": "vscode-byolad.explainCode",
@@ -175,7 +172,7 @@
         {
           "id": "byoLAD",
           "title": "byoLAD",
-          "icon": "media/icons8-stars-16-white.png"
+          "icon": "media/byolad_bw_zoom_24x24.svg"
         }
       ]
     },
@@ -186,7 +183,7 @@
           "name": "byoLAD",
           "type": "webview",
           "contextualTitle": "byoLAD",
-          "icon": "media/icons8-stars-16-white.png"
+          "icon": "media/byolad_bw_zoom_24x24.svg"
         }
       ]
     },

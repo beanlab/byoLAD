@@ -118,7 +118,13 @@ function App() {
   const messages = history.map((message, position) => {
     console.log(position);
     if (message.role != ChatRole.System) {
-      return <Message role={message.role} messageBlocks={message.content} />;
+      return (
+        <Message
+          role={message.role}
+          messageBlocks={message.content}
+          extensionMessenger={extensionMessenger}
+        />
+      );
     }
   });
 
@@ -131,7 +137,6 @@ function App() {
       case "refreshChat": {
         const params = message.params as RefreshChatMessageParams;
         const conversation = params.activeConversation as Conversation | null;
-        console.log("Active Conversation: ", conversation); // TODO: DELETE ME
         setHistory(conversation?.messages ?? []);
         // TODO: Handle refresh request (which contains the contents of the active conversation, including any messages that have just been received)
         // Display the new messages from the model or completely change the chat history in line with the provided active conversation

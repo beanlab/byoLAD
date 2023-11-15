@@ -1,16 +1,20 @@
-import { VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
+import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
 import Markdown from "react-markdown";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import byo_LAD_icon from "../circle_byo_LAD.png";
-import { UserIcon } from "./UserIcon";
 import { ChatRole, CodeBlock, MessageBlock } from "../utilities/ChatModel";
+import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 
 interface MessageProps {
   role: ChatRole;
   messageBlocks: MessageBlock[];
+  extensionMessenger: ExtensionMessenger;
 }
-export const Message: React.FC<MessageProps> = ({ role, messageBlocks }) => {
+export const Message: React.FC<MessageProps> = ({
+  role,
+  messageBlocks,
+  extensionMessenger,
+}) => {
   return (
     <div>
       <VSCodeDivider role="separator" />
@@ -26,6 +30,7 @@ export const Message: React.FC<MessageProps> = ({ role, messageBlocks }) => {
               return (
                 <CodeMessageBlock
                   languageId={(messageBlock as CodeBlock).languageId}
+                  extensionMessenger={extensionMessenger}
                 >
                   {messageBlock.content}
                 </CodeMessageBlock>
@@ -50,23 +55,59 @@ const TextMessageBlock: React.FC<TextMessageBlockProps> = ({ children }) => {
 interface CodeMessageBlockProps {
   languageId: string | undefined;
   children: string;
+  extensionMessenger: ExtensionMessenger;
 }
 const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
   languageId,
   children,
+  extensionMessenger,
 }) => {
-  if (!languageId) {
-    let markdown: string = "```";
-    markdown += "\n" + children + "\n```";
-    return <Markdown>{markdown}</Markdown>;
-  } else {
-    const markdown = children;
-    return (
-      <SyntaxHighlighter language={languageId} style={darcula}>
-        {markdown}
-      </SyntaxHighlighter>
-    );
-  }
+  const content: string = children;
+  const noMargin = {
+    margin: 0,
+  };
+
+  return (
+    <div className="code-block-container">
+      {languageId ? (
+        <SyntaxHighlighter
+          language={languageId}
+          style={darcula}
+          customStyle={noMargin}
+        >
+          {content}
+        </SyntaxHighlighter>
+      ) : (
+        <Markdown>{"```" + languageId + "\n" + content + "\n```"}</Markdown>
+      )}
+      <div className="code-button-container">
+        <VSCodeButton
+          appearance="icon"
+          aria-label="Copy to clipboard"
+          title="Copy to clipboard"
+          onClick={(e) => copyToClipboard(e, content, extensionMessenger)}
+        >
+          <span className="codicon codicon-copy"></span>
+        </VSCodeButton>
+        <VSCodeButton
+          appearance="icon"
+          aria-label="Insert at cursor"
+          title="Insert at cursor"
+          onClick={(e) => insertIntoEditor(e, content, extensionMessenger)}
+        >
+          <span className="codicon codicon-insert"></span>
+        </VSCodeButton>
+        <VSCodeButton
+          appearance="icon"
+          aria-label="View diff in editor"
+          title="View diff in editor"
+          onClick={(e) => diffInEditor(e, content, extensionMessenger)}
+        >
+          <span className="codicon codicon-diff"></span>
+        </VSCodeButton>
+      </div>
+    </div>
+  );
 };
 
 interface MessageHeaderProps {
@@ -76,15 +117,15 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
   switch (role) {
     case ChatRole.User:
       return (
-        <div className="header">
-          <UserIcon />
+        <div className="message-header">
+          <i className="codicon codicon-account"></i>
           <div className="role-name">You</div>
         </div>
       );
     case ChatRole.Assistant:
       return (
-        <div className="header">
-          <img src={byo_LAD_icon} alt="byoLAD" className="assistant-icon" />
+        <div className="message-header">
+          <i className="codicon codicon-hubot"></i>
           <div className="role-name">byoLAD</div>
         </div>
       );
@@ -94,3 +135,34 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
       return null;
   }
 };
+
+function copyToClipboard(
+  event: React.MouseEvent<HTMLElement, MouseEvent>,
+  content: string,
+  extensionMessenger: ExtensionMessenger,
+): void {
+  console.log(extensionMessenger); // TODO: DELETE ME
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(content);
+  } else {
+    console.log("Clipboard API not available"); // TODO: Handle
+  }
+}
+
+function insertIntoEditor(
+  event: React.MouseEvent<HTMLElement, MouseEvent>,
+  content: string,
+  extensionMessenger: ExtensionMessenger,
+): void {
+  console.log(extensionMessenger); // TODO: DELETE ME
+  console.log(content); // TODO: DELETE ME
+}
+
+function diffInEditor(
+  event: React.MouseEvent<HTMLElement, MouseEvent>,
+  content: string,
+  extensionMessenger: ExtensionMessenger,
+): void {
+  console.log(extensionMessenger); // TODO: DELETE ME
+  console.log(content); // TODO: DELETE ME
+}

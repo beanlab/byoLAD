@@ -123,7 +123,19 @@ main {
   padding-bottom: 2.5px;
 }
 
-.header {
+.code-block-container {
+  border: solid 1px;
+  border-color: var(--vscode-menu-border);
+}
+
+.code-button-container {
+  border: solid 1px;
+  border-color: var(--vscode-menu-border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-header {
   display: flex;
   justify-content: flex-start;
   align-items: center;

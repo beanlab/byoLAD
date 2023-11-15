@@ -85,7 +85,7 @@ const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Copy to clipboard"
           title="Copy to clipboard"
-          onClick={(e) => copyToClipboard(e, content, extensionMessenger)}
+          onClick={() => copyToClipboard(content, extensionMessenger)}
         >
           <span className="codicon codicon-copy"></span>
         </VSCodeButton>
@@ -93,7 +93,7 @@ const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Insert at cursor"
           title="Insert at cursor"
-          onClick={(e) => insertIntoEditor(e, content, extensionMessenger)}
+          onClick={() => insertIntoEditor(content, extensionMessenger)}
         >
           <span className="codicon codicon-insert"></span>
         </VSCodeButton>
@@ -101,7 +101,7 @@ const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="View diff in editor"
           title="View diff in editor"
-          onClick={(e) => diffInEditor(e, content, extensionMessenger)}
+          onClick={() => diffInEditor(content, extensionMessenger)}
         >
           <span className="codicon codicon-diff"></span>
         </VSCodeButton>
@@ -137,7 +137,6 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
 };
 
 function copyToClipboard(
-  event: React.MouseEvent<HTMLElement, MouseEvent>,
   content: string,
   extensionMessenger: ExtensionMessenger,
 ): void {
@@ -150,7 +149,6 @@ function copyToClipboard(
 }
 
 function insertIntoEditor(
-  event: React.MouseEvent<HTMLElement, MouseEvent>,
   content: string,
   extensionMessenger: ExtensionMessenger,
 ): void {
@@ -159,10 +157,8 @@ function insertIntoEditor(
 }
 
 function diffInEditor(
-  event: React.MouseEvent<HTMLElement, MouseEvent>,
   content: string,
   extensionMessenger: ExtensionMessenger,
 ): void {
-  console.log(extensionMessenger); // TODO: DELETE ME
-  console.log(content); // TODO: DELETE ME
+  extensionMessenger.diffClodeBlock(content);
 }

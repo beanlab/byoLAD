@@ -184,9 +184,6 @@ function App() {
               Delete All Conversations
             </VSCodeButton>
             <br />
-            <VSCodeButton onClick={extensionMessenger.diffClodeBlock}>
-              Diff Code Block
-            </VSCodeButton>
           </div>
           <div>{messages}</div>
         </div>

@@ -1,15 +1,20 @@
 import * as vscode from "vscode";
-import { CodeBlock } from "../ChatModel/ChatModel";
+import { SettingsProvider } from "../helpers/SettingsProvider";
+import { diffCode } from "../helpers/diffCode";
 
 export class ChatViewMessageHandler {
-  constructor() {}
+  private settingsProvider: SettingsProvider;
+
+  constructor(settingsProvider: SettingsProvider) {
+    this.settingsProvider = settingsProvider;
+  }
 
   /**
    * Handles messages sent from the webview view context
    *
    * @param message The message sent from the webview view context. Its parameters must be coordinated with the webview view context.
    */
-  public static handleMessage(message: WebviewToExtensionMessage) {
+  public async handleMessage(message: WebviewToExtensionMessage) {
     switch (message.messageType) {
       case "newConversation":
         vscode.commands.executeCommand("vscode-byolad.newConversation");
@@ -34,10 +39,7 @@ export class ChatViewMessageHandler {
       }
       case "diffCodeBlock": {
         const params = message.params as DiffCodeBlockParams;
-        vscode.commands.executeCommand(
-          "vscode-byolad.diffCodeBlock",
-          params.codeBlock,
-        );
+        await diffCode(params.code, this.settingsProvider);
         break;
       }
       default:
@@ -63,5 +65,5 @@ interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
 }
 
 interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
-  codeBlock: CodeBlock;
+  code: string;
 }

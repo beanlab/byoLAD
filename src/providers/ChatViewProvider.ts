@@ -3,6 +3,7 @@ import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
 import { Conversation } from "../ChatModel/ChatModel";
+import { SettingsProvider } from "../helpers/SettingsProvider";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -13,8 +14,13 @@ import { Conversation } from "../ChatModel/ChatModel";
 export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
+  private readonly _extensionUri: vscode.Uri;
+  private readonly _settingsProvider: SettingsProvider;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(extensionUri: vscode.Uri, settingsProvider: SettingsProvider) {
+    this._extensionUri = extensionUri;
+    this._settingsProvider = settingsProvider;
+  }
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -138,8 +144,11 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
    * @param webviewView
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
-    webviewView.webview.onDidReceiveMessage((message) =>
-      ChatViewMessageHandler.handleMessage(message),
-    );
+    webviewView.webview.onDidReceiveMessage(async (message) => {
+      const chatViewMessageHandler = new ChatViewMessageHandler(
+        this._settingsProvider,
+      );
+      await chatViewMessageHandler.handleMessage(message);
+    });
   }
 }

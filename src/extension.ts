@@ -11,13 +11,15 @@ import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
 import { getRefreshChatViewCommand } from "./commands/getRefreshChatViewCommand";
-import { getDiffCodeBlockCommand } from "./commands/getDiffCodeBlockCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
   const conversationManager = new ConversationManager(context);
-  const chatWebviewProvider = new ChatWebviewProvider(context.extensionUri);
+  const chatWebviewProvider = new ChatWebviewProvider(
+    context.extensionUri,
+    settingsProvider,
+  );
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
     ChatWebviewProvider.viewType,
@@ -45,10 +47,6 @@ export function activate(context: vscode.ExtensionContext) {
     settingsProvider,
     conversationManager,
   );
-  const diffCodeBlockCommand = getDiffCodeBlockCommand(
-    settingsProvider,
-    conversationManager,
-  );
   const refreshChatViewCommand = getRefreshChatViewCommand(
     chatWebviewProvider,
     conversationManager,
@@ -67,7 +65,6 @@ export function activate(context: vscode.ExtensionContext) {
     reviewFileCodeCommand,
     explainCodeCommand,
     sendChatMessageCommand,
-    diffCodeBlockCommand,
     refreshChatViewCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,

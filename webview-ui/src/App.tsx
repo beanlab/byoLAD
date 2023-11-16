@@ -17,6 +17,11 @@ function App() {
 
   const extensionMessenger = new ExtensionMessenger();
 
+  const changeActiveChat = (conversation: Conversation | null) => {
+    extensionMessenger.setActiveChat(conversation);
+    setActiveChat(conversation);
+  };
+
   if (fetchConversations) {
     setFetchConversations(false);
     extensionMessenger.getConversations();
@@ -40,9 +45,13 @@ function App() {
       case "updateConversation": {
         const params = message.params as UpdateConversationMessageParams;
         const conversations = params.conversations;
-        const activeConversation = params.activeConversation;
+        const activeConversationId = params.activeConversationId;
         setChatList(conversations);
-        if (activeConversation) {
+        if (activeConversationId) {
+          const activeConversation =
+            conversations.find(
+              (conversation) => conversation.id === activeConversationId,
+            ) || null;
           setActiveChat(activeConversation);
         } else if (activeChat) {
           const newActiveChat = conversations.find(
@@ -62,9 +71,11 @@ function App() {
   });
 
   if (activeChat) {
-    return <ChatView activeChat={activeChat} setActiveChat={setActiveChat} />;
+    return (
+      <ChatView activeChat={activeChat} changeActiveChat={changeActiveChat} />
+    );
   } else {
-    return <ChatList chatList={chatList} setActiveChat={setActiveChat} />;
+    return <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />;
   }
 }
 

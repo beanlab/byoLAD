@@ -8,10 +8,10 @@ const byo_LAD = "./circle_byo_LAD.png";
 
 interface ChatViewProps {
   activeChat: Conversation;
-  setActiveChat: (conversation: Conversation | null) => void;
+  changeActiveChat: (conversation: Conversation | null) => void;
 }
 
-export const ChatView = ({ activeChat, setActiveChat }: ChatViewProps) => {
+export const ChatView = ({ activeChat, changeActiveChat }: ChatViewProps) => {
   const [userPrompt, setUserPrompt] = useState("");
 
   const extensionMessenger = new ExtensionMessenger();
@@ -62,7 +62,7 @@ export const ChatView = ({ activeChat, setActiveChat }: ChatViewProps) => {
         newActiveChat.messages.push(newUserMessage);
       }
     }
-    setActiveChat(newActiveChat);
+    changeActiveChat(newActiveChat);
     setUserPrompt("");
     extensionMessenger.sendChatMessage(
       newActiveChat.messages[newActiveChat.messages.length - 1],
@@ -73,7 +73,7 @@ export const ChatView = ({ activeChat, setActiveChat }: ChatViewProps) => {
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={() => setActiveChat(null)}>Back</button>
+        <button onClick={() => changeActiveChat(null)}>Back</button>
         <img src={byo_LAD} className="App-logo" alt="logo" />
       </header>
       <div className="App-body">

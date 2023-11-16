@@ -132,6 +132,11 @@
         "command": "vscode-byolad.openSettingsCommand",
         "title": "byoLAD — Open Settings",
         "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.addCodeToConversation",
+        "title": "byoLAD — Add Code to Conversation",
+        "category": "byoLAD"
       }
     ],
     "menus": {
@@ -147,6 +152,11 @@
         {
           "command": "vscode-byolad.newConversation",
           "when": "!editorReadonly && !isInDiffEditor"
+        },
+        {
+          "command": "vscode-byolad.addCodeToConversation",
+          "when": "editorFocus"
+
         },
         {
           "command": "vscode-byolad.deleteAllConversations"
@@ -166,6 +176,11 @@
         {
           "when": "editorFocus && !editorReadonly && !isInDiffEditor",
           "command": "vscode-byolad.explainCode",
+          "group": "1_modification"
+        },
+        {
+          "when": "editorFocus",
+          "command": "vscode-byolad.addCodeToConversation",
           "group": "1_modification"
         }
       ],

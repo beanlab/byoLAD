@@ -77,7 +77,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
 
   public updateConversation(
     conversations: Conversation[],
-    activeConversation: Conversation | null,
+    activeConversationId: number | null,
   ) {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
@@ -87,7 +87,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       messageType: "updateConversation",
       params: {
         conversations: conversations,
-        activeConversation: activeConversation,
+        activeConversationId: activeConversationId,
       },
     });
   }

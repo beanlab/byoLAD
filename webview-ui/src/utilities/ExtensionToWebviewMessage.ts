@@ -13,7 +13,7 @@ export interface RefreshChatMessageParams {
 
 export interface UpdateConversationMessageParams {
   conversations: Conversation[];
-  activeConversation?: Conversation;
+  activeConversationId?: number;
 }
 
 export interface AddCodeBlockMessageParams {

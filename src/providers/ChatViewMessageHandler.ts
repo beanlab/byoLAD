@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
-import { ChatRole, CodeBlock, MessageBlock } from "../ChatModel/ChatModel";
+import { CodeBlock } from "../ChatModel/ChatModel";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
-import { getCodeReference } from "../helpers/getCodeReference";
 
 export class ChatViewMessageHandler {
   conversationManager: ConversationManager;
@@ -29,7 +28,7 @@ export class ChatViewMessageHandler {
       case "getConversations":
         this.chatViewProvider.updateConversation(
           this.conversationManager.conversations,
-          null,
+          this.conversationManager.activeConversationId,
         );
         break;
       case "deleteAllConversations":
@@ -60,55 +59,14 @@ export class ChatViewMessageHandler {
       }
       case "getCodeBlock": {
         const params = message.params as GetCodeBlockParams;
-        const activeConversation = this.conversationManager.getConversation(
-          params.chatId,
-        );
-        if (activeConversation) {
-          const activeEditor = vscode.window.activeTextEditor;
-          if (activeEditor) {
-            const codeBlock = getCodeReference(
-              activeEditor,
-            ) as CodeBlock | null;
-            if (codeBlock) {
-              const updatedConversation = { ...activeConversation };
-              let lastMessage;
-
-              if (
-                !updatedConversation.messages ||
-                updatedConversation.messages.length === 0
-              ) {
-                updatedConversation.messages = [];
-                const newMessage = {
-                  role: ChatRole.User,
-                  content: [] as MessageBlock[],
-                };
-                updatedConversation.messages.push(newMessage);
-                lastMessage = newMessage;
-              } else {
-                lastMessage =
-                  updatedConversation.messages[
-                    updatedConversation.messages.length - 1
-                  ];
-              }
-
-              if (lastMessage.role === ChatRole.User) {
-                lastMessage.content.push(codeBlock);
-              } else {
-                const newMessage = {
-                  role: ChatRole.User,
-                  content: [codeBlock] as MessageBlock[],
-                };
-                updatedConversation.messages.push(newMessage);
-              }
-
-              this.conversationManager.updateConversation(updatedConversation);
-              this.chatViewProvider.updateConversation(
-                this.conversationManager.conversations,
-                updatedConversation,
-              );
-            }
-          }
-        }
+        this.conversationManager.activeConversationId = params.chatId;
+        vscode.commands.executeCommand("vscode-byolad.addCodeToConversation");
+        break;
+      }
+      case "setActiveChat": {
+        const params = message.params as SetActiveChatParams;
+        this.conversationManager.activeConversationId =
+          params.activeConversationId;
         break;
       }
       default:
@@ -139,4 +97,8 @@ interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
 
 interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
   chatId: number;
+}
+
+interface SetActiveChatParams extends WebviewToExtensionMessageParams {
+  activeConversationId: number;
 }

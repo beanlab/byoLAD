@@ -16,7 +16,7 @@ export const getNewConversationCommand = (
       //chatViewProvider.refresh(activeConversation);
       chatViewProvider.updateConversation(
         conversationManager.conversations,
-        activeConversation,
+        activeConversation.id,
       );
     },
   );

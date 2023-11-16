@@ -12,6 +12,7 @@ import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
 import { getRefreshChatViewCommand } from "./commands/getRefreshChatViewCommand";
 import { getDiffCodeBlockCommand } from "./commands/getDiffCodeBlockCommand";
+import { getAddCodeToConversationCommand } from "./commands/getAddCodeToConversationCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
@@ -57,6 +58,10 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
     conversationManager,
   );
+  const addCodeToConversationCommand = getAddCodeToConversationCommand(
+    chatWebviewProvider,
+    conversationManager,
+  );
   const openSettingsCommand = getOpenSettingsCommand();
 
   const onDidChangeConfigurationHandler =
@@ -77,6 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
     chatViewDisposable,
+    addCodeToConversationCommand,
   );
 }
 

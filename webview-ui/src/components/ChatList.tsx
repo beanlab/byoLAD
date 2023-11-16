@@ -3,10 +3,10 @@ import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 
 interface ChatListProps {
   chatList: Conversation[];
-  setActiveChat: (conversation: Conversation | null) => void;
+  changeActiveChat: (conversation: Conversation | null) => void;
 }
 
-export const ChatList = ({ chatList, setActiveChat }: ChatListProps) => {
+export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   const extensionMessenger = new ExtensionMessenger();
 
   if (chatList.length === 0) {
@@ -15,7 +15,7 @@ export const ChatList = ({ chatList, setActiveChat }: ChatListProps) => {
   }
 
   const handleOnClick = (conversation: Conversation) => {
-    setActiveChat(conversation);
+    changeActiveChat(conversation);
   };
 
   return (

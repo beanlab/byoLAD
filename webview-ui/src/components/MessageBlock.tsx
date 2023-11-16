@@ -48,7 +48,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           title="Copy to clipboard"
           onClick={() => extensionMessenger.copyToClipboard(content)}
         >
-          <span className="codicon codicon-copy"></span>
+          <i className="codicon codicon-copy"></i>
         </VSCodeButton>
         <VSCodeButton
           appearance="icon"
@@ -56,7 +56,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           title="Insert at cursor"
           onClick={() => extensionMessenger.insertCodeBlock(content)}
         >
-          <span className="codicon codicon-insert"></span>
+          <i className="codicon codicon-insert"></i>
         </VSCodeButton>
         <VSCodeButton
           appearance="icon"
@@ -64,7 +64,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           title="View diff in editor"
           onClick={() => extensionMessenger.diffClodeBlock(content)}
         >
-          <span className="codicon codicon-diff"></span>
+          <i className="codicon codicon-diff"></i>
         </VSCodeButton>
       </div>
     </div>

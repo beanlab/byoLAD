@@ -72,7 +72,6 @@ function App() {
           role={message.role}
           messageBlocks={message.content}
           extensionMessenger={extensionMessenger}
-          imagePaths={imagePaths}
         />
       );
     }
@@ -153,7 +152,7 @@ function App() {
                 aria-label="Send message"
                 title="Send message"
               >
-                <span className="codicon codicon-send"></span>
+                <i className="codicon codicon-send"></i>
               </VSCodeButton>
             </form>
           </div>

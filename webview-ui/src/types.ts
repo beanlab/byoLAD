@@ -10,7 +10,6 @@ export interface Message {
 
 export interface ImagePaths {
   byoLadCircleImageUri: string;
-  byoladIconUri: string;
 }
 
 export enum VsCodeTheme {

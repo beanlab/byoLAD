@@ -1,14 +1,6 @@
 import * as vscode from "vscode";
-import {
-  ApplyChangesPosition,
-  ApplySuggestionsMode,
-  TextProviderScheme,
-} from "./types";
-import {
-  DIFF_VIEW_TITLE_SUFFIX_AUTO_MODE,
-  DIFF_VIEW_TITLE_SUFFIX_MANUAL_MODE,
-  NOT_IMPLEMENTED_ERROR_MESSAGE,
-} from "../commands/constants";
+import { ApplyChangesPosition, TextProviderScheme } from "./types";
+import { DIFF_VIEW_TITLE_SUFFIX } from "../commands/constants";
 import { SettingsProvider } from "./SettingsProvider";
 
 /**
@@ -29,27 +21,13 @@ export async function displayDiff(
   const originalFileName = originalDocPath.substring(
     originalDocPath.lastIndexOf("/") + 1,
   );
-  const applySuggestionsMode = settingsProvider.getApplySuggestionsMode();
-  if (
-    applySuggestionsMode != ApplySuggestionsMode.Auto &&
-    applySuggestionsMode != ApplySuggestionsMode.Manual
-  ) {
-    vscode.window.showErrorMessage(NOT_IMPLEMENTED_ERROR_MESSAGE);
-    return;
-  }
 
-  const virtualComparisonDoc = await getVirtualComparisonDoc(
+  const virtualComparisonDoc = await createVirtualDoc(
     newDocText,
-    activeDoc,
-    applySuggestionsMode,
+    activeDoc.fileName,
   );
 
-  if (applySuggestionsMode == ApplySuggestionsMode.Auto) {
-    await applySuggestions(activeDoc, newDocText);
-  }
-
-  const title = getDiffTitle(originalFileName, applySuggestionsMode);
-
+  const title = originalFileName + DIFF_VIEW_TITLE_SUFFIX;
   const diffViewPosition = settingsProvider.getDiffViewPosition();
   const opts: vscode.TextDocumentShowOptions = {
     viewColumn:
@@ -69,48 +47,6 @@ export async function displayDiff(
     title,
     opts,
   );
-}
-
-/**
- * Gets the virtual document to compare to the active editor document based on the apply suggestions mode.
- * If the apply suggestions mode is manual, the virtual document will be created with the provided (suggestion) text.
- * If the apply suggestions mode is auto, the virtual document will be created with the active editor document text.
- * Assumes the apply suggestions mode is one of those two.
- *
- * @param newDocText Suggested text to be used in the virtual document in manual mode
- * @param activeDoc The active editor document (whose text is used in the virtual document in auto mode)
- * @param applySuggestionsMode The apply suggestions mode
- * @returns The virtual document to compare to the active editor document
- */
-async function getVirtualComparisonDoc(
-  newDocText: string | undefined,
-  activeDoc: vscode.TextDocument,
-  applySuggestionsMode: ApplySuggestionsMode,
-) {
-  if (applySuggestionsMode == ApplySuggestionsMode.Manual) {
-    return await createVirtualDoc(newDocText, activeDoc.fileName);
-  } else {
-    return await createVirtualDoc(activeDoc.getText(), activeDoc.fileName);
-  }
-}
-
-/**
- * Gets the title for the diff view based on the original file name and the apply suggestions mode.
- * Assumes the apply suggestions mode is auto or manual.
- *
- * @param originalFileName Name of the original file
- * @param applySuggestionsMode The apply suggestions mode
- * @returns The title for the diff view
- */
-function getDiffTitle(
-  originalFileName: string,
-  applySuggestionsMode: ApplySuggestionsMode,
-) {
-  if (applySuggestionsMode == ApplySuggestionsMode.Manual) {
-    return originalFileName + DIFF_VIEW_TITLE_SUFFIX_MANUAL_MODE;
-  } else {
-    return originalFileName + DIFF_VIEW_TITLE_SUFFIX_AUTO_MODE;
-  }
 }
 
 /**
@@ -141,26 +77,4 @@ async function createVirtualDoc(
   );
   await vscode.workspace.applyEdit(edit);
   return virtualDoc;
-}
-
-/**
- * Applies the provided suggestions to the active editor document.
- *
- * @param activeDoc The active editor document to apply the suggestions to
- * @param newDocText The text to apply to the active editor document
- */
-async function applySuggestions(
-  activeDoc: vscode.TextDocument,
-  newDocText: string | undefined,
-) {
-  const edit = new vscode.WorkspaceEdit();
-  edit.replace(
-    activeDoc.uri,
-    new vscode.Range(
-      new vscode.Position(0, 0),
-      activeDoc.lineAt(activeDoc.lineCount - 1).range.end,
-    ),
-    newDocText ?? "",
-  );
-  await vscode.workspace.applyEdit(edit);
 }

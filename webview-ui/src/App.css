@@ -20,10 +20,6 @@ main {
 .App-footer {
   min-height: 20vh;
   text-align: justify;
-  /* display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center; */
 }
 
 .App-header {
@@ -35,7 +31,6 @@ main {
 }
 
 .App-body1 {
-  /* color: white; */
   font-size: calc(8px + 2vmin);
   padding-left: 5%;
   padding-right: 5%;
@@ -46,36 +41,27 @@ main {
   width: 85%;
 }
 
+/* Styling for the chat bar with the words and the button */
 .chat-bar {
   background-color: #717171;
   width: 100%;
   display: flex;
   align-items: center;
   border-radius: 60px;
-  padding: 10px 10px;
+  padding: 8px 8px;
 }
 
+/* Styling for the words in the chat-bar */
 .chat-bar input {
   background: transparent;
   flex: 1;
   border: 0;
   outline: none;
-  padding: 5px 20px;
-  font-size: 16px;
+  padding: 5px;
   color: #AAAAAA;
-  /* color: #EFEFEF; */
 }
 
-.chat-bar button {
-  background: #313131;
-  border: 0;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  font-size: 20px;
-}
-
+ /* Makes the placeholding text the same color as the input text */
 ::placeholder {
   color: #aaaaaa;
 }
@@ -149,11 +135,6 @@ main {
   padding-left: 5%;
   padding-top: 10%;
   text-align: left;
-}
-
-.byoLAD {
-  height: 7vmin;
-  border-radius: 50%;
 }
 
 .chat-prompts {

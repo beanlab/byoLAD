@@ -80,7 +80,8 @@ function App() {
           <p>
             Here you can chat with the AI about your code. You can ask whatever
             you want, but the best is to ask question about your code or
-            generating new code.
+            generating new code. You can add snippets of code to your conversation 
+            from the editor by selecting the code and clicking the "Add to chat" button.
           </p>
           <div>
             {/* <VSCodeButton onClick={extensionMessenger.newConversaiton}>
@@ -107,7 +108,7 @@ function App() {
               onChange={handleInputOnChange}
               value={userPrompt}
               type="text"
-              placeholder="Ask a question to the AI"
+              placeholder="Ask a question"
             />
             <VSCodeButton
               type="submit"

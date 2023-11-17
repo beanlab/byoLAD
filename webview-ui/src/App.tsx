@@ -83,26 +83,14 @@ function App() {
             generating new code.
           </p>
           <div>
-            {/*
-              TODO: This is just showing how it all connects. The way to call the extenionMessenger will obviously be different for some of these buttons.
-              TODO: Use React or vscode-webview-ui-toolkit stuff (or CSS I guess) to format this
-            */}
-            <VSCodeButton onClick={extensionMessenger.reviewCode}>
-              Review Code
-            </VSCodeButton>
-            <br />
-            <VSCodeButton onClick={extensionMessenger.explainCode}>
-              Explain Code
-            </VSCodeButton>
-            <br />
-            <VSCodeButton onClick={extensionMessenger.newConversaiton}>
+            {/* <VSCodeButton onClick={extensionMessenger.newConversaiton}>
               New Conversation
             </VSCodeButton>
             <br />
             <VSCodeButton onClick={extensionMessenger.deleteAllConversations}>
               Delete All Conversations
             </VSCodeButton>
-            <br />
+            <br /> */}
           </div>
           <div>{messages}</div>
         </div>
@@ -130,6 +118,14 @@ function App() {
               <span className="codicon codicon-send"></span>
             </VSCodeButton>
           </form>
+        </div>
+        <div className="chat-prompts">
+          <VSCodeButton onClick={extensionMessenger.reviewCode}>
+            Review Code
+          </VSCodeButton>
+          <VSCodeButton onClick={extensionMessenger.explainCode}>
+            Explain Code
+          </VSCodeButton>
         </div>
       </footer>
     </div>

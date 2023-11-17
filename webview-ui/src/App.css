@@ -18,11 +18,12 @@ main {
 }
 
 .App-footer {
-  min-height: 10vh;
-  display: flex;
+  min-height: 20vh;
+  text-align: justify;
+  /* display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
 }
 
 .App-header {
@@ -155,6 +156,6 @@ main {
   border-radius: 50%;
 }
 
-.App-link {
-  color: #61dafb;
+.chat-prompts {
+  text-align: center;
 }

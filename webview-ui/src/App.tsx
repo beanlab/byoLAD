@@ -74,7 +74,10 @@ function App() {
 
   return (
     <div className="App">
-      <img src={imagePaths.byoLadCircleImageUri} width="50%" />
+      <div className="top-logo">
+        <img src={imagePaths.byoLadCircleImageUri} className="App-logo" />
+        <p className="top-font">byoLAD</p>
+      </div>
       <div className="App-body">
         <div className="App-body1">
           <p>

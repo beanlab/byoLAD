@@ -123,10 +123,6 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
         "media",
         "circle_byolad.png",
       ]).toString(),
-      byoladIconUri: getUri(webview, extensionUri, [
-        "media",
-        "byolad_bw_zoom_24x24.svg",
-      ]).toString(),
     };
 
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below

@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import React from "react";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { ChatRole, Conversation } from "./utilities/ChatModel";
@@ -19,33 +19,25 @@ function App() {
   const [history, setHistory] = useState<Array<ChatMessage>>([]);
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
-  const [vsCodeTheme, setVsCodeTheme] = useState(VsCodeTheme.Dark);
 
-  useEffect(() => {
-    const theme = getVsCodeThemeFromCssClasses(document.body.className);
-    if (theme !== undefined) {
-      setVsCodeTheme(theme);
-    }
+  const theme = getVsCodeThemeFromCssClasses(document.body.className);
+  const [vsCodeTheme, setVsCodeTheme] = useState(theme || VsCodeTheme.Dark);
 
-    // Watches the <body> element of the webview for changes to its theme classes, tracking that state
-    const mutationObserver = new MutationObserver(
-      (mutations: MutationRecord[]) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            const theme = getVsCodeThemeFromCssClasses(document.body.className);
-            if (theme !== undefined) {
-              setVsCodeTheme(theme);
-            }
-            return;
+  // Watches the <body> element of the webview for changes to its theme classes, tracking that state
+  const mutationObserver = new MutationObserver(
+    (mutations: MutationRecord[]) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const theme = getVsCodeThemeFromCssClasses(document.body.className);
+          if (theme !== undefined) {
+            setVsCodeTheme(theme);
           }
-        });
-      },
-    );
-    mutationObserver.observe(document.body, { attributes: true });
-    return () => {
-      mutationObserver.disconnect();
-    };
-  }, []); // Empty array arg means the code in the `useEffect` will only run on mount and unmount
+          return;
+        }
+      });
+    },
+  );
+  mutationObserver.observe(document.body, { attributes: true });
 
   const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newval = event.target.value;

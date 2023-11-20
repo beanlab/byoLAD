@@ -73,7 +73,6 @@ function handleSuccessfulResponse(
 
   currentPanel.updateConversation(conversationManager.conversations, null);
   outputConversationHtml(conversationManager); // TODO: Change to updating the webview instead
-  //vscode.commands.executeCommand("vscode-byolad.refreshChatView"); // TODO: Use constants?
 }
 
 /**

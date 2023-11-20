@@ -10,8 +10,6 @@ import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConvers
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
-import { getRefreshChatViewCommand } from "./commands/getRefreshChatViewCommand";
-import { getDiffCodeBlockCommand } from "./commands/getDiffCodeBlockCommand";
 import { getAddCodeToConversationCommand } from "./commands/getAddCodeToConversationCommand";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -20,6 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
   const conversationManager = new ConversationManager(context);
   const chatWebviewProvider = new ChatWebviewProvider(
     context.extensionUri,
+    settingsProvider,
     conversationManager,
   );
 
@@ -50,14 +49,6 @@ export function activate(context: vscode.ExtensionContext) {
     conversationManager,
     chatWebviewProvider,
   );
-  const diffCodeBlockCommand = getDiffCodeBlockCommand(
-    settingsProvider,
-    conversationManager,
-  );
-  const refreshChatViewCommand = getRefreshChatViewCommand(
-    chatWebviewProvider,
-    conversationManager,
-  );
   const addCodeToConversationCommand = getAddCodeToConversationCommand(
     chatWebviewProvider,
     conversationManager,
@@ -76,8 +67,6 @@ export function activate(context: vscode.ExtensionContext) {
     reviewFileCodeCommand,
     explainCodeCommand,
     sendChatMessageCommand,
-    diffCodeBlockCommand,
-    refreshChatViewCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,

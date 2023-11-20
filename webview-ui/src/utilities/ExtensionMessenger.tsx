@@ -1,5 +1,5 @@
 import { vscode } from "./vscode";
-import { ChatMessage, CodeBlock, Conversation } from "./ChatModel";
+import { ChatMessage, Conversation } from "./ChatModel";
 
 /**
  * Sends messages to the extension context.
@@ -27,15 +27,29 @@ export class ExtensionMessenger {
     });
   }
 
-  diffClodeBlock() {
-    const demoCodeBlock = {
-      content:
-        "TODO: his is just a demo code block and is otherwise useless. This will actually need to use the code block the user has selected.",
-    } as CodeBlock;
+  copyToClipboard(content: string): void {
+    vscode.postMessage({
+      messageType: "copyToClipboard",
+      params: {
+        content: content,
+      },
+    });
+  }
+
+  diffClodeBlock(code: string) {
     vscode.postMessage({
       messageType: "diffCodeBlock",
       params: {
-        codeBlock: demoCodeBlock,
+        code: code,
+      },
+    });
+  }
+
+  insertCodeBlock(code: string) {
+    vscode.postMessage({
+      messageType: "insertCodeBlock",
+      params: {
+        code: code,
       },
     });
   }
@@ -73,6 +87,12 @@ export class ExtensionMessenger {
       params: {
         activeConversationId: conversation?.id || null,
       },
+    });
+  }
+
+  getByoladMessageIcon() {
+    vscode.postMessage({
+      messageType: "getByoladMessageIcon",
     });
   }
 }

@@ -63,13 +63,6 @@
           "editPresentation": "multilineText",
           "order": 3
         },
-        "vscode-byolad.explainCodePrompt": {
-          "type": "string",
-          "default": "Explain the following code to me in a way that I can easily understand without using too many words. You may explain it piece by piece with appropriate code references if that's useful.",
-          "description": "The prompt to use to explain code.",
-          "editPresentation": "multilineText",
-          "order": 4
-        },
         "vscode-byolad.applySuggestions.mode": {
           "type": "string",
           "default": "Manual",
@@ -81,7 +74,7 @@
             "See AI-proposed changes and apply selected changes manually",
             "Apply AI-proposed changes with the option to revert selected changes"
           ],
-          "order": 5
+          "order": 4
         },
         "vscode-byolad.applySuggestions.diffViewPosition": {
           "type": "string",
@@ -118,10 +111,7 @@
         "command": "vscode-byolad.reviewCode",
         "title": "byoLAD — Review Code",
         "category": "byoLAD",
-        "icon": {
-          "dark": "./media/icons8-stars-16-white.png",
-          "light": "./media/icons8-stars-16-black.png"
-        }
+        "icon": "media/byolad_bw_zoom_margin_16x16.svg"
       },
       {
         "command": "vscode-byolad.explainCode",
@@ -197,7 +187,7 @@
         {
           "id": "byoLAD",
           "title": "byoLAD",
-          "icon": "media/icons8-stars-16-white.png"
+          "icon": "media/byolad_bw_zoom_24x24.svg"
         }
       ]
     },
@@ -208,7 +198,7 @@
           "name": "byoLAD",
           "type": "webview",
           "contextualTitle": "byoLAD",
-          "icon": "media/icons8-stars-16-white.png"
+          "icon": "media/byolad_bw_zoom_24x24.svg"
         }
       ]
     },

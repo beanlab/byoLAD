@@ -1,18 +1,24 @@
 import * as vscode from "vscode";
-import { CodeBlock } from "../ChatModel/ChatModel";
+import { SettingsProvider } from "../helpers/SettingsProvider";
+import { diffCode } from "../helpers/diffCode";
+import { insertCode } from "../helpers/insertCode";
+import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
 
 export class ChatViewMessageHandler {
+  private settingsProvider: SettingsProvider;
   conversationManager: ConversationManager;
   chatViewProvider: ChatWebviewProvider;
 
   constructor(
+    settingsProvider: SettingsProvider,
     conversationManager: ConversationManager,
     chatViewProvider: ChatWebviewProvider,
   ) {
     this.conversationManager = conversationManager;
     this.chatViewProvider = chatViewProvider;
+    this.settingsProvider = settingsProvider;
   }
 
   /**
@@ -20,7 +26,7 @@ export class ChatViewMessageHandler {
    *
    * @param message The message sent from the webview view context. Its parameters must be coordinated with the webview view context.
    */
-  public handleMessage(message: WebviewToExtensionMessage) {
+  public async handleMessage(message: WebviewToExtensionMessage) {
     switch (message.messageType) {
       case "newConversation":
         vscode.commands.executeCommand("vscode-byolad.newConversation");
@@ -49,12 +55,19 @@ export class ChatViewMessageHandler {
         );
         break;
       }
+      case "copyToClipboard": {
+        const params = message.params as CopyToClipboardMessageParams;
+        await copyToClipboard(params.content);
+        break;
+      }
       case "diffCodeBlock": {
         const params = message.params as DiffCodeBlockParams;
-        vscode.commands.executeCommand(
-          "vscode-byolad.diffCodeBlock",
-          params.codeBlock,
-        );
+        await diffCode(params.code, this.settingsProvider);
+        break;
+      }
+      case "insertCodeBlock": {
+        const params = message.params as InsertCodeBlockParams;
+        await insertCode(params.code);
         break;
       }
       case "getCodeBlock": {
@@ -92,7 +105,23 @@ interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
 }
 
 interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
-  codeBlock: CodeBlock;
+  code: string;
+}
+
+interface InsertCodeBlockParams extends WebviewToExtensionMessageParams {
+  code: string;
+}
+
+interface CopyToClipboardMessageParams extends WebviewToExtensionMessageParams {
+  content: string;
+}
+
+interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
+  chatId: number;
+}
+
+interface SetActiveChatParams extends WebviewToExtensionMessageParams {
+  activeConversationId: number;
 }
 
 interface GetCodeBlockParams extends WebviewToExtensionMessageParams {

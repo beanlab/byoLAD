@@ -1,8 +1,4 @@
-import {
-  ApplyChangesPosition,
-  ApplySuggestionsMode,
-  LLMProvider,
-} from "./types";
+import { ApplyChangesPosition, LLMProvider } from "./types";
 import { injectChatModel } from "./injectChatModel";
 import * as vscode from "vscode";
 import { MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE } from "../commands/constants";
@@ -57,10 +53,6 @@ export class SettingsProvider {
 
   getProvider(): LLMProvider {
     return this._config.get("provider") as LLMProvider;
-  }
-
-  getApplySuggestionsMode(): ApplySuggestionsMode {
-    return this._config.get("applySuggestions.mode") as ApplySuggestionsMode;
   }
 
   /**

@@ -10,6 +10,9 @@ export const getDeleteAllConversationsCommand = (
     "vscode-byolad.deleteAllConversations",
     () => {
       conversationManager.clearAllConversations();
-      chatWebviewProvider.refresh(null);
+      chatWebviewProvider.updateConversation(
+        conversationManager.conversations,
+        null,
+      );
     },
   );

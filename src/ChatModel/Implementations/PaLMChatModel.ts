@@ -41,9 +41,9 @@ interface PaLMExample {
 }
 
 enum PaLMContentBlockedReason {
-  BLOCKED_REASON_UNSPECIFIED = "Blocked reason unspecified",
-  SAFETY = "Safety",
-  OTHER = "Other",
+  BLOCKED_REASON_UNSPECIFIED = "BLOCKED_REASON_UNSPECIFIED",
+  SAFETY = "SAFETY",
+  OTHER = "OTHER",
 }
 
 export class PaLMChatModel implements ChatModel {
@@ -64,8 +64,10 @@ export class PaLMChatModel implements ChatModel {
         prompt: this.convertToPaLMPrompt(request.conversation),
       })
       .then((response) => {
-        const candidates = response[0] as PalMMessage[];
-        const filters = response[1] as PaLMContentFilter[];
+        const candidates: PalMMessage[] | null = response[0]
+          .candidates as PalMMessage[];
+        const filters: PaLMContentFilter[] | null = response[0]
+          .filters as PaLMContentFilter[];
         if (candidates && candidates.length > 0) {
           return {
             success: true,
@@ -75,7 +77,7 @@ export class PaLMChatModel implements ChatModel {
             },
           };
         } else {
-          if (filters.length > 0) {
+          if (filters && filters.length > 0) {
             return {
               success: false,
               errorMessage: this.getFilterErrorMessage(filters),
@@ -141,11 +143,12 @@ export class PaLMChatModel implements ChatModel {
   convertToPaLMMessages(chatMessages: ChatMessage[]): PalMMessage[] {
     // Add messages to the beginning of the conversation history to provide examples/set the stage
     const introMessages: ChatMessage[] = getExampleMessages();
-    chatMessages.splice(0, 0, ...introMessages);
+
+    const messages: ChatMessage[] = [...introMessages, ...chatMessages];
 
     // Convert system messages to user messages so that PaLM can handle it (only supports two authors)
     const messagesWithAcceptedAuthorship: ChatMessage[] = [];
-    for (const message of chatMessages) {
+    for (const message of messages) {
       if (message.role === ChatRole.System) {
         messagesWithAcceptedAuthorship.push({
           ...message,

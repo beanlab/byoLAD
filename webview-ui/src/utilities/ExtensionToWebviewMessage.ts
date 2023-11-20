@@ -7,10 +7,6 @@ export interface ExtensionToWebviewMessage {
 
 export interface ExtensionToWebviewMessageParams {}
 
-export interface RefreshChatMessageParams {
-  activeConversation?: Conversation;
-}
-
 export interface UpdateConversationMessageParams {
   conversations: Conversation[];
   activeConversationId?: number;

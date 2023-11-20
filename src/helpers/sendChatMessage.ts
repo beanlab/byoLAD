@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
-import { ChatMessage, ChatModelResponse } from "../ChatModel/ChatModel";
+import {
+  ChatMessage,
+  ChatModelResponse,
+  ChatRole,
+} from "../ChatModel/ChatModel";
 import { Conversation } from "../ChatModel/ChatModel";
 import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
@@ -18,8 +22,15 @@ export async function sendChatMessage(
     return;
   }
 
-  // TODO: I think this actually modifies the conversation as stored in the workspace state. Is that a problem?
-  conversation.messages.push(chatMessage);
+  if (
+    conversation.messages.length === 0 ||
+    conversation.messages[conversation.messages.length - 1].role !==
+      ChatRole.User
+  ) {
+    conversation.messages.push(chatMessage);
+  } else {
+    conversation.messages[conversation.messages.length - 1] = chatMessage;
+  }
 
   let response: ChatModelResponse;
   // TODO: Use a loading/typing indicator of sorts in the side panel instead of notification progress bar

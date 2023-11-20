@@ -5,6 +5,7 @@ import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
+import { ChatMessage } from "../ChatModel/ChatModel";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
@@ -51,7 +52,6 @@ export class ChatViewMessageHandler {
         vscode.commands.executeCommand(
           "vscode-byolad.sendChatMessage",
           params.userInput,
-          params.useCodeReference,
         );
         break;
       }
@@ -100,8 +100,7 @@ interface WebviewToExtensionMessage {
 interface WebviewToExtensionMessageParams {}
 
 interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
-  userInput: string;
-  useCodeReference: boolean;
+  userInput: ChatMessage;
 }
 
 interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {

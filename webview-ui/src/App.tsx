@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState } from "react";
 import { Conversation } from "./utilities/ChatModel";
+import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
   ExtensionToWebviewMessage,
   UpdateConversationMessageParams,
@@ -8,7 +9,8 @@ import {
 import { ChatView } from "./components/ChatView";
 import { ChatList } from "./components/ChatList";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
-import { ImagePaths } from "./types";
+import { ImagePaths, VsCodeTheme } from "./types";
+import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 
 function App() {
   const [fetchConversations, setFetchConversations] = useState<boolean>(true);
@@ -17,6 +19,25 @@ function App() {
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
+
+  const theme = getVsCodeThemeFromCssClasses(document.body.className);
+  const [vsCodeTheme, setVsCodeTheme] = useState(theme || VsCodeTheme.Dark);
+
+  // Watches the <body> element of the webview for changes to its theme classes, tracking that state
+  const mutationObserver = new MutationObserver(
+    (mutations: MutationRecord[]) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const theme = getVsCodeThemeFromCssClasses(document.body.className);
+          if (theme !== undefined) {
+            setVsCodeTheme(theme);
+          }
+          return;
+        }
+      });
+    },
+  );
+  mutationObserver.observe(document.body, { attributes: true });
 
   const changeActiveChat = (conversation: Conversation | null) => {
     extensionMessenger.setActiveChat(conversation);
@@ -62,17 +83,19 @@ function App() {
     }
   });
 
-  if (activeChat) {
-    return (
-      <ChatView
-        activeChat={activeChat}
-        changeActiveChat={changeActiveChat}
-        imagePaths={imagePaths}
-      />
-    );
-  } else {
-    return <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />;
-  }
+  return (
+    <VsCodeThemeContext.Provider value={vsCodeTheme}>
+      {activeChat ? (
+        <ChatView
+          activeChat={activeChat}
+          changeActiveChat={changeActiveChat}
+          imagePaths={imagePaths}
+        />
+      ) : (
+        <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
+      )}
+    </VsCodeThemeContext.Provider>
+  );
 }
 
 export default App;

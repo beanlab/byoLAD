@@ -82,7 +82,6 @@ export const ChatView = ({
           role={message.role}
           messageBlocks={message.content}
           extensionMessenger={extensionMessenger}
-          imagePaths={imagePaths}
         />
       );
     }
@@ -99,10 +98,6 @@ export const ChatView = ({
             generating new code.
           </p>
           <div>
-            {/*
-              TODO: This is just showing how it all connects. The way to call the extenionMessenger will obviously be different for some of these buttons.
-              TODO: Use React or vscode-webview-ui-toolkit stuff (or CSS I guess) to format this
-            */}
             <VSCodeButton onClick={() => changeActiveChat(null)}>
               Back
             </VSCodeButton>
@@ -153,7 +148,7 @@ export const ChatView = ({
               aria-label="Send message"
               title="Send message"
             >
-              <span className="codicon codicon-send"></span>
+              <i className="codicon codicon-send"></i>
             </VSCodeButton>
           </form>
         </div>

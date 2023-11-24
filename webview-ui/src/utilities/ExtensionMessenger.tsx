@@ -1,4 +1,5 @@
 import { vscode } from "./vscode";
+import { ChatMessage, Conversation } from "./ChatModel";
 
 /**
  * Sends messages to the extension context.
@@ -16,7 +17,7 @@ export class ExtensionMessenger {
     });
   }
 
-  sendChatMessage(userInput: string, useCodeReference: boolean) {
+  sendChatMessage(userInput: ChatMessage, useCodeReference: boolean) {
     vscode.postMessage({
       messageType: "sendChatMessage",
       params: {
@@ -59,9 +60,33 @@ export class ExtensionMessenger {
     });
   }
 
-  newConversaiton() {
+  newConversation() {
     vscode.postMessage({
       messageType: "newConversation",
+    });
+  }
+
+  getConversations() {
+    vscode.postMessage({
+      messageType: "getConversations",
+    });
+  }
+
+  getCodeBlock(chatId: number) {
+    vscode.postMessage({
+      messageType: "getCodeBlock",
+      params: {
+        chatId: chatId,
+      },
+    });
+  }
+
+  setActiveChat(conversation: Conversation | null) {
+    vscode.postMessage({
+      messageType: "setActiveChat",
+      params: {
+        activeConversationId: conversation?.id || null,
+      },
     });
   }
 

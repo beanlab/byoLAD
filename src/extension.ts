@@ -10,7 +10,7 @@ import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConvers
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
-import { getRefreshChatViewCommand } from "./commands/getRefreshChatViewCommand";
+import { getAddCodeToConversationCommand } from "./commands/getAddCodeToConversationCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
@@ -19,6 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
   const chatWebviewProvider = new ChatWebviewProvider(
     context.extensionUri,
     settingsProvider,
+    conversationManager,
   );
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
@@ -46,8 +47,9 @@ export function activate(context: vscode.ExtensionContext) {
   const sendChatMessageCommand = getSendChatMessageCommand(
     settingsProvider,
     conversationManager,
+    chatWebviewProvider,
   );
-  const refreshChatViewCommand = getRefreshChatViewCommand(
+  const addCodeToConversationCommand = getAddCodeToConversationCommand(
     chatWebviewProvider,
     conversationManager,
   );
@@ -65,11 +67,11 @@ export function activate(context: vscode.ExtensionContext) {
     reviewFileCodeCommand,
     explainCodeCommand,
     sendChatMessageCommand,
-    refreshChatViewCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
     chatViewDisposable,
+    addCodeToConversationCommand,
   );
 }
 

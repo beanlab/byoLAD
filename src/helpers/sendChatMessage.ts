@@ -5,7 +5,6 @@ import {
   ChatRole,
 } from "../ChatModel/ChatModel";
 import { Conversation } from "../ChatModel/ChatModel";
-import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
@@ -83,7 +82,6 @@ function handleSuccessfulResponse(
   }
 
   currentPanel.updateConversation(conversationManager.conversations, null);
-  outputConversationHtml(conversationManager); // TODO: Change to updating the webview instead
 }
 
 /**

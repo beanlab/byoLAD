@@ -35,6 +35,10 @@ export class SettingsProvider {
     );
   }
 
+  getBasePromptInstruction(): string {
+    return this._config.get(" ") as string;
+  }
+
   getReviewCodePrompt(): string {
     return this._config.get("reviewCodePrompt") as string;
   }

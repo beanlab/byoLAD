@@ -144,7 +144,9 @@ export class ConversationManager {
       id: newId,
       name,
       messages: messages ?? [],
-      contextInstruction: this.settingsProvider.getBasePromptInstruction(),
+      contextInstruction:
+        this.settingsProvider.getBasePromptInstruction() +
+        constants.LLM_MESSAGE_FORMATTING_INSTRUCTION,
     };
     return conversation;
   }

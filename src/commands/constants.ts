@@ -5,6 +5,9 @@ export const UNKNOWN_RESPONSE_ERROR_MESSAGE =
 export const DIFF_VIEW_TITLE_SUFFIX = ": AI Suggestions ↔ Current";
 export const MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE =
   "Error with byoLAD extension setting applySuggestions.diffViewPosition: Could not get merge-conflict.diffViewPosition setting or it doesn't match any of the available options (likely due to a breaking change in that extension). Using the default byoLAD setting.";
+export const LLM_MESSAGE_FORMATTING_INSTRUCTION = `The user will provide you with requests/questions and optionally code samples to modify or use as reference.
+  You MUST respond in valid Markdown format with any code samples using code fences and a language identifier.
+  This is necessary so the user can easily see which parts of your response are code and which parts are just descriptive/explanatory Markdown text.`;
 
 // ConversationManager Keys
 export const CONVERSATIONS_KEY = "conversations";

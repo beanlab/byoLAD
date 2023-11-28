@@ -56,9 +56,9 @@
           "markdownDescription": "**Required**\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
           "order": 2
         },
-        "vscode.byolad.basePromptInstruction": {
+        "vscode-byolad.basePromptInstruction": {
           "type": "string",
-          "default": "You are a friendly coding assistant helping to answer a developer's questions about their code as they are writing/editing it.\nThe user will provide you with requests/questions and optionally code samples to modify or use as reference.\nKeep your answers as consise as possible while still being helpful to the user.\nYou MUST respond in valid Markdown format with any code samples using code fences and a language identifier.\nThis is necessary so the user can easily see which parts of your response are code and which parts are just descriptive/explanatory Markdown text.\nIf the user's request is not related to code or programming, you should respond with something like 'I'm sorry, I can't help with that. Do you have a question about your code?' If the user provides you with a large code sample and you only need to modify a small portion of it, you should only return the modified portion of the code only and indicate which part you are modifying/improving/replacing.",
+          "default": "You are a friendly coding assistant helping to answer a developer's questions about their code as they are writing/editing it.\nKeep your answers as consise as possible while still being helpful to the user.\nIf the user's request is not related to code or programming, you should respond with something like 'I'm sorry, I can't help with that. Do you have a question about your code?' If the user provides you with a large code sample and you only need to modify a small portion of it, you should return the modified portion of the code only and indicate which part you are modifying/improving/replacing.",
           "description": "The base instructions provided to the LLM to establish its overall purpose.",
           "editPresentation": "multilineText",
           "order": 3

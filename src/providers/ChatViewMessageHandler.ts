@@ -3,11 +3,22 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { diffCode } from "../helpers/diffCode";
 import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
+import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatWebviewProvider } from "./ChatViewProvider";
+import { ChatMessage } from "../ChatModel/ChatModel";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
+  conversationManager: ConversationManager;
+  chatViewProvider: ChatWebviewProvider;
 
-  constructor(settingsProvider: SettingsProvider) {
+  constructor(
+    settingsProvider: SettingsProvider,
+    conversationManager: ConversationManager,
+    chatViewProvider: ChatWebviewProvider,
+  ) {
+    this.conversationManager = conversationManager;
+    this.chatViewProvider = chatViewProvider;
     this.settingsProvider = settingsProvider;
   }
 
@@ -35,7 +46,6 @@ export class ChatViewMessageHandler {
         vscode.commands.executeCommand(
           "vscode-byolad.sendChatMessage",
           params.userInput,
-          params.useCodeReference,
         );
         break;
       }
@@ -52,6 +62,18 @@ export class ChatViewMessageHandler {
       case "insertCodeBlock": {
         const params = message.params as InsertCodeBlockParams;
         await insertCode(params.code);
+        break;
+      }
+      case "getCodeBlock": {
+        const params = message.params as GetCodeBlockParams;
+        this.conversationManager.activeConversationId = params.chatId;
+        vscode.commands.executeCommand("vscode-byolad.addCodeToConversation");
+        break;
+      }
+      case "setActiveChat": {
+        const params = message.params as SetActiveChatParams;
+        this.conversationManager.activeConversationId =
+          params.activeConversationId;
         break;
       }
       default:
@@ -72,8 +94,7 @@ interface WebviewToExtensionMessage {
 interface WebviewToExtensionMessageParams {}
 
 interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
-  userInput: string;
-  useCodeReference: boolean;
+  userInput: ChatMessage;
 }
 
 interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
@@ -86,4 +107,20 @@ interface InsertCodeBlockParams extends WebviewToExtensionMessageParams {
 
 interface CopyToClipboardMessageParams extends WebviewToExtensionMessageParams {
   content: string;
+}
+
+interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
+  chatId: number;
+}
+
+interface SetActiveChatParams extends WebviewToExtensionMessageParams {
+  activeConversationId: number;
+}
+
+interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
+  chatId: number;
+}
+
+interface SetActiveChatParams extends WebviewToExtensionMessageParams {
+  activeConversationId: number;
 }

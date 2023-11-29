@@ -1,26 +1,24 @@
 import { VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
 import { ChatRole, CodeBlock, MessageBlock } from "../utilities/ChatModel";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { ImagePaths } from "../types";
 import { CodeMessageBlock } from "./MessageBlock";
 import { TextMessageBlock } from "./MessageBlock";
+import { ByoLadIconAdaptiveTheme } from "./ByoLadIconAdaptiveTheme";
 
 interface MessageProps {
   role: ChatRole;
   messageBlocks: MessageBlock[];
   extensionMessenger: ExtensionMessenger;
-  imagePaths?: ImagePaths;
 }
 export const Message: React.FC<MessageProps> = ({
   role,
   messageBlocks,
   extensionMessenger,
-  imagePaths,
 }) => (
   <div>
     <VSCodeDivider role="separator" />
     <div className="message">
-      <MessageHeader role={role} assistantIconUri={imagePaths?.byoladIconUri} />
+      <MessageHeader role={role} />
       <div className="message-block">
         {messageBlocks.map((messageBlock) => {
           if (messageBlock.type === "text") {
@@ -46,12 +44,8 @@ export const Message: React.FC<MessageProps> = ({
 
 interface MessageHeaderProps {
   role: ChatRole;
-  assistantIconUri?: string;
 }
-const MessageHeader: React.FC<MessageHeaderProps> = ({
-  role,
-  assistantIconUri,
-}) => {
+const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
   switch (role) {
     case ChatRole.User:
       return (
@@ -63,11 +57,7 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
     case ChatRole.Assistant:
       return (
         <div className="message-header">
-          {assistantIconUri ? (
-            <img src={assistantIconUri} alt="Assistant Icon" />
-          ) : (
-            <i className="codicon codicon-hubot"></i>
-          )}
+          <ByoLadIconAdaptiveTheme />
           <div className="role-name">byoLAD</div>
         </div>
       );

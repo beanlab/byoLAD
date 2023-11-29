@@ -3,19 +3,18 @@ import {
   ChatMessage,
   ChatModelResponse,
   ChatRole,
-  CodeBlock,
-  TextBlock,
 } from "../ChatModel/ChatModel";
 import { Conversation } from "../ChatModel/ChatModel";
 import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
 import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 export async function sendChatMessage(
-  messageText: TextBlock,
-  codeReference: CodeBlock | null,
+  chatMessage: ChatMessage,
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
+  currentPanel: ChatWebviewProvider | null,
 ) {
   const conversation = conversationManager.getActiveConversation();
   if (!conversation) {
@@ -23,11 +22,15 @@ export async function sendChatMessage(
     return;
   }
 
-  // TODO: I think this actually modifies the conversation as stored in the workspace state. Is that a problem?
-  conversation.messages.push({
-    role: ChatRole.User,
-    content: codeReference ? [messageText, codeReference] : [messageText],
-  } as ChatMessage);
+  if (
+    conversation.messages.length === 0 ||
+    conversation.messages[conversation.messages.length - 1].role !==
+      ChatRole.User
+  ) {
+    conversation.messages.push(chatMessage);
+  } else {
+    conversation.messages[conversation.messages.length - 1] = chatMessage;
+  }
 
   let response: ChatModelResponse;
   // TODO: Use a loading/typing indicator of sorts in the side panel instead of notification progress bar
@@ -50,6 +53,7 @@ export async function sendChatMessage(
           response.message,
           conversation,
           conversationManager,
+          currentPanel,
         );
       } else {
         handleErrorResponse(response);
@@ -68,13 +72,18 @@ function handleSuccessfulResponse(
   responseMessage: ChatMessage,
   conversation: Conversation,
   conversationManager: ConversationManager,
+  currentPanel: ChatWebviewProvider | null,
 ): void {
   vscode.window.showInformationMessage("Successful response!"); // TODO: DELETE ME
   conversation.messages.push(responseMessage);
   conversationManager.updateConversation(conversation);
 
+  if (!currentPanel) {
+    return;
+  }
+
+  currentPanel.updateConversation(conversationManager.conversations, null);
   outputConversationHtml(conversationManager); // TODO: Change to updating the webview instead
-  vscode.commands.executeCommand("vscode-byolad.refreshChatView"); // TODO: Use constants?
 }
 
 /**

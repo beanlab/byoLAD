@@ -15,7 +15,10 @@ import { getAddCodeToConversationCommand } from "./commands/getAddCodeToConversa
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
-  const conversationManager = new ConversationManager(context);
+  const conversationManager = new ConversationManager(
+    context,
+    settingsProvider,
+  );
   const chatWebviewProvider = new ChatWebviewProvider(
     context.extensionUri,
     settingsProvider,
@@ -39,10 +42,12 @@ export function activate(context: vscode.ExtensionContext) {
   const reviewFileCodeCommand = getReviewCodeCommand(
     settingsProvider,
     conversationManager,
+    chatWebviewProvider,
   );
   const explainCodeCommand = getExplainCodeCommand(
     settingsProvider,
     conversationManager,
+    chatWebviewProvider,
   );
   const sendChatMessageCommand = getSendChatMessageCommand(
     settingsProvider,

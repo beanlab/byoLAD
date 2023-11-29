@@ -5,6 +5,7 @@ import { ChatRole, TextBlock } from "../ChatModel/ChatModel";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { getCodeReference } from "../helpers/getCodeReference";
 import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 /**
  * Queries the model for a reviewed, edited version of the current file contents.
@@ -13,6 +14,7 @@ import { ConversationManager } from "../Conversation/ConversationManager";
 export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
+  currentPanel: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     "vscode-byolad.reviewCode",
@@ -39,7 +41,7 @@ export const getReviewCodeCommand = (
         message,
         settingsProvider,
         conversationManager,
-        null,
+        currentPanel,
       );
     },
   );

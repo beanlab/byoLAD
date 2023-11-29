@@ -4,10 +4,12 @@ import { ConversationManager } from "../Conversation/ConversationManager";
 import { getCodeReference } from "../helpers/getCodeReference";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { SettingsProvider } from "../helpers/SettingsProvider";
+import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 export const getExplainCodeCommand = (
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
+  currentPanel: ChatWebviewProvider,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.explainCode", async () => {
     const activeEditor = vscode.window.activeTextEditor;
@@ -28,5 +30,10 @@ export const getExplainCodeCommand = (
       content: codeReference ? [textBlock, codeReference] : [textBlock],
     };
 
-    await sendChatMessage(message, settingsProvider, conversationManager, null);
+    await sendChatMessage(
+      message,
+      settingsProvider,
+      conversationManager,
+      currentPanel,
+    );
   });

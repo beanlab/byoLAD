@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { ChatRole, Conversation, TextBlock } from "../utilities/ChatModel";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
 
@@ -87,48 +88,49 @@ export const ChatView = ({
     }
   });
 
+  let welcomeMessage = null; 
+  if (activeChat.messages.length === 0) { 
+    welcomeMessage = (
+      <div className="welcome-message">
+          <div className="top-logo">
+            <img src={imagePaths.byoLadCircleImageUri} className="App-logo"/>
+            <p className="top-font">byoLAD</p>
+          </div>
+          <p>
+            Here you can chat with your AI, ask questions about code, or generate code.
+            You can add snippets of code to your conversation from the editor by
+            selecting the code and clicking the "Add to chat" button.
+          </p>
+        </div> 
+    );
+  }
+
   return (
     <div className="App">
-      <img src={imagePaths.byoLadCircleImageUri} width="50%" />
-      <div className="App-body">
-        <div className="App-body1">
-          <p>
-            Here you can chat with the AI about your code. You can ask whatever
-            you want, but the best is to ask question about your code or
-            generating new code.
-          </p>
-          <div>
-            <VSCodeButton onClick={() => changeActiveChat(null)}>
-              Back
-            </VSCodeButton>
-            <br />
-            <VSCodeButton onClick={extensionMessenger.reviewCode}>
-              Review Code
-            </VSCodeButton>
-            <br />
-            <VSCodeButton onClick={extensionMessenger.explainCode}>
-              Explain Code
-            </VSCodeButton>
-            <br />
-            <VSCodeButton onClick={extensionMessenger.newConversation}>
-              New Conversation
-            </VSCodeButton>
-            <br />
-            <VSCodeButton onClick={extensionMessenger.deleteAllConversations}>
-              Delete All Conversations
-            </VSCodeButton>
-            <br />
-            <VSCodeButton
-              onClick={() => extensionMessenger.getCodeBlock(activeChat.id)}
-            >
-              Add Code
-            </VSCodeButton>
-            <br />
-          </div>
-          <div>{messages}</div>
-        </div>
+      <div className="App-header">
+      <VSCodeBadge className="navbar">
+          <VSCodeButton
+            appearance="icon"
+            aria-label="Back to chat list"
+            title="Back to chat list"
+            onClick={() => changeActiveChat(null)}
+          >
+            <i className="codicon codicon-chevron-left"></i>
+          </VSCodeButton>
+          <VSCodeButton
+            appearance="icon"
+            aria-label="New conversation"
+            title="New conversation"
+            onClick={extensionMessenger.newConversation}
+          >
+            <i className="codicon codicon-add"></i>
+          </VSCodeButton>
+      </VSCodeBadge>
       </div>
-
+      <div className="App-body">
+        <div>{welcomeMessage}</div>
+        <div>{messages}</div>
+      </div>
       <footer className="App-footer">
         <div className="chat-box">
           <form
@@ -140,7 +142,7 @@ export const ChatView = ({
               onChange={handleInputOnChange}
               value={userPrompt}
               type="text"
-              placeholder="Ask a question to the AI"
+              placeholder="Ask a question"
             />
             <VSCodeButton
               type="submit"
@@ -151,6 +153,18 @@ export const ChatView = ({
               <i className="codicon codicon-send"></i>
             </VSCodeButton>
           </form>
+        </div>
+        <div className="chat-prompts">
+          <div className="prompt-button">
+            <VSCodeButton onClick={extensionMessenger.reviewCode}>
+              Review Code
+            </VSCodeButton>
+          </div>
+          <div className="prompt-button">
+            <VSCodeButton onClick={extensionMessenger.explainCode}>
+              Explain Code
+            </VSCodeButton>
+          </div>
         </div>
       </footer>
     </div>

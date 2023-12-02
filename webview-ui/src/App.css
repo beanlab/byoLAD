@@ -2,11 +2,35 @@
   text-align: center;
 }
 
+/* Styling for the back and add button at top of page */
+.navigation {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-bottom: 4px;
+  padding-left: 5%;
+  /* padding-top: 5%; */
+}
+
+.App-header {
+  position: fixed;
+  width: 100%;
+  height: 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 20px;
+}
+
 /* Styles the logo at the top of the page */
 .top-logo {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  padding-top: 4px;
 }
 
 .top-font {
@@ -18,11 +42,12 @@
   height: 60px;
 }
 
-/* Styles the text at the top of the page */
-.App-body1 {
+/* Styles the text and content below the nav bar */
+.App-body {
   font-size: calc(8px + 2vmin);
   padding-left: 5%;
   padding-right: 5%;
+  padding-top: 26px;
 }
 
 /* Chat Bar Styling Below */
@@ -39,6 +64,10 @@
   justify-content: space-around;
   padding-left: 5%;
   padding-bottom: 5%;
+}
+
+.prompt-button {
+  padding-left: 4px;
 }
 
 .chat-bar {
@@ -99,4 +128,25 @@
   border-color: var(--vscode-menu-border);
   display: flex;
   justify-content: flex-end;
+}
+
+/* Styling for the the conversation list page */
+.convo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.convo-id {
+  padding-right: 20px;
+  cursor: pointer;
+}
+
+.delete-all {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 4px;
 }

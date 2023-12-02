@@ -109,6 +109,11 @@
         "category": "byoLAD"
       },
       {
+        "command": "vscode-byolad.deleteConversation",
+        "title": "byoLAD — Delete Conversation",
+        "category": "byoLAD"
+      },
+      {
         "command": "vscode-byolad.reviewCode",
         "title": "byoLAD — Review Code",
         "category": "byoLAD",

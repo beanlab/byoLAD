@@ -114,6 +114,7 @@ export const ChatView = ({
             aria-label="Back to chat list"
             title="Back to chat list"
             onClick={() => changeActiveChat(null)}
+            className="back-button"
           >
             <i className="codicon codicon-chevron-left"></i>
           </VSCodeButton>
@@ -142,7 +143,7 @@ export const ChatView = ({
               onChange={handleInputOnChange}
               value={userPrompt}
               type="text"
-              placeholder="Ask a question"
+              placeholder="Message"
             />
             <VSCodeButton
               type="submit"

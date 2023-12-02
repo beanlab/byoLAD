@@ -25,6 +25,10 @@
   height: 20px;
 }
 
+.back-button {
+  padding-left: 5px;
+}
+
 /* Styles the logo at the top of the page */
 .top-logo {
   display: flex;

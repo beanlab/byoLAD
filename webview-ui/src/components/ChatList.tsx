@@ -35,7 +35,7 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
             appearance="icon"
             aria-label="Delete conversation"
             title="Delete conversation"
-            onClick={() => changeActiveChat(null)}
+            onClick={() => extensionMessenger.deleteConversation(conversation.id)}
           >
             <i className="codicon codicon-remove"></i>
           </VSCodeButton>
@@ -55,7 +55,7 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
             appearance="icon"
             aria-label="New conversation"
             title="New conversation"
-            onClick={() => changeActiveChat(null)}
+            onClick={extensionMessenger.newConversation}
           >
             <i className="codicon codicon-add"></i>
           </VSCodeButton>

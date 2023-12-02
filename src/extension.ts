@@ -7,6 +7,7 @@ import { ConversationManager } from "./Conversation/ConversationManager";
 import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
 import { getNewConversationCommand } from "./commands/getNewConversationCommand";
 import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConversationsCommand";
+import { getDeleteConversationCommand } from "./commands/getDeleteConversationCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
@@ -36,6 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
   );
   const deleteAllConversationsCommand = getDeleteAllConversationsCommand(
+    conversationManager,
+    chatWebviewProvider,
+  );
+  const deleteConversationCommand = getDeleteConversationCommand(
     conversationManager,
     chatWebviewProvider,
   );
@@ -69,6 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     newConversationCommand,
     deleteAllConversationsCommand,
+    deleteConversationCommand,
     reviewFileCodeCommand,
     explainCodeCommand,
     sendChatMessageCommand,

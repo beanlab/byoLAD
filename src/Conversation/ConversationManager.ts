@@ -2,12 +2,15 @@ import { Conversation } from "../ChatModel/ChatModel";
 import { ExtensionContext } from "vscode";
 import { ChatMessage } from "../ChatModel/ChatModel";
 import * as constants from "../commands/constants";
+import { SettingsProvider } from "../helpers/SettingsProvider";
 
 export class ConversationManager {
   private readonly context: ExtensionContext;
+  private readonly settingsProvider: SettingsProvider;
 
-  constructor(context: ExtensionContext) {
+  constructor(context: ExtensionContext, settingsProvider: SettingsProvider) {
     this.context = context;
+    this.settingsProvider = settingsProvider;
   }
 
   get conversations(): Conversation[] {
@@ -141,7 +144,9 @@ export class ConversationManager {
       id: newId,
       name,
       messages: messages ?? [],
-      contextInstruction: constants.CONTEXT_INSTRUCTION,
+      contextInstruction:
+        this.settingsProvider.getBasePromptInstruction() +
+        constants.LLM_MESSAGE_FORMATTING_INSTRUCTION,
     };
     return conversation;
   }

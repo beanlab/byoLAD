@@ -32,13 +32,13 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
         </div>
         {/* TODO: add a function to delete a single conversation to make button work */}
         <VSCodeButton
-            appearance="icon"
-            aria-label="Delete conversation"
-            title="Delete conversation"
-            onClick={() => extensionMessenger.deleteConversation(conversation.id)}
-          >
-            <i className="codicon codicon-remove"></i>
-          </VSCodeButton>
+          appearance="icon"
+          aria-label="Delete conversation"
+          title="Delete conversation"
+          onClick={() => extensionMessenger.deleteConversation(conversation.id)}
+        >
+          <i className="codicon codicon-remove"></i>
+        </VSCodeButton>
       </div>
     );
   });
@@ -51,14 +51,14 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
         </VSCodeButton>
       </div> */}
       <VSCodeBadge className="navbar">
-          <VSCodeButton
-            appearance="icon"
-            aria-label="New conversation"
-            title="New conversation"
-            onClick={extensionMessenger.newConversation}
-          >
-            <i className="codicon codicon-add"></i>
-          </VSCodeButton>
+        <VSCodeButton
+          appearance="icon"
+          aria-label="New conversation"
+          title="New conversation"
+          onClick={extensionMessenger.newConversation}
+        >
+          <i className="codicon codicon-add"></i>
+        </VSCodeButton>
       </VSCodeBadge>
       {listOfChats}
     </div>

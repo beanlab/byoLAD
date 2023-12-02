@@ -88,27 +88,27 @@ export const ChatView = ({
     }
   });
 
-  let welcomeMessage = null; 
-  if (activeChat.messages.length === 0) { 
+  let welcomeMessage = null;
+  if (activeChat.messages.length === 0) {
     welcomeMessage = (
       <div className="welcome-message">
-          <div className="top-logo">
-            <img src={imagePaths.byoLadCircleImageUri} className="App-logo"/>
-            <p className="top-font">byoLAD</p>
-          </div>
-          <p>
-            Here you can chat with your AI, ask questions about code, or generate code.
-            You can add snippets of code to your conversation from the editor by
-            selecting the code and clicking the "Add to chat" button.
-          </p>
-        </div> 
+        <div className="top-logo">
+          <img src={imagePaths.byoLadCircleImageUri} className="App-logo" />
+          <p className="top-font">byoLAD</p>
+        </div>
+        <p>
+          Here you can chat with your AI, ask questions about code, or generate
+          code. You can add snippets of code to your conversation from the
+          editor by selecting the code and clicking the "Add to chat" button.
+        </p>
+      </div>
     );
   }
 
   return (
     <div className="App">
       <div className="App-header">
-      <VSCodeBadge className="navbar">
+        <VSCodeBadge className="navbar">
           <VSCodeButton
             appearance="icon"
             aria-label="Back to chat list"
@@ -126,7 +126,7 @@ export const ChatView = ({
           >
             <i className="codicon codicon-add"></i>
           </VSCodeButton>
-      </VSCodeBadge>
+        </VSCodeBadge>
       </div>
       <div className="App-body">
         <div>{welcomeMessage}</div>

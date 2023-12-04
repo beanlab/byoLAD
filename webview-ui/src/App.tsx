@@ -17,6 +17,7 @@ function App() {
   const [chatList, setChatList] = useState<Conversation[]>(
     window.initialState?.conversations || [],
   );
+  const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
 
   const passedActiveConversationId = window.initialState?.activeConversationId;
   const [activeChat, setActiveChat] = useState<Conversation | null>(
@@ -79,6 +80,7 @@ function App() {
             setActiveChat(newActiveChat);
           }
         }
+        setLoadingMessage(false);
         break;
       }
       case "updateConversationList": {
@@ -101,6 +103,8 @@ function App() {
           activeChat={activeChat}
           changeActiveChat={changeActiveChat}
           imagePaths={imagePaths}
+          loadingMessage={loadingMessage}
+          setLoadingMessage={setLoadingMessage}
         />
       ) : (
         <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />

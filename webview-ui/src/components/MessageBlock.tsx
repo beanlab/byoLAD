@@ -68,7 +68,10 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
         >
           <i className="codicon codicon-diff" />
         </VSCodeButton>
-        <DeleteMessageBlockButton deleteMessageBlock={deleteMessageBlock} />
+        <DeleteMessageBlockButton
+          deleteMessageBlock={deleteMessageBlock}
+          codeBlock={true}
+        />
       </div>
     </div>
   );
@@ -92,7 +95,10 @@ export const TextMessageBlock: React.FC<TextMessageBlockProps> = ({
     >
       <Markdown>{children}</Markdown>
       {showDeleteButton ? (
-        <DeleteMessageBlockButton deleteMessageBlock={deleteMessageBlock} />
+        <DeleteMessageBlockButton
+          deleteMessageBlock={deleteMessageBlock}
+          codeBlock={false}
+        />
       ) : (
         <></>
       )}
@@ -131,15 +137,21 @@ function getThemedSyntaxStyle(): {
 
 const DeleteMessageBlockButton = ({
   deleteMessageBlock,
+  codeBlock,
 }: {
   deleteMessageBlock: () => void;
-}) => (
-  <VSCodeButton
-    appearance="icon"
-    aria-label="Remove code block"
-    title="Remove code block"
-    onClick={deleteMessageBlock}
-  >
-    <i className="codicon codicon-trash" />
-  </VSCodeButton>
-);
+  codeBlock: boolean;
+}) => {
+  const title = codeBlock ? "Remove code block" : "Remove text block";
+
+  return (
+    <VSCodeButton
+      appearance="icon"
+      aria-label={title}
+      title={title}
+      onClick={deleteMessageBlock}
+    >
+      <i className="codicon codicon-trash" />
+    </VSCodeButton>
+  );
+};

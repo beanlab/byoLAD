@@ -79,8 +79,6 @@ export const ChatView = ({
     messagePosition: number,
     messageBlockPosition: number,
   ) => {
-    console.log("Active chat");
-    console.log(activeChat);
     const newChat = { ...activeChat };
     newChat.messages[messagePosition].content.splice(messageBlockPosition, 1);
     if (newChat.messages[messagePosition].content.length == 0) {
@@ -97,8 +95,6 @@ export const ChatView = ({
       }
       newChat.messages.splice(messagePosition, 1);
     }
-    console.log("new chat");
-    console.log(newChat);
     extensionMessenger.updateChat(newChat);
   };
 

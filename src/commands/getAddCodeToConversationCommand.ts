@@ -3,6 +3,7 @@ import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { getCodeReference } from "../helpers/getCodeReference";
 import { ChatRole, CodeBlock, MessageBlock } from "../ChatModel/ChatModel";
+import { ensureActiveWebviewAndConversation } from "../helpers/ensureActiveWebviewAndConversation";
 
 export const getAddCodeToConversationCommand = (
   chatWebviewProvider: ChatWebviewProvider,
@@ -11,6 +12,11 @@ export const getAddCodeToConversationCommand = (
   vscode.commands.registerCommand(
     "vscode-byolad.addCodeToConversation",
     async () => {
+      await ensureActiveWebviewAndConversation(
+        conversationManager,
+        chatWebviewProvider,
+      );
+
       const activeConversationId = conversationManager.activeConversationId;
       if (activeConversationId) {
         const activeConversation =

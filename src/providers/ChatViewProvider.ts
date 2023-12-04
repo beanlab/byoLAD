@@ -96,6 +96,10 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     });
   }
 
+  public isWebviewVisible(): boolean {
+    return this._webviewView != null && this._webviewView.visible;
+  }
+
   /**
    * Defines and returns the HTML that should be rendered within the webview view
    *

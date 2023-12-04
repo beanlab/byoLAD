@@ -37,7 +37,7 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
           title="Delete conversation"
           onClick={() => extensionMessenger.deleteConversation(conversation.id)}
         >
-          <i className="codicon codicon-remove"></i>
+          <i className="codicon codicon-trash"></i>
         </VSCodeButton>
       </div>
     );

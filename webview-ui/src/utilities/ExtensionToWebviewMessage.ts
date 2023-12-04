@@ -12,6 +12,10 @@ export interface UpdateConversationMessageParams {
   activeConversationId?: number;
 }
 
+export interface UpdateConversationListMessageParams {
+  conversations: Conversation[];
+}
+
 export interface AddCodeBlockMessageParams {
   codeBlock: CodeBlock;
 }

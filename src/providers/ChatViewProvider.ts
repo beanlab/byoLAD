@@ -83,6 +83,19 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     });
   }
 
+  public updateConversationList(conversations: Conversation[]) {
+    if (!this._webviewView) {
+      vscode.window.showErrorMessage("No active webview view"); // How to handle?
+      return;
+    }
+    this._webviewView.webview.postMessage({
+      messageType: "updateConversationList",
+      params: {
+        conversations: conversations,
+      },
+    });
+  }
+
   /**
    * Defines and returns the HTML that should be rendered within the webview view
    *

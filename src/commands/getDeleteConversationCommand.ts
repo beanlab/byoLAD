@@ -10,9 +10,8 @@ export const getDeleteConversationCommand = (
     "vscode-byolad.deleteConversation",
     async (conversationId: number) => {
       conversationManager.deleteConversation(conversationId);
-      chatWebviewProvider.updateConversation(
+      chatWebviewProvider.updateConversationList(
         conversationManager.conversations,
-        null,
       );
     },
   );

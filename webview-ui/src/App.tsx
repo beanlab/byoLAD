@@ -5,6 +5,7 @@ import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
   ExtensionToWebviewMessage,
   UpdateConversationMessageParams,
+  UpdateConversationListMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ChatList } from "./components/ChatList";
@@ -78,6 +79,12 @@ function App() {
             setActiveChat(newActiveChat);
           }
         }
+        break;
+      }
+      case "updateConversationList": {
+        const params = message.params as UpdateConversationListMessageParams;
+        const conversations = params.conversations;
+        setChatList(conversations);
         break;
       }
       default:

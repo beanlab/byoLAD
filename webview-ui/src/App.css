@@ -1,48 +1,77 @@
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
-}
-
 .App {
   text-align: center;
 }
 
-.App-logo {
-  padding-top: 5vmin;
-  height: 10vmin;
-  pointer-events: none;
-  border-radius: 50%;
-}
-
-.App-footer {
-  min-height: 10vh;
+/* Styling for the back and add button at top of page */
+.navigation {
   display: flex;
-  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
+  padding-bottom: 4px;
+  padding-left: 5%;
+  /* padding-top: 5%; */
 }
 
 .App-header {
-  min-height: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: fixed;
+  width: 100%;
+  height: 20px;
 }
 
-.App-body1 {
-  /* color: white; */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 20px;
+}
+
+.back-button {
+  padding-left: 5px;
+}
+
+/* Styles the logo at the top of the page */
+.top-logo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.top-font {
+  font-weight: bold;
+  padding-left: 10px;
+}
+
+.App-logo {
+  height: 60px;
+}
+
+/* Styles the text and content below the nav bar */
+.App-body {
   font-size: calc(8px + 2vmin);
   padding-left: 5%;
   padding-right: 5%;
+  padding-top: 26px;
 }
 
+/* Chat Bar Styling Below */
+/* styles the box around the chat bar not including the buttons below */
 .chat-box {
-  min-height: 10vh;
-  width: 85%;
+  padding-left: 5%;
+  padding-right: 5%;
+  min-height: 9vh;
+}
+
+/* styling for the buttons below the chat bar */
+.chat-prompts {
+  display: flex;
+  justify-content: space-around;
+  padding-left: 5%;
+  padding-bottom: 5%;
+}
+
+.prompt-button {
+  padding-left: 4px;
 }
 
 .chat-bar {
@@ -51,7 +80,7 @@ main {
   display: flex;
   align-items: center;
   border-radius: 60px;
-  padding: 10px 10px;
+  padding: 8px 8px;
 }
 
 .chat-bar input {
@@ -59,55 +88,16 @@ main {
   flex: 1;
   border: 0;
   outline: none;
-  padding: 5px 20px;
-  font-size: 16px;
-  color: #AAAAAA;
-  /* color: #EFEFEF; */
-}
-
-.chat-bar button {
-  background: #313131;
-  border: 0;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  font-size: 20px;
+  padding: 5px;
+  color: #aaaaaa;
+  width: 80%;
 }
 
 ::placeholder {
   color: #aaaaaa;
 }
 
-.chat-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  height: 100%;
-  width: 85%;
-}
-
-.chat-wrap2 {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  justify-content: left;
-}
-
-.chat-text {
-  display: flex;
-  /* flex-direction: row; */
-  align-items: left;
-  justify-content: left;
-  /* padding: 10px; */
-  /* padding-left: 8%;
-  padding-bottom: 5%;
-  padding-top: 3%; */
-  /* border-bottom: 1px solid #717171; */
-}
-
+/* Message Styling Below */
 .message {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -125,6 +115,13 @@ main {
   padding-bottom: 2.5px;
 }
 
+.message-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
 .code-block-container {
   border: solid 1px;
   border-color: var(--vscode-menu-border);
@@ -137,24 +134,23 @@ main {
   justify-content: flex-end;
 }
 
-.message-header {
+/* Styling for the the conversation list page */
+.convo {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  padding-left: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
-.chat-text2 {
-  padding-left: 5%;
-  padding-top: 10%;
-  text-align: left;
+.convo-id {
+  padding-right: 20px;
+  cursor: pointer;
 }
 
-.byoLAD {
-  height: 7vmin;
-  border-radius: 50%;
-}
-
-.App-link {
-  color: #61dafb;
+.delete-all {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 4px;
 }

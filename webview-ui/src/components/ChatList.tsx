@@ -21,6 +21,20 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   };
 
   const listOfChats = chatList.map((conversation) => {
+    let name = conversation.name;
+    if (conversation.messages.length === 0) {
+      name = "Empty Chat";
+    } 
+    else if (conversation.messages[0].content[0].type !== "code") {
+      console.log("in here");
+      name = conversation.messages[0].content[0].content;
+      console.log(name);
+    } else {
+      name = "undefined";
+      const temp = conversation.messages[1].content[0].content;
+      const temp2 = temp.split(".");
+      name = temp2[0];
+    }
     return (
       <div className="convo">
         <div
@@ -28,7 +42,7 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
           key={conversation.id}
           className="convo-id"
         >
-          {conversation.id}
+          {name}
         </div>
         {/* TODO: add a function to delete a single conversation to make button work */}
         <VSCodeButton

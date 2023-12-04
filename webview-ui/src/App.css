@@ -147,6 +147,7 @@
 .convo-id {
   padding-right: 20px;
   cursor: pointer;
+  padding-top: 10px;
 }
 
 .delete-all {

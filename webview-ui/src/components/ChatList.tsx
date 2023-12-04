@@ -12,7 +12,7 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   const extensionMessenger = new ExtensionMessenger();
 
   if (chatList.length === 0) {
-    extensionMessenger.newConversation;
+    extensionMessenger.newConversation();
     return <div>There are no conversations</div>;
   }
 

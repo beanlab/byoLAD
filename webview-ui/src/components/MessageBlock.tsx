@@ -8,7 +8,7 @@ import {
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import Markdown from "react-markdown";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { VsCodeThemeContext } from "../utilities/VsCodeThemeContext";
 import { VsCodeTheme } from "../types";
 
@@ -16,11 +16,13 @@ interface CodeMessageBlockProps {
   languageId: string | undefined;
   children: string;
   extensionMessenger: ExtensionMessenger;
+  deleteMessageBlock: () => void;
 }
 export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
   languageId,
   children,
   extensionMessenger,
+  deleteMessageBlock,
 }) => {
   const syntaxStyle = getThemedSyntaxStyle();
   const content: string = children;
@@ -48,7 +50,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           title="Copy to clipboard"
           onClick={() => extensionMessenger.copyToClipboard(content)}
         >
-          <i className="codicon codicon-copy"></i>
+          <i className="codicon codicon-copy" />
         </VSCodeButton>
         <VSCodeButton
           appearance="icon"
@@ -56,7 +58,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           title="Insert at cursor"
           onClick={() => extensionMessenger.insertCodeBlock(content)}
         >
-          <i className="codicon codicon-insert"></i>
+          <i className="codicon codicon-insert" />
         </VSCodeButton>
         <VSCodeButton
           appearance="icon"
@@ -64,8 +66,9 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           title="View diff in editor"
           onClick={() => extensionMessenger.diffClodeBlock(content)}
         >
-          <i className="codicon codicon-diff"></i>
+          <i className="codicon codicon-diff" />
         </VSCodeButton>
+        <DeleteMessageBlockButton deleteMessageBlock={deleteMessageBlock} />
       </div>
     </div>
   );
@@ -73,11 +76,28 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
 
 interface TextMessageBlockProps {
   children: string;
+  deleteMessageBlock: () => void;
 }
+
 export const TextMessageBlock: React.FC<TextMessageBlockProps> = ({
   children,
+  deleteMessageBlock,
 }) => {
-  return <Markdown>{children}</Markdown>;
+  const [showDeleteButton, setShowDeleteButton] = useState<boolean>(false);
+
+  return (
+    <div
+      onMouseEnter={() => setShowDeleteButton(true)}
+      onMouseLeave={() => setShowDeleteButton(false)}
+    >
+      <Markdown>{children}</Markdown>
+      {showDeleteButton ? (
+        <DeleteMessageBlockButton deleteMessageBlock={deleteMessageBlock} />
+      ) : (
+        <></>
+      )}
+    </div>
+  );
 };
 
 /**
@@ -108,3 +128,18 @@ function getThemedSyntaxStyle(): {
   }
   return syntaxStyle;
 }
+
+const DeleteMessageBlockButton = ({
+  deleteMessageBlock,
+}: {
+  deleteMessageBlock: () => void;
+}) => (
+  <VSCodeButton
+    appearance="icon"
+    aria-label="Remove code block"
+    title="Remove code block"
+    onClick={deleteMessageBlock}
+  >
+    <i className="codicon codicon-trash" />
+  </VSCodeButton>
+);

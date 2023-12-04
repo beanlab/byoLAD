@@ -95,4 +95,13 @@ export class ExtensionMessenger {
       messageType: "getByoladMessageIcon",
     });
   }
+
+  updateChat(chat: Conversation) {
+    vscode.postMessage({
+      messageType: "updateChat",
+      params: {
+        chat: chat,
+      },
+    });
+  }
 }

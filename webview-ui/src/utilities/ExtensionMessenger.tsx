@@ -60,15 +60,18 @@ export class ExtensionMessenger {
     });
   }
 
-  newConversation() {
+  deleteConversation(conversationId: number) {
     vscode.postMessage({
-      messageType: "newConversation",
+      messageType: "deleteConversation",
+      params: {
+        conversationId: conversationId,
+      },
     });
   }
 
-  getConversations() {
+  newConversation() {
     vscode.postMessage({
-      messageType: "getConversations",
+      messageType: "newConversation",
     });
   }
 

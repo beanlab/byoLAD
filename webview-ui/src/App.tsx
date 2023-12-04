@@ -5,6 +5,7 @@ import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
   ExtensionToWebviewMessage,
   UpdateConversationMessageParams,
+  UpdateConversationListMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ChatList } from "./components/ChatList";
@@ -13,9 +14,18 @@ import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 
 function App() {
-  const [fetchConversations, setFetchConversations] = useState<boolean>(true);
-  const [chatList, setChatList] = useState<Conversation[]>([]);
-  const [activeChat, setActiveChat] = useState<Conversation | null>(null);
+  const [chatList, setChatList] = useState<Conversation[]>(
+    window.initialState?.conversations || [],
+  );
+
+  const passedActiveConversationId = window.initialState?.activeConversationId;
+  const [activeChat, setActiveChat] = useState<Conversation | null>(
+    passedActiveConversationId
+      ? chatList.find(
+          (conversation) => conversation.id === passedActiveConversationId,
+        ) || null
+      : null,
+  );
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
@@ -44,11 +54,6 @@ function App() {
     setActiveChat(conversation);
   };
 
-  if (fetchConversations) {
-    setFetchConversations(false);
-    extensionMessenger.getConversations();
-  }
-
   /**
    * Handle messages sent from the extension to the webview
    */
@@ -74,6 +79,12 @@ function App() {
             setActiveChat(newActiveChat);
           }
         }
+        break;
+      }
+      case "updateConversationList": {
+        const params = message.params as UpdateConversationListMessageParams;
+        const conversations = params.conversations;
+        setChatList(conversations);
         break;
       }
       default:

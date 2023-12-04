@@ -83,6 +83,19 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     });
   }
 
+  public updateConversationList(conversations: Conversation[]) {
+    if (!this._webviewView) {
+      vscode.window.showErrorMessage("No active webview view"); // How to handle?
+      return;
+    }
+    this._webviewView.webview.postMessage({
+      messageType: "updateConversationList",
+      params: {
+        conversations: conversations,
+      },
+    });
+  }
+
   /**
    * Defines and returns the HTML that should be rendered within the webview view
    *
@@ -149,7 +162,12 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
           <body>
             <div id="root"></div>
             <script nonce="${nonce}"> <!-- Provides the React app access to the properly formatted resource URIs -->
-              window.initialState = ${JSON.stringify({ imagePaths })};
+              window.initialState = ${JSON.stringify({
+                imagePaths: imagePaths,
+                conversations: this.conversationManager.conversations,
+                activeConversationId:
+                  this.conversationManager.activeConversationId,
+              })};
             </script>
             <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
           </body> 

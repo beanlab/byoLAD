@@ -32,12 +32,6 @@ export class ChatViewMessageHandler {
       case "newConversation":
         vscode.commands.executeCommand("vscode-byolad.newConversation");
         break;
-      case "getConversations":
-        this.chatViewProvider.updateConversation(
-          this.conversationManager.conversations,
-          this.conversationManager.activeConversationId,
-        );
-        break;
       case "deleteAllConversations":
         vscode.commands.executeCommand("vscode-byolad.deleteAllConversations");
         break;
@@ -47,6 +41,14 @@ export class ChatViewMessageHandler {
       case "explainCode":
         vscode.commands.executeCommand("vscode-byolad.explainCode");
         break;
+      case "deleteConversation": {
+        const params = message.params as DeleteConversationParams;
+        vscode.commands.executeCommand(
+          "vscode-byolad.deleteConversation",
+          params.conversationId,
+        );
+        break;
+      }
       case "sendChatMessage": {
         const params = message.params as SendChatMessageMessageParams;
         vscode.commands.executeCommand(
@@ -138,6 +140,10 @@ interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
 
 interface SetActiveChatParams extends WebviewToExtensionMessageParams {
   activeConversationId: number;
+}
+
+interface DeleteConversationParams extends WebviewToExtensionMessageParams {
+  conversationId: number;
 }
 
 interface UpdateChatParams extends WebviewToExtensionMessageParams {

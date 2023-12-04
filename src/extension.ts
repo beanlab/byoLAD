@@ -7,6 +7,7 @@ import { ConversationManager } from "./Conversation/ConversationManager";
 import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
 import { getNewConversationCommand } from "./commands/getNewConversationCommand";
 import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConversationsCommand";
+import { getDeleteConversationCommand } from "./commands/getDeleteConversationCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
@@ -15,7 +16,10 @@ import { getAddCodeToConversationCommand } from "./commands/getAddCodeToConversa
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
-  const conversationManager = new ConversationManager(context);
+  const conversationManager = new ConversationManager(
+    context,
+    settingsProvider,
+  );
   const chatWebviewProvider = new ChatWebviewProvider(
     context.extensionUri,
     settingsProvider,
@@ -36,13 +40,19 @@ export function activate(context: vscode.ExtensionContext) {
     conversationManager,
     chatWebviewProvider,
   );
+  const deleteConversationCommand = getDeleteConversationCommand(
+    conversationManager,
+    chatWebviewProvider,
+  );
   const reviewFileCodeCommand = getReviewCodeCommand(
     settingsProvider,
     conversationManager,
+    chatWebviewProvider,
   );
   const explainCodeCommand = getExplainCodeCommand(
     settingsProvider,
     conversationManager,
+    chatWebviewProvider,
   );
   const sendChatMessageCommand = getSendChatMessageCommand(
     settingsProvider,
@@ -64,6 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     newConversationCommand,
     deleteAllConversationsCommand,
+    deleteConversationCommand,
     reviewFileCodeCommand,
     explainCodeCommand,
     sendChatMessageCommand,

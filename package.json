@@ -56,25 +56,26 @@
           "markdownDescription": "**Required**\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
           "order": 2
         },
+        "vscode-byolad.basePromptInstruction": {
+          "type": "string",
+          "default": "You are a friendly coding assistant helping to answer a developer's questions about their code as they are writing/editing it.\nKeep your answers as consise as possible while still being helpful to the user.\nIf the user's request is not related to code or programming, you should respond with something like 'I'm sorry, I can't help with that. Do you have a question about your code?' If the user provides you with a large code sample and you only need to modify a small portion of it, you should return the modified portion of the code only and indicate which part you are modifying/improving/replacing.",
+          "description": "The base instructions provided to the LLM to establish its overall purpose.",
+          "editPresentation": "multilineText",
+          "order": 3
+        },
         "vscode-byolad.reviewCodePrompt": {
           "type": "string",
           "default": "Review the provided code. Return code that reflects the following improvements:\n- fix bugs\n- improve code quality, best practices, readability\n- improve performance\n- provide code comments as necessary\n- add missing documentation",
           "description": "The prompt to use to review code.",
           "editPresentation": "multilineText",
-          "order": 3
-        },
-        "vscode-byolad.applySuggestions.mode": {
-          "type": "string",
-          "default": "Manual",
-          "enum": [
-            "Manual",
-            "Auto"
-          ],
-          "enumDescriptions": [
-            "See AI-proposed changes and apply selected changes manually",
-            "Apply AI-proposed changes with the option to revert selected changes"
-          ],
           "order": 4
+        },
+        "vscode-byolad.explainCodePrompt": {
+          "type": "string",
+          "default": "Explain the provided code in a way that is helpful given its context. You may use code samples as necessary to illustrate your explanation if needed. Make the explanation simple and easy to understand.",
+          "description": "The prompt to use to explain code.",
+          "editPresentation": "multilineText",
+          "order": 5
         },
         "vscode-byolad.applySuggestions.diffViewPosition": {
           "type": "string",
@@ -99,12 +100,17 @@
     "commands": [
       {
         "command": "vscode-byolad.newConversation",
-        "title": "byoLAD — Start Conversation",
+        "title": "byoLAD — New Conversation",
         "category": "byoLAD"
       },
       {
         "command": "vscode-byolad.deleteAllConversations",
         "title": "byoLAD — Delete All Conversations",
+        "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.deleteConversation",
+        "title": "byoLAD — Delete Conversation",
         "category": "byoLAD"
       },
       {
@@ -146,28 +152,12 @@
         {
           "command": "vscode-byolad.addCodeToConversation",
           "when": "editorFocus"
-
         },
         {
           "command": "vscode-byolad.deleteAllConversations"
         }
       ],
       "editor/context": [
-        {
-          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.newConversation",
-          "group": "1_modification"
-        },
-        {
-          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewCode",
-          "group": "1_modification"
-        },
-        {
-          "when": "editorFocus && !editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.explainCode",
-          "group": "1_modification"
-        },
         {
           "when": "editorFocus",
           "command": "vscode-byolad.addCodeToConversation",

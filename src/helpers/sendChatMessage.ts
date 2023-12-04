@@ -5,7 +5,6 @@ import {
   ChatRole,
 } from "../ChatModel/ChatModel";
 import { Conversation } from "../ChatModel/ChatModel";
-import { outputConversationHtml } from "../Conversation/outputConversationHtml";
 import { SettingsProvider } from "./SettingsProvider";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
@@ -62,11 +61,12 @@ export async function sendChatMessage(
 }
 
 /**
- * TODO: Incorporate webview
+ * Handle a successful response from the chat model. Update the conversation and the side panel.
  *
- * @param responseMessage
- * @param conversation
- * @param conversationManager
+ * @param responseMessage Response message from the chat model
+ * @param conversation Conversation to update
+ * @param conversationManager Conversation manager
+ * @param currentPanel Current side panel
  */
 function handleSuccessfulResponse(
   responseMessage: ChatMessage,
@@ -74,7 +74,6 @@ function handleSuccessfulResponse(
   conversationManager: ConversationManager,
   currentPanel: ChatWebviewProvider | null,
 ): void {
-  vscode.window.showInformationMessage("Successful response!"); // TODO: DELETE ME
   conversation.messages.push(responseMessage);
   conversationManager.updateConversation(conversation);
 
@@ -83,7 +82,6 @@ function handleSuccessfulResponse(
   }
 
   currentPanel.updateConversation(conversationManager.conversations, null);
-  outputConversationHtml(conversationManager); // TODO: Change to updating the webview instead
 }
 
 /**

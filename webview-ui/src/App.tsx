@@ -17,6 +17,7 @@ function App() {
   const [fetchConversations, setFetchConversations] = useState<boolean>(true);
   const [chatList, setChatList] = useState<Conversation[]>([]);
   const [activeChat, setActiveChat] = useState<Conversation | null>(null);
+  const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;

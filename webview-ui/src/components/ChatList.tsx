@@ -12,8 +12,8 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   const extensionMessenger = new ExtensionMessenger();
 
   if (chatList.length === 0) {
-    extensionMessenger.newConversation;
-    return <div>There are no conversations</div>;
+    extensionMessenger.newConversation();
+    return <div>Loading...</div>;
   }
 
   const handleOnClick = (conversation: Conversation) => {
@@ -30,7 +30,6 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
         >
           {conversation.id}
         </div>
-        {/* TODO: add a function to delete a single conversation to make button work */}
         <VSCodeButton
           appearance="icon"
           aria-label="Delete conversation"

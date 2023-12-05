@@ -131,7 +131,7 @@
       },
       {
         "command": "vscode-byolad.addCodeToConversation",
-        "title": "byoLAD — Add Code to Conversation",
+        "title": "byoLAD — Add Code to Chat",
         "category": "byoLAD"
       }
     ],

@@ -13,11 +13,11 @@ export async function sendChatMessage(
   chatMessage: ChatMessage,
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
-  currentPanel: ChatWebviewProvider | null,
+  chatWebviewProvider: ChatWebviewProvider,
 ) {
   const conversation = conversationManager.getActiveConversation();
   if (!conversation) {
-    vscode.window.showErrorMessage("No active conversation"); // TODO: How to handle?
+    vscode.window.showErrorMessage("No active conversation");
     return;
   }
 
@@ -52,7 +52,7 @@ export async function sendChatMessage(
           response.message,
           conversation,
           conversationManager,
-          currentPanel,
+          chatWebviewProvider,
         );
       } else {
         handleErrorResponse(response);
@@ -66,22 +66,20 @@ export async function sendChatMessage(
  * @param responseMessage Response message from the chat model
  * @param conversation Conversation to update
  * @param conversationManager Conversation manager
- * @param currentPanel Current side panel
+ * @param chatWebviewProvider Current side panel
  */
 function handleSuccessfulResponse(
   responseMessage: ChatMessage,
   conversation: Conversation,
   conversationManager: ConversationManager,
-  currentPanel: ChatWebviewProvider | null,
+  chatWebviewProvider: ChatWebviewProvider,
 ): void {
   conversation.messages.push(responseMessage);
   conversationManager.updateConversation(conversation);
-
-  if (!currentPanel) {
-    return;
-  }
-
-  currentPanel.updateConversation(conversationManager.conversations, null);
+  chatWebviewProvider.updateConversation(
+    conversationManager.conversations,
+    conversation.id,
+  );
 }
 
 /**

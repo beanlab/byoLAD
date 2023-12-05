@@ -124,7 +124,8 @@ export const ChatView = ({
         <p>
           Here you can chat with your AI, ask questions about code, or generate
           code. You can add snippets of code to your conversation from the
-          editor by selecting the code and clicking the "Add to chat" button.
+          editor by selecting the code and clicking the "Add Code to Chat"
+          button.
         </p>
       </div>
     );

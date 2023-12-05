@@ -81,15 +81,6 @@ export class ExtensionMessenger {
     });
   }
 
-  getCodeBlock(chatId: number) {
-    vscode.postMessage({
-      messageType: "getCodeBlock",
-      params: {
-        chatId: chatId,
-      },
-    });
-  }
-
   setActiveChat(conversation: Conversation | null) {
     vscode.postMessage({
       messageType: "setActiveChat",

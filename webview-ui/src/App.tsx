@@ -14,19 +14,9 @@ import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 
 function App() {
-  const [chatList, setChatList] = useState<Conversation[]>(
-    window.initialState?.conversations || [],
-  );
-  const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
-
-  const passedActiveConversationId = window.initialState?.activeConversationId;
-  const [activeChat, setActiveChat] = useState<Conversation | null>(
-    passedActiveConversationId
-      ? chatList.find(
-          (conversation) => conversation.id === passedActiveConversationId,
-        ) || null
-      : null,
-  );
+  const [fetchConversations, setFetchConversations] = useState<boolean>(true);
+  const [chatList, setChatList] = useState<Conversation[]>([]);
+  const [activeChat, setActiveChat] = useState<Conversation | null>(null);
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
@@ -54,6 +44,11 @@ function App() {
     extensionMessenger.setActiveChat(conversation);
     setActiveChat(conversation);
   };
+
+  if (fetchConversations) {
+    setFetchConversations(false);
+    extensionMessenger.getConversations();
+  }
 
   /**
    * Handle messages sent from the extension to the webview

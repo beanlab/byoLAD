@@ -10,12 +10,16 @@ interface ChatViewProps {
   activeChat: Conversation;
   changeActiveChat: (conversation: Conversation | null) => void;
   imagePaths: ImagePaths;
+  loadingMessage: boolean;
+  setLoadingMessage: (loading: boolean) => void;
 }
 
 export const ChatView = ({
   activeChat,
   changeActiveChat,
   imagePaths,
+  loadingMessage,
+  setLoadingMessage,
 }: ChatViewProps) => {
   const [userPrompt, setUserPrompt] = useState("");
 
@@ -33,6 +37,7 @@ export const ChatView = ({
       | React.KeyboardEvent<HTMLInputElement>,
   ) => {
     e.preventDefault();
+    setLoadingMessage(true);
     const newActiveChat = { ...activeChat };
     if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
       newActiveChat.messages = [];
@@ -159,6 +164,9 @@ export const ChatView = ({
         <div>{messages}</div>
       </div>
       <footer className="App-footer">
+        {loadingMessage === true &&
+          <p>Loading...</p>
+        }
         <div className="chat-box">
           <form
             className="chat-bar"

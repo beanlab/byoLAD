@@ -32,6 +32,12 @@ export class ChatViewMessageHandler {
       case "newConversation":
         vscode.commands.executeCommand("vscode-byolad.newConversation");
         break;
+      case "getConversations":
+        this.chatViewProvider.updateConversation(
+          this.conversationManager.conversations,
+          this.conversationManager.activeConversationId,
+        );
+        break;
       case "deleteAllConversations":
         vscode.commands.executeCommand("vscode-byolad.deleteAllConversations");
         break;

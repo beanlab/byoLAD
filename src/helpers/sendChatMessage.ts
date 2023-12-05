@@ -78,7 +78,7 @@ function handleSuccessfulResponse(
   conversationManager.updateConversation(conversation);
   chatWebviewProvider.updateConversation(
     conversationManager.conversations,
-    null,
+    conversation.id,
   );
 }
 

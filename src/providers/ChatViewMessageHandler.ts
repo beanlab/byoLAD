@@ -130,10 +130,6 @@ interface SetActiveChatParams extends WebviewToExtensionMessageParams {
   activeConversationId: number;
 }
 
-interface SetActiveChatParams extends WebviewToExtensionMessageParams {
-  activeConversationId: number;
-}
-
 interface DeleteConversationParams extends WebviewToExtensionMessageParams {
   conversationId: number;
 }

@@ -2,7 +2,7 @@
 
 # byoLAD: Your code improvement buddy
 
-byoLAD augments your development experience by reviewing your code, identifying errors, adding documentation, and suggesting general improvements.  Since byoLAD is open-source, you can modify prompts and other configurations to your liking. 
+byoLAD augments your development experience by reviewing your code, explaining code, generating code, and chatting with your AI.  Since byoLAD is open-source, you can modify prompts and other configurations to your liking. byoLAD stands for bring your own Large Language Model Augmented Development, so byoLAD is flexible to your customization. 
 
 In addition, byoLAD enables you to use your own Large Language Model (LLM) API, so you can use your favorite AI and control how much you spend. We don't add any extra costs, and there are no extra parties looking at your data. You manage your account directly with your LLM provider. 
 #### LLM Providers Currently Supported: 
@@ -18,10 +18,13 @@ In addition, byoLAD enables you to use your own Large Language Model (LLM) API, 
 ## Features
 
 - Option to review a whole file or just a piece of selected code
-- Suggests formatting improvements
 - Identifies bugs in code
 - Adds Documentation
-- Suggests general code improvements
+- Chatting with AI provider
+- Explaining code
+- Saves multiple chats, so you can look back through them
+- Ability to add code to chats
+- Delete and add new chats for your needs
 
 ## Set Up
 
@@ -37,4 +40,5 @@ After installing the byoLAD extension, configure it with your API key from your 
 
 **Contributions of any kind welcome.**
 
+[Bean Lab](https://github.com/beanlab)
 <!-- <img src="bean.jpg"  width="150" height="100"> -->

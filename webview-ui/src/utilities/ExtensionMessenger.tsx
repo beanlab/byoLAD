@@ -75,6 +75,12 @@ export class ExtensionMessenger {
     });
   }
 
+  getConversations() {
+    vscode.postMessage({
+      messageType: "getConversations",
+    });
+  }
+
   setActiveChat(conversation: Conversation | null) {
     vscode.postMessage({
       messageType: "setActiveChat",
@@ -87,6 +93,15 @@ export class ExtensionMessenger {
   getByoladMessageIcon() {
     vscode.postMessage({
       messageType: "getByoladMessageIcon",
+    });
+  }
+
+  updateChat(chat: Conversation) {
+    vscode.postMessage({
+      messageType: "updateChat",
+      params: {
+        chat: chat,
+      },
     });
   }
 }

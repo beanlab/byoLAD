@@ -5,7 +5,7 @@ import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ConversationManager } from "../Conversation/ConversationManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
-import { ChatMessage } from "../ChatModel/ChatModel";
+import { ChatMessage, Conversation } from "../ChatModel/ChatModel";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
@@ -90,6 +90,15 @@ export class ChatViewMessageHandler {
           params.activeConversationId;
         break;
       }
+      case "updateChat": {
+        const params = message.params as UpdateChatParams;
+        this.conversationManager.updateConversation(params.chat);
+        this.chatViewProvider.updateConversation(
+          this.conversationManager.conversations,
+          this.conversationManager.activeConversationId,
+        );
+        break;
+      }
       default:
         // TODO: How to handle?
         vscode.window.showErrorMessage(
@@ -141,4 +150,8 @@ interface SetActiveChatParams extends WebviewToExtensionMessageParams {
 
 interface DeleteConversationParams extends WebviewToExtensionMessageParams {
   conversationId: number;
+}
+
+interface UpdateChatParams extends WebviewToExtensionMessageParams {
+  chat: Conversation;
 }

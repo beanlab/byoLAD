@@ -75,14 +75,39 @@ export const ChatView = ({
     );
   };
 
+  const deleteMessageBlock = (
+    messagePosition: number,
+    messageBlockPosition: number,
+  ) => {
+    const newChat = { ...activeChat };
+    newChat.messages[messagePosition].content.splice(messageBlockPosition, 1);
+    if (newChat.messages[messagePosition].content.length == 0) {
+      if (
+        newChat.messages.length > messagePosition + 1 &&
+        messagePosition != 0 &&
+        newChat.messages[messagePosition - 1].role ===
+          newChat.messages[messagePosition + 1].role
+      ) {
+        newChat.messages[messagePosition + 1].content.forEach((currMessage) => {
+          newChat.messages[messagePosition - 1].content.push(currMessage);
+        });
+        newChat.messages.splice(messagePosition + 1, 1);
+      }
+      newChat.messages.splice(messagePosition, 1);
+    }
+    extensionMessenger.updateChat(newChat);
+  };
+
   const messages = activeChat.messages.map((message, position) => {
-    console.log(position);
     if (message.role != ChatRole.System) {
       return (
         <Message
           role={message.role}
           messageBlocks={message.content}
           extensionMessenger={extensionMessenger}
+          deleteMessageBlock={(messageBlockPosition: number) =>
+            deleteMessageBlock(position, messageBlockPosition)
+          }
         />
       );
     }

@@ -137,7 +137,7 @@ export const ChatView = ({
   }
 
   return (
-    <div className="App">
+    <div>
       <div className="App-header">
         <VSCodeBadge className="navbar">
           <VSCodeButton
@@ -164,9 +164,7 @@ export const ChatView = ({
         <div>{messages}</div>
       </div>
       <footer className="App-footer">
-        {loadingMessage === true &&
-          <p>Loading...</p>
-        }
+        {loadingMessage === true && <p>Loading...</p>}
         <div className="chat-box">
           <form
             className="chat-bar"
@@ -188,18 +186,6 @@ export const ChatView = ({
               <i className="codicon codicon-send"></i>
             </VSCodeButton>
           </form>
-        </div>
-        <div className="chat-prompts">
-          <div className="prompt-button">
-            <VSCodeButton onClick={extensionMessenger.reviewCode}>
-              Review Code
-            </VSCodeButton>
-          </div>
-          <div className="prompt-button">
-            <VSCodeButton onClick={extensionMessenger.explainCode}>
-              Explain Code
-            </VSCodeButton>
-          </div>
         </div>
       </footer>
     </div>

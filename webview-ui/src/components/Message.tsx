@@ -23,7 +23,7 @@ export const Message: React.FC<MessageProps> = ({
       <VSCodeDivider role="separator" />
       <div className="message">
         <MessageHeader role={role} />
-        <div className="message-block">
+        <div className="message-blocks">
           {messageBlocks.map((messageBlock, position) => {
             if (messageBlock.type === "text") {
               return (

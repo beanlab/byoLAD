@@ -137,7 +137,7 @@ export const ChatView = ({
   }
 
   return (
-    <div className="App">
+    <div>
       <div className="App-header">
         <VSCodeBadge className="navbar">
           <VSCodeButton
@@ -164,9 +164,7 @@ export const ChatView = ({
         <div>{messages}</div>
       </div>
       <footer className="App-footer">
-        {loadingMessage === true &&
-          <p>Loading...</p>
-        }
+        {loadingMessage === true && <p>Loading...</p>}
         <div className="chat-box">
           <form
             className="chat-bar"

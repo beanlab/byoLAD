@@ -31,7 +31,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
   };
 
   return (
-    <div className="code-block-container">
+    <div className="code-block-container message-block-container">
       {languageId ? (
         <SyntaxHighlighter
           language={languageId}
@@ -90,6 +90,7 @@ export const TextMessageBlock: React.FC<TextMessageBlockProps> = ({
 
   return (
     <div
+      className="message-block-container"
       onMouseEnter={() => setShowDeleteButton(true)}
       onMouseLeave={() => setShowDeleteButton(false)}
     >

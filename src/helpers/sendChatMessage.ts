@@ -31,33 +31,26 @@ export async function sendChatMessage(
     conversation.messages[conversation.messages.length - 1] = chatMessage;
   }
 
-  let response: ChatModelResponse;
-  // TODO: Use a loading/typing indicator of sorts in the side panel instead of notification progress bar
-  vscode.window
-    .withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        cancellable: false,
-        title: "Sending message...", // TODO: make this a constant
-      },
-      async () => {
-        response = await settingsProvider.getChatModel().chat({
-          conversation,
-        });
-      },
-    )
-    .then(async () => {
-      if (response.success && response.message) {
-        handleSuccessfulResponse(
-          response.message,
-          conversation,
-          conversationManager,
-          chatWebviewProvider,
-        );
-      } else {
-        handleErrorResponse(response);
-      }
-    });
+  try {
+    const response: ChatModelResponse = await settingsProvider
+      .getChatModel()
+      .chat({
+        conversation,
+      });
+    if (response.success && response.message) {
+      handleSuccessfulResponse(
+        response.message,
+        conversation,
+        conversationManager,
+        chatWebviewProvider,
+      );
+    } else {
+      handleErrorResponse(response);
+    }
+  } catch (error) {
+    console.error("Error occurred:", error);
+    vscode.window.showErrorMessage(`Unexpected error: ${error}`);
+  }
 }
 
 /**

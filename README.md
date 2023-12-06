@@ -37,5 +37,4 @@ After installing the byoLAD extension, configure it with your API key from your 
 
 **If you want to contribute, see our [contribution page](contribute.md).**
 
-[Bean Lab](https://github.com/beanlab)
-<!-- <img src="bean.jpg"  width="150" height="100"> -->
+<img src="https://avatars.githubusercontent.com/u/135072938?s=200&v=4"  width="50" height="50"> [Bean Lab](https://github.com/beanlab)

@@ -187,18 +187,6 @@ export const ChatView = ({
             </VSCodeButton>
           </form>
         </div>
-        <div className="chat-prompts">
-          <div className="prompt-button">
-            <VSCodeButton onClick={extensionMessenger.reviewCode}>
-              Review Code
-            </VSCodeButton>
-          </div>
-          <div className="prompt-button">
-            <VSCodeButton onClick={extensionMessenger.explainCode}>
-              Explain Code
-            </VSCodeButton>
-          </div>
-        </div>
       </footer>
     </div>
   );

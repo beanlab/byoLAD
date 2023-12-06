@@ -60,18 +60,6 @@
   min-height: 9vh;
 }
 
-/* styling for the buttons below the chat bar */
-.chat-prompts {
-  display: flex;
-  justify-content: space-around;
-  padding-left: 5%;
-  padding-bottom: 5%;
-}
-
-.prompt-button {
-  padding-left: 4px;
-}
-
 .chat-bar {
   background-color: #717171;
   width: 100%;

@@ -12,7 +12,7 @@ byoLAD (bring your own LLM Augmented Development) augments your development expe
     - [models](https://developers.generativeai.google/models/language)
     - [API Key](https://developers.generativeai.google/tutorials/setup)
   
-![](ReviewCode.gif)
+![](DemoGif.gif)
 
 ## Features
 
@@ -32,7 +32,7 @@ After installing the byoLAD extension, configure it with your API key from your 
 - Then under APIKey put in your API key from your provider.
 - Then under Model enter the model you desire to use of your LLM provider's API.
 
-![](SetAPIkey.gif)
+![](SettingGif.gif)
 > Note: If you want to run the extension locally, go to [contribute.md](contribute.md)
 
 **If you want to contribute, see our [contribution page](contribute.md).**

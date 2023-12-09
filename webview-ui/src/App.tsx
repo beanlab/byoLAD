@@ -15,8 +15,11 @@ import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 
 function App() {
   const [fetchConversations, setFetchConversations] = useState<boolean>(true);
-  const [chatList, setChatList] = useState<Conversation[]>([]);
+  const [chatList, setChatList] = useState<Conversation[] | undefined>(
+    undefined,
+  );
   const [activeChat, setActiveChat] = useState<Conversation | null>(null);
+  const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
@@ -75,6 +78,7 @@ function App() {
             setActiveChat(newActiveChat);
           }
         }
+        setLoadingMessage(false);
         break;
       }
       case "updateConversationList": {
@@ -97,9 +101,15 @@ function App() {
           activeChat={activeChat}
           changeActiveChat={changeActiveChat}
           imagePaths={imagePaths}
+          loadingMessage={loadingMessage}
+          setLoadingMessage={setLoadingMessage}
         />
-      ) : (
+      ) : chatList ? (
+        // When there is no active chat, show the list of chats
+        // But, only if the chatList has been fetched, otherwise show a loading message
         <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
+      ) : (
+        <div>Loading...</div>
       )}
     </VsCodeThemeContext.Provider>
   );

@@ -78,12 +78,6 @@ export class ChatViewMessageHandler {
         await insertCode(params.code);
         break;
       }
-      case "getCodeBlock": {
-        const params = message.params as GetCodeBlockParams;
-        this.conversationManager.activeConversationId = params.chatId;
-        vscode.commands.executeCommand("vscode-byolad.addCodeToConversation");
-        break;
-      }
       case "setActiveChat": {
         const params = message.params as SetActiveChatParams;
         this.conversationManager.activeConversationId =
@@ -130,18 +124,6 @@ interface InsertCodeBlockParams extends WebviewToExtensionMessageParams {
 
 interface CopyToClipboardMessageParams extends WebviewToExtensionMessageParams {
   content: string;
-}
-
-interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
-  chatId: number;
-}
-
-interface SetActiveChatParams extends WebviewToExtensionMessageParams {
-  activeConversationId: number;
-}
-
-interface GetCodeBlockParams extends WebviewToExtensionMessageParams {
-  chatId: number;
 }
 
 interface SetActiveChatParams extends WebviewToExtensionMessageParams {

@@ -13,11 +13,11 @@ export async function sendChatMessage(
   chatMessage: ChatMessage,
   settingsProvider: SettingsProvider,
   conversationManager: ConversationManager,
-  currentPanel: ChatWebviewProvider | null,
+  chatWebviewProvider: ChatWebviewProvider,
 ) {
   const conversation = conversationManager.getActiveConversation();
   if (!conversation) {
-    vscode.window.showErrorMessage("No active conversation"); // TODO: How to handle?
+    vscode.window.showErrorMessage("No active conversation");
     return;
   }
 
@@ -31,33 +31,26 @@ export async function sendChatMessage(
     conversation.messages[conversation.messages.length - 1] = chatMessage;
   }
 
-  let response: ChatModelResponse;
-  // TODO: Use a loading/typing indicator of sorts in the side panel instead of notification progress bar
-  vscode.window
-    .withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        cancellable: false,
-        title: "Sending message...", // TODO: make this a constant
-      },
-      async () => {
-        response = await settingsProvider.getChatModel().chat({
-          conversation,
-        });
-      },
-    )
-    .then(async () => {
-      if (response.success && response.message) {
-        handleSuccessfulResponse(
-          response.message,
-          conversation,
-          conversationManager,
-          currentPanel,
-        );
-      } else {
-        handleErrorResponse(response);
-      }
-    });
+  try {
+    const response: ChatModelResponse = await settingsProvider
+      .getChatModel()
+      .chat({
+        conversation,
+      });
+    if (response.success && response.message) {
+      handleSuccessfulResponse(
+        response.message,
+        conversation,
+        conversationManager,
+        chatWebviewProvider,
+      );
+    } else {
+      handleErrorResponse(response);
+    }
+  } catch (error) {
+    console.error("Error occurred:", error);
+    vscode.window.showErrorMessage(`Unexpected error: ${error}`);
+  }
 }
 
 /**
@@ -66,22 +59,20 @@ export async function sendChatMessage(
  * @param responseMessage Response message from the chat model
  * @param conversation Conversation to update
  * @param conversationManager Conversation manager
- * @param currentPanel Current side panel
+ * @param chatWebviewProvider Current side panel
  */
 function handleSuccessfulResponse(
   responseMessage: ChatMessage,
   conversation: Conversation,
   conversationManager: ConversationManager,
-  currentPanel: ChatWebviewProvider | null,
+  chatWebviewProvider: ChatWebviewProvider,
 ): void {
   conversation.messages.push(responseMessage);
   conversationManager.updateConversation(conversation);
-
-  if (!currentPanel) {
-    return;
-  }
-
-  currentPanel.updateConversation(conversationManager.conversations, null);
+  chatWebviewProvider.updateConversation(
+    conversationManager.conversations,
+    conversation.id,
+  );
 }
 
 /**

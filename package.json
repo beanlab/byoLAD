@@ -163,13 +163,6 @@
           "command": "vscode-byolad.addCodeToConversation",
           "group": "1_modification"
         }
-      ],
-      "editor/title": [
-        {
-          "when": "!editorReadonly && !isInDiffEditor",
-          "command": "vscode-byolad.reviewCode",
-          "group": "navigation@1"
-        }
       ]
     },
     "viewsContainers": {

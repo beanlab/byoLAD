@@ -58,7 +58,7 @@
         },
         "vscode-byolad.basePromptInstruction": {
           "type": "string",
-          "default": "You are a friendly coding assistant. You are talking to a developer who is asking you for help programming.\nKeep your answers as concise as possible while still being helpful.\nIf you need more information, simply ask the developer to clarify their question or provide more code.",
+          "default": "You are a friendly coding assistant.\nKeep your answers as concise as possible while still being helpful.\nIf you need more information, ask.",
           "description": "The base instructions provided to the LLM to establish its overall purpose.",
           "editPresentation": "multilineText",
           "order": 3

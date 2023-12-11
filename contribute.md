@@ -17,11 +17,12 @@ If you desire to run this extension locally, here are the steps to have it run p
 ### Specific instructions for setup
 
 - Clone the repo.
-- Run npm install.
+- Run `npm run install:all`.
 - Copy the .vscode.sample folder and rename it to .vscode.
 
 ### To run the extension
 
+- Run `npm run build:webview` (whenever you make changes within the `webview-ui` folder, you will need to run this command again).
 - Press `F5` to open a new window with the extension loaded.
 - Another "Extension Development Host" VS code window should open.
 - With a file open, right click.

@@ -45,7 +45,7 @@ export async function sendChatMessage(
         chatWebviewProvider,
       );
     } else {
-      handleErrorResponse(response);
+      handleErrorResponse(response, chatWebviewProvider);
     }
   } catch (error) {
     console.error("Error occurred:", error);
@@ -84,8 +84,7 @@ function handleSuccessfulResponse(
  */
 function handleErrorResponse(
   response: ChatModelResponse,
-  // conversation: Conversation,
-  // conversationManager: ConversationManager,
+  chatWebviewProvider: ChatWebviewProvider,
 ): void {
   if (!response.success) {
     if (response.errorMessage) {
@@ -100,4 +99,5 @@ function handleErrorResponse(
   } else {
     vscode.window.showErrorMessage("Unknown error");
   }
+  chatWebviewProvider.sendErrorResponse();
 }

@@ -87,6 +87,10 @@ function App() {
         setChatList(conversations);
         break;
       }
+      case "errorResponse": {
+        setLoadingMessage(false);
+        break;
+      }
       default:
         // TODO: How to handle?
         console.log("Unknown event 'message' received: ", event);

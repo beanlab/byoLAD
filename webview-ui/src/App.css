@@ -5,7 +5,6 @@
   align-items: center;
   padding-bottom: 4px;
   padding-left: 5%;
-  /* padding-top: 5%; */
 }
 
 .App-header {
@@ -14,6 +13,7 @@
   height: 20px;
   background-color: var(--vscode-sideBar-background);
   padding-bottom: 4px;
+  z-index: 1; /* Stay in front of other elements */
 }
 
 .navbar {
@@ -51,7 +51,11 @@
 /* Styles the text and content below the nav bar */
 .App-body {
   font-size: calc(8px + 2vmin);
-  padding-top: 26px;
+  /* Vertical offset of the body to render below the navbar.
+     Also ensures that the edges of body content (e.g., the user icon)
+     don't peek out from the edges of the navbar
+  */
+  padding: 24px 1px;
 }
 
 /* Chat Bar Styling Below */
@@ -101,8 +105,9 @@
   padding-top: 2.5px 0;
 }
 
-.message-block-container {
-  margin: 5px 0;
+.text-block-container {
+  position: relative;
+  padding: 3px 0;
 }
 
 .message-header {
@@ -115,6 +120,7 @@
 .code-block-container {
   border: solid 1px;
   border-color: var(--vscode-menu-border);
+  margin: 5px 0;
 }
 
 .code-button-container {
@@ -122,6 +128,12 @@
   border-color: var(--vscode-menu-border);
   display: flex;
   justify-content: flex-end;
+}
+
+.text-block-delete-button {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 /* Styling for the the conversation list page */

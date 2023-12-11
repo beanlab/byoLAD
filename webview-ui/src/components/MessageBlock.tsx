@@ -90,16 +90,18 @@ export const TextMessageBlock: React.FC<TextMessageBlockProps> = ({
 
   return (
     <div
-      className="message-block-container"
+      className="text-block-container message-block-container"
       onMouseEnter={() => setShowDeleteButton(true)}
       onMouseLeave={() => setShowDeleteButton(false)}
     >
       <Markdown>{children}</Markdown>
       {showDeleteButton ? (
-        <DeleteMessageBlockButton
-          deleteMessageBlock={deleteMessageBlock}
-          codeBlock={false}
-        />
+        <div className="text-block-delete-button">
+          <DeleteMessageBlockButton
+            deleteMessageBlock={deleteMessageBlock}
+            codeBlock={false}
+          />
+        </div>
       ) : (
         <></>
       )}

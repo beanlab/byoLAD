@@ -105,6 +105,11 @@
   margin: 5px 0;
 }
 
+.text-block-container {
+  position: relative;
+  padding: 2.5px 0;
+}
+
 .message-header {
   display: flex;
   justify-content: flex-start;
@@ -122,6 +127,12 @@
   border-color: var(--vscode-menu-border);
   display: flex;
   justify-content: flex-end;
+}
+
+.text-block-delete-button {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 /* Styling for the the conversation list page */

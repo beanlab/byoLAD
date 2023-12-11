@@ -1,49 +1,90 @@
 import * as vscode from "vscode";
-import { getReviewFileCodeCommand } from "./commands/getReviewFileCodeCommand";
-import { getReviewSelectedCodeCommand } from "./commands/getReviewSelectedCodeCommand";
+import { getReviewCodeCommand } from "./commands/getReviewCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
-import { getReviewSelectedCodeCustomPromptCommand } from "./commands/getReviewSelectedCodeCustomPromptCommand";
-import { getReviewFileCodeCustomPromptCommand } from "./commands/getReviewFileCodeCustomPromptCommand";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
+import { ConversationManager } from "./Conversation/ConversationManager";
+import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
+import { getNewConversationCommand } from "./commands/getNewConversationCommand";
+import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConversationsCommand";
+import { getDeleteConversationCommand } from "./commands/getDeleteConversationCommand";
+import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
+import { ChatWebviewProvider } from "./providers/ChatViewProvider";
+import { getAddCodeToConversationCommand } from "./commands/getAddCodeToConversationCommand";
 
-// This method is called when the extension is activated
-// The extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "vscode-byolad" is now active!');
-
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
+  const conversationManager = new ConversationManager(
+    context,
+    settingsProvider,
+  );
+  const chatWebviewProvider = new ChatWebviewProvider(
+    context.extensionUri,
+    settingsProvider,
+    conversationManager,
+  );
 
-  // For commands that have been defined in the package.json file,
-  // provide the implementation with registerCommand.
-  // The commandId parameter must match the command field in package.json
+  const chatViewDisposable = vscode.window.registerWebviewViewProvider(
+    ChatWebviewProvider.viewType,
+    chatWebviewProvider,
+  );
 
-  const reviewFileCodeCommand = getReviewFileCodeCommand(settingsProvider);
-  const reviewSelectedCodeCommand =
-    getReviewSelectedCodeCommand(settingsProvider);
-  const reviewFileCodeCustomPromptCommand =
-    getReviewFileCodeCustomPromptCommand(settingsProvider);
-  const reviewSelectedCodeCustomPromptCommand =
-    getReviewSelectedCodeCustomPromptCommand(settingsProvider);
+  const newConversationCommand = getNewConversationCommand(
+    settingsProvider,
+    conversationManager,
+    chatWebviewProvider,
+  );
+  const deleteAllConversationsCommand = getDeleteAllConversationsCommand(
+    conversationManager,
+    chatWebviewProvider,
+  );
+  const deleteConversationCommand = getDeleteConversationCommand(
+    conversationManager,
+    chatWebviewProvider,
+  );
+  const reviewFileCodeCommand = getReviewCodeCommand(
+    settingsProvider,
+    conversationManager,
+    chatWebviewProvider,
+  );
+  const explainCodeCommand = getExplainCodeCommand(
+    settingsProvider,
+    conversationManager,
+    chatWebviewProvider,
+  );
+  const sendChatMessageCommand = getSendChatMessageCommand(
+    settingsProvider,
+    conversationManager,
+    chatWebviewProvider,
+  );
+  const addCodeToConversationCommand = getAddCodeToConversationCommand(
+    chatWebviewProvider,
+    conversationManager,
+  );
+  const openSettingsCommand = getOpenSettingsCommand();
+
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
   const reviewCodeTextDocumentContentProvider =
     getReviewCodeTextDocumentContentProvider();
-  const openSettingsCommand = getOpenSettingsCommand();
 
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
+    newConversationCommand,
+    deleteAllConversationsCommand,
+    deleteConversationCommand,
     reviewFileCodeCommand,
-    reviewSelectedCodeCommand,
-    reviewFileCodeCustomPromptCommand,
-    reviewSelectedCodeCustomPromptCommand,
+    explainCodeCommand,
+    sendChatMessageCommand,
+    openSettingsCommand,
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
-    openSettingsCommand,
+    chatViewDisposable,
+    addCodeToConversationCommand,
   );
 }
 
 // This method is called when the extension is deactivated
-export function deactivate() {}
+// export function deactivate() {}

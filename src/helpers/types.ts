@@ -1,4 +1,4 @@
-export enum CompletionProviderType {
+export enum LLMProvider {
   OpenAI = "OpenAI",
   Google = "Google",
 }
@@ -11,11 +11,6 @@ export enum MessageSeverity {
 
 export enum TextProviderScheme {
   AiCodeReview = "ai-code-review",
-}
-
-export enum ApplySuggestionsMode {
-  Manual = "Manual",
-  Auto = "Auto",
 }
 
 export enum ApplyChangesPosition {

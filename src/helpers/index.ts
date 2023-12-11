@@ -1,6 +1,6 @@
-export { doCompletion } from "./doCompletion";
-export { getDocumentTextAfterSelection } from "./getDocumentTextAfterSelection";
-export { getDocumentTextBeforeSelection } from "./getDocumentTextBeforeSelection";
-export { injectCompletionModel } from "./injectCompletionModel";
-export { getUserPrompt } from "./getUserPrompt";
+export {
+  getDocumentTextAfterSelection,
+  getDocumentTextBeforeSelection,
+} from "./getDocumentTextAroundSelection";
+export { injectChatModel } from "./injectChatModel";
 export { getReviewCodeTextDocumentContentProvider } from "./getReviewCodeTextDocumentContentProvider";

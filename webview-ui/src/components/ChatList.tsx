@@ -24,11 +24,8 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
     let name = conversation.name;
     if (conversation.messages.length === 0) {
       name = "Empty Chat";
-    } 
-    else if (conversation.messages[0].content[0].type !== "code") {
-      console.log("in here");
+    } else if (conversation.messages[0].content[0].type !== "code") {
       name = conversation.messages[0].content[0].content;
-      console.log(name);
     } else {
       name = "undefined";
       const temp = conversation.messages[1].content[0].content;

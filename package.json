@@ -3,7 +3,7 @@
   "name": "vscode-byolad",
   "displayName": "byoLAD",
   "description": "",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -235,6 +235,7 @@
   },
   "dependencies": {
     "@google-ai/generativelanguage": "^1.0.1",
+    "@vscode/codicons": "^0.0.35",
     "google-auth-library": "^9.0.0",
     "openai": "^4.5.0"
   }

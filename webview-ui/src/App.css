@@ -157,3 +157,15 @@
   justify-content: center;
   padding-bottom: 4px;
 }
+
+.error-message-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 3px 0;
+  color: var(--vscode-problemsErrorIcon-foreground);
+}
+
+.warning-error-icon {
+  padding-right: 5px;
+}

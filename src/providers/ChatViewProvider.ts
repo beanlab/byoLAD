@@ -96,13 +96,16 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     });
   }
 
-  public sendErrorResponse() {
+  public showErrorMessage(errorMessage: string) {
     if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
+      vscode.window.showErrorMessage(errorMessage);
       return;
     }
     this._webviewView.webview.postMessage({
       messageType: "errorResponse",
+      params: {
+        errorMessage: errorMessage,
+      },
     });
   }
 

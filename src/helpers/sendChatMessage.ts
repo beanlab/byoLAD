@@ -48,8 +48,7 @@ export async function sendChatMessage(
       handleErrorResponse(response, chatWebviewProvider);
     }
   } catch (error) {
-    console.error("Error occurred:", error);
-    vscode.window.showErrorMessage(`Unexpected error: ${error}`);
+    chatWebviewProvider.showErrorMessage(`Unexpected error: ${error}`);
   }
 }
 
@@ -76,11 +75,10 @@ function handleSuccessfulResponse(
 }
 
 /**
- * TODO: How to handle all of these? Probably depends on how the webview sidepanel is implemented.
+ * Handle a failed response from the chat model. Show an error message on the side panel with no change to the conversation.
  *
- * @param response
- * @param conversation
- * @param conversationManager
+ * @param response Response from the chat model
+ * @param chatWebviewProvider Current side panel
  */
 function handleErrorResponse(
   response: ChatModelResponse,
@@ -88,16 +86,15 @@ function handleErrorResponse(
 ): void {
   if (!response.success) {
     if (response.errorMessage) {
-      vscode.window.showErrorMessage(`Error: ${response.errorMessage}`);
+      chatWebviewProvider.showErrorMessage(`Error: ${response.errorMessage}`);
     } else {
-      vscode.window.showErrorMessage("Unknown error");
+      chatWebviewProvider.showErrorMessage("Unknown error");
     }
   } else if (!response.message) {
-    vscode.window.showErrorMessage(
+    chatWebviewProvider.showErrorMessage(
       "Response marked successful, but no message was returned",
     );
   } else {
-    vscode.window.showErrorMessage("Unknown error");
+    chatWebviewProvider.showErrorMessage("Unknown error");
   }
-  chatWebviewProvider.sendErrorResponse();
 }

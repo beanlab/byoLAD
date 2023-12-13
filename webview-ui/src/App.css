@@ -50,7 +50,7 @@
 
 /* Styles the text and content below the nav bar */
 .App-body {
-  font-size: calc(8px + 2vmin);
+  font-size: var(--vscode-editor-font-size);
   /* Vertical offset of the body to render below the navbar.
      Also ensures that the edges of body content (e.g., the user icon)
      don't peek out from the edges of the navbar
@@ -61,14 +61,11 @@
 /* Chat Bar Styling Below */
 /* styles the box around the chat bar not including the buttons below */
 .chat-box {
-  padding-left: 5%;
-  padding-right: 5%;
   min-height: 9vh;
 }
 
 .chat-bar {
   background-color: #717171;
-  width: 100%;
   display: flex;
   align-items: center;
   border-radius: 60px;
@@ -93,7 +90,6 @@
 .message {
   padding-top: 10px;
   padding-bottom: 10px;
-  font-size: 0.9rem;
 }
 
 .role-name {

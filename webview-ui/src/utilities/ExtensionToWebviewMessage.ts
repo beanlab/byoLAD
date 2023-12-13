@@ -19,3 +19,7 @@ export interface UpdateConversationListMessageParams {
 export interface AddCodeBlockMessageParams {
   codeBlock: CodeBlock;
 }
+
+export interface ErrorResponseMessageParams {
+  errorMessage: string;
+}

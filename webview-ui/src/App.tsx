@@ -6,6 +6,7 @@ import {
   ExtensionToWebviewMessage,
   UpdateConversationMessageParams,
   UpdateConversationListMessageParams,
+  ErrorResponseMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ChatList } from "./components/ChatList";
@@ -20,6 +21,7 @@ function App() {
   );
   const [activeChat, setActiveChat] = useState<Conversation | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
@@ -46,6 +48,7 @@ function App() {
   const changeActiveChat = (conversation: Conversation | null) => {
     extensionMessenger.setActiveChat(conversation);
     setActiveChat(conversation);
+    setErrorMessage(null);
   };
 
   if (fetchConversations) {
@@ -79,6 +82,7 @@ function App() {
           }
         }
         setLoadingMessage(false);
+        setErrorMessage(null);
         break;
       }
       case "updateConversationList": {
@@ -88,7 +92,9 @@ function App() {
         break;
       }
       case "errorResponse": {
+        const params = message.params as ErrorResponseMessageParams;
         setLoadingMessage(false);
+        setErrorMessage(params.errorMessage);
         break;
       }
       default:
@@ -107,6 +113,7 @@ function App() {
           imagePaths={imagePaths}
           loadingMessage={loadingMessage}
           setLoadingMessage={setLoadingMessage}
+          errorMessage={errorMessage}
         />
       ) : chatList ? (
         // When there is no active chat, show the list of chats

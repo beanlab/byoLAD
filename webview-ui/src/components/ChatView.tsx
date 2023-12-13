@@ -5,6 +5,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
+import ErrorMessage from "./ErrorMessage";
 
 interface ChatViewProps {
   activeChat: Conversation;
@@ -12,6 +13,7 @@ interface ChatViewProps {
   imagePaths: ImagePaths;
   loadingMessage: boolean;
   setLoadingMessage: (loading: boolean) => void;
+  errorMessage: string | null;
 }
 
 export const ChatView = ({
@@ -20,6 +22,7 @@ export const ChatView = ({
   imagePaths,
   loadingMessage,
   setLoadingMessage,
+  errorMessage,
 }: ChatViewProps) => {
   const [userPrompt, setUserPrompt] = useState("");
 
@@ -162,9 +165,10 @@ export const ChatView = ({
       <div className="App-body">
         <div>{welcomeMessage}</div>
         <div>{messages}</div>
+        {loadingMessage === true && <p>Loading...</p>}
+        {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
       </div>
       <footer className="App-footer">
-        {loadingMessage === true && <p>Loading...</p>}
         <div className="chat-box">
           <form
             className="chat-bar"

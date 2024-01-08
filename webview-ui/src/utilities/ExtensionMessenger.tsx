@@ -1,5 +1,5 @@
 import { vscode } from "./vscode";
-import { ChatMessage, Conversation } from "./ChatModel";
+import { ChatMessage, Chat } from "./ChatModel";
 
 /**
  * Sends messages to the extension context.
@@ -54,38 +54,38 @@ export class ExtensionMessenger {
     });
   }
 
-  deleteAllConversations() {
+  deleteAllChats() {
     vscode.postMessage({
-      messageType: "deleteAllConversations",
+      messageType: "deleteAllChats",
     });
   }
 
-  deleteConversation(conversationId: number) {
+  deleteChat(chatId: number) {
     vscode.postMessage({
-      messageType: "deleteConversation",
+      messageType: "deleteChat",
       params: {
-        conversationId: conversationId,
+        chatId: chatId,
       },
     });
   }
 
-  newConversation() {
+  newChat() {
     vscode.postMessage({
-      messageType: "newConversation",
+      messageType: "newChat",
     });
   }
 
-  getConversations() {
+  getChats() {
     vscode.postMessage({
-      messageType: "getConversations",
+      messageType: "getChats",
     });
   }
 
-  setActiveChat(conversation: Conversation | null) {
+  setActiveChat(chat: Chat | null) {
     vscode.postMessage({
       messageType: "setActiveChat",
       params: {
-        activeConversationId: conversation?.id || null,
+        activeChatId: chat?.id || null,
       },
     });
   }
@@ -96,7 +96,7 @@ export class ExtensionMessenger {
     });
   }
 
-  updateChat(chat: Conversation) {
+  updateChat(chat: Chat) {
     vscode.postMessage({
       messageType: "updateChat",
       params: {

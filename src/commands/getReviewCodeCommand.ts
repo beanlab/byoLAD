@@ -4,9 +4,9 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatRole, TextBlock } from "../ChatModel/ChatModel";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { getCodeReference } from "../helpers/getCodeReference";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { ensureActiveWebviewAndConversation } from "../helpers/ensureActiveWebviewAndConversation";
+import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
 
 /**
  * Queries the model for a reviewed, edited version of the current file contents.
@@ -14,7 +14,7 @@ import { ensureActiveWebviewAndConversation } from "../helpers/ensureActiveWebvi
  */
 export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager,
+  chatManager: ChatManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
@@ -38,14 +38,11 @@ export const getReviewCodeCommand = (
         content: codeReference ? [textBlock, codeReference] : [textBlock],
       };
 
-      await ensureActiveWebviewAndConversation(
-        conversationManager,
-        chatWebviewProvider,
-      );
+      await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
       await sendChatMessage(
         message,
         settingsProvider,
-        conversationManager,
+        chatManager,
         chatWebviewProvider,
       );
     },

@@ -9,10 +9,10 @@ export const LLM_MESSAGE_FORMATTING_INSTRUCTION = `The user will provide you wit
   You MUST respond in valid Markdown format with any code samples using code fences and a language identifier.
   This is necessary so the user can easily see which parts of your response are code and which parts are just descriptive/explanatory Markdown text.`;
 
-// ConversationManager Keys
-export const CONVERSATIONS_KEY = "conversations";
-export const CONVERSATION_IDS_KEY = "conversationIds";
-export const ACTIVE_CONVERSATION_ID_KEY = "activeConversationId";
+// ChatManager Keys
+export const CONVERSATIONS_KEY = "chats";
+export const CONVERSATION_IDS_KEY = "chatIds";
+export const ACTIVE_CONVERSATION_ID_KEY = "activeChatId";
 export const NEXT_ID_KEY = "nextId";
 
 // Settings/configuration error messages

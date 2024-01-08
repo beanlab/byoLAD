@@ -6,9 +6,9 @@ import {
 } from "../ChatModel/ChatModel";
 
 /**
- * Gets an array of brief introductory messages to use as an example conversation.
+ * Gets an array of brief introductory messages to use as an example chat.
  * Here, the user asks the assistant what it can do, and the assistant responds with a demo of its capabilities.
- * For use in the model prompt at the beginning of a conversation so that the model has more to work with.
+ * For use in the model prompt at the beginning of a chat so that the model has more to work with.
  *
  * @returns
  */

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { ChatRole, Conversation, TextBlock } from "../utilities/ChatModel";
+import { ChatRole, Chat, TextBlock } from "../utilities/ChatModel";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
 import { Message } from "./Message";
@@ -8,8 +8,8 @@ import { ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";
 
 interface ChatViewProps {
-  activeChat: Conversation;
-  changeActiveChat: (conversation: Conversation | null) => void;
+  activeChat: Chat;
+  changeActiveChat: (chat: Chat | null) => void;
   imagePaths: ImagePaths;
   loadingMessage: boolean;
   setLoadingMessage: (loading: boolean) => void;
@@ -131,9 +131,8 @@ export const ChatView = ({
         </div>
         <p>
           Here you can chat with your AI, ask questions about code, or generate
-          code. You can add snippets of code to your conversation from the
-          editor by selecting the code and clicking the "Add Code to Chat"
-          button.
+          code. You can add snippets of code to your chat from the editor by
+          selecting the code and clicking the "Add Code to Chat" button.
         </p>
       </div>
     );
@@ -154,9 +153,9 @@ export const ChatView = ({
           </VSCodeButton>
           <VSCodeButton
             appearance="icon"
-            aria-label="New conversation"
-            title="New conversation"
-            onClick={extensionMessenger.newConversation}
+            aria-label="New chat"
+            title="New chat"
+            onClick={extensionMessenger.newChat}
           >
             <i className="codicon codicon-add"></i>
           </VSCodeButton>

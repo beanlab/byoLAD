@@ -99,18 +99,18 @@
     },
     "commands": [
       {
-        "command": "vscode-byolad.newConversation",
-        "title": "byoLAD — New Conversation",
+        "command": "vscode-byolad.newChat",
+        "title": "byoLAD — New Chat",
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.deleteAllConversations",
-        "title": "byoLAD — Delete All Conversations",
+        "command": "vscode-byolad.deleteAllChats",
+        "title": "byoLAD — Delete All Chats",
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.deleteConversation",
-        "title": "byoLAD — Delete Conversation",
+        "command": "vscode-byolad.deleteChat",
+        "title": "byoLAD — Delete Chat",
         "category": "byoLAD"
       },
       {
@@ -130,7 +130,7 @@
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.addCodeToConversation",
+        "command": "vscode-byolad.addCodeToChat",
         "title": "byoLAD — Add Code to Chat",
         "category": "byoLAD"
       }
@@ -146,21 +146,21 @@
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.newConversation",
+          "command": "vscode-byolad.newChat",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.addCodeToConversation",
+          "command": "vscode-byolad.addCodeToChat",
           "when": "editorFocus"
         },
         {
-          "command": "vscode-byolad.deleteAllConversations"
+          "command": "vscode-byolad.deleteAllChats"
         }
       ],
       "editor/context": [
         {
           "when": "editorFocus",
-          "command": "vscode-byolad.addCodeToConversation",
+          "command": "vscode-byolad.addCodeToChat",
           "group": "1_modification"
         }
       ]

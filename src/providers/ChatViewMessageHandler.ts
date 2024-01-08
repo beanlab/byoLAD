@@ -3,21 +3,21 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { diffCode } from "../helpers/diffCode";
 import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
-import { ChatMessage, Conversation } from "../ChatModel/ChatModel";
+import { ChatMessage, Chat } from "../ChatModel/ChatModel";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
-  conversationManager: ConversationManager;
+  chatManager: ChatManager;
   chatViewProvider: ChatWebviewProvider;
 
   constructor(
     settingsProvider: SettingsProvider,
-    conversationManager: ConversationManager,
+    chatManager: ChatManager,
     chatViewProvider: ChatWebviewProvider,
   ) {
-    this.conversationManager = conversationManager;
+    this.chatManager = chatManager;
     this.chatViewProvider = chatViewProvider;
     this.settingsProvider = settingsProvider;
   }
@@ -29,17 +29,17 @@ export class ChatViewMessageHandler {
    */
   public async handleMessage(message: WebviewToExtensionMessage) {
     switch (message.messageType) {
-      case "newConversation":
-        vscode.commands.executeCommand("vscode-byolad.newConversation");
+      case "newChat":
+        vscode.commands.executeCommand("vscode-byolad.newChat");
         break;
-      case "getConversations":
-        this.chatViewProvider.updateConversation(
-          this.conversationManager.conversations,
-          this.conversationManager.activeConversationId,
+      case "getChats":
+        this.chatViewProvider.updateChat(
+          this.chatManager.chats,
+          this.chatManager.activeChatId,
         );
         break;
-      case "deleteAllConversations":
-        vscode.commands.executeCommand("vscode-byolad.deleteAllConversations");
+      case "deleteAllChats":
+        vscode.commands.executeCommand("vscode-byolad.deleteAllChats");
         break;
       case "reviewCode":
         vscode.commands.executeCommand("vscode-byolad.reviewCode");
@@ -47,11 +47,11 @@ export class ChatViewMessageHandler {
       case "explainCode":
         vscode.commands.executeCommand("vscode-byolad.explainCode");
         break;
-      case "deleteConversation": {
-        const params = message.params as DeleteConversationParams;
+      case "deleteChat": {
+        const params = message.params as DeleteChatParams;
         vscode.commands.executeCommand(
-          "vscode-byolad.deleteConversation",
-          params.conversationId,
+          "vscode-byolad.deleteChat",
+          params.chatId,
         );
         break;
       }
@@ -80,16 +80,15 @@ export class ChatViewMessageHandler {
       }
       case "setActiveChat": {
         const params = message.params as SetActiveChatParams;
-        this.conversationManager.activeConversationId =
-          params.activeConversationId;
+        this.chatManager.activeChatId = params.activeChatId;
         break;
       }
       case "updateChat": {
         const params = message.params as UpdateChatParams;
-        this.conversationManager.updateConversation(params.chat);
-        this.chatViewProvider.updateConversation(
-          this.conversationManager.conversations,
-          this.conversationManager.activeConversationId,
+        this.chatManager.updateChat(params.chat);
+        this.chatViewProvider.updateChat(
+          this.chatManager.chats,
+          this.chatManager.activeChatId,
         );
         break;
       }
@@ -127,13 +126,13 @@ interface CopyToClipboardMessageParams extends WebviewToExtensionMessageParams {
 }
 
 interface SetActiveChatParams extends WebviewToExtensionMessageParams {
-  activeConversationId: number;
+  activeChatId: number;
 }
 
-interface DeleteConversationParams extends WebviewToExtensionMessageParams {
-  conversationId: number;
+interface DeleteChatParams extends WebviewToExtensionMessageParams {
+  chatId: number;
 }
 
 interface UpdateChatParams extends WebviewToExtensionMessageParams {
-  chat: Conversation;
+  chat: Chat;
 }

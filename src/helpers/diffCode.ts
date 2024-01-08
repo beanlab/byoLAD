@@ -8,9 +8,9 @@ import { displayDiff } from "./displayDiff";
 import { SettingsProvider } from "./SettingsProvider";
 
 /**
- * Displays a diff of the given code block in the active conversation with the user's current selection in the editor.
+ * Displays a diff of the given code block in the active chat with the user's current selection in the editor.
  * If nothing is selected, the diff will be against an insertion at the present cursor position.
- * Throws an error if there is no active editor, no active conversation, or no code block in the conversation.
+ * Throws an error if there is no active editor, no active chat, or no code block in the chat.
  *
  * @param content
  * @param settingsProvider

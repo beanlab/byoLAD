@@ -1,11 +1,11 @@
 import "./App.css";
 import { useState } from "react";
-import { Conversation } from "./utilities/ChatModel";
+import { Chat } from "./utilities/ChatModel";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
   ExtensionToWebviewMessage,
-  UpdateConversationMessageParams,
-  UpdateConversationListMessageParams,
+  UpdateChatMessageParams,
+  UpdateChatListMessageParams,
   ErrorResponseMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
@@ -15,11 +15,9 @@ import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 
 function App() {
-  const [fetchConversations, setFetchConversations] = useState<boolean>(true);
-  const [chatList, setChatList] = useState<Conversation[] | undefined>(
-    undefined,
-  );
-  const [activeChat, setActiveChat] = useState<Conversation | null>(null);
+  const [fetchChats, setFetchChats] = useState<boolean>(true);
+  const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -45,15 +43,15 @@ function App() {
   );
   mutationObserver.observe(document.body, { attributes: true });
 
-  const changeActiveChat = (conversation: Conversation | null) => {
-    extensionMessenger.setActiveChat(conversation);
-    setActiveChat(conversation);
+  const changeActiveChat = (chat: Chat | null) => {
+    extensionMessenger.setActiveChat(chat);
+    setActiveChat(chat);
     setErrorMessage(null);
   };
 
-  if (fetchConversations) {
-    setFetchConversations(false);
-    extensionMessenger.getConversations();
+  if (fetchChats) {
+    setFetchChats(false);
+    extensionMessenger.getChats();
   }
 
   /**
@@ -62,21 +60,17 @@ function App() {
   window.addEventListener("message", (event) => {
     const message = event.data as ExtensionToWebviewMessage;
     switch (message.messageType) {
-      case "updateConversation": {
-        const params = message.params as UpdateConversationMessageParams;
-        const conversations = params.conversations;
-        const activeConversationId = params.activeConversationId;
-        setChatList(conversations);
-        if (activeConversationId) {
-          const activeConversation =
-            conversations.find(
-              (conversation) => conversation.id === activeConversationId,
-            ) || null;
-          setActiveChat(activeConversation);
+      case "updateChat": {
+        const params = message.params as UpdateChatMessageParams;
+        const chats = params.chats;
+        const activeChatId = params.activeChatId;
+        setChatList(chats);
+        if (activeChatId) {
+          const activeChat =
+            chats.find((chat) => chat.id === activeChatId) || null;
+          setActiveChat(activeChat);
         } else if (activeChat) {
-          const newActiveChat = conversations.find(
-            (conversation) => conversation.id === activeChat.id,
-          );
+          const newActiveChat = chats.find((chat) => chat.id === activeChat.id);
           if (newActiveChat) {
             setActiveChat(newActiveChat);
           }
@@ -85,10 +79,10 @@ function App() {
         setErrorMessage(null);
         break;
       }
-      case "updateConversationList": {
-        const params = message.params as UpdateConversationListMessageParams;
-        const conversations = params.conversations;
-        setChatList(conversations);
+      case "updateChatList": {
+        const params = message.params as UpdateChatListMessageParams;
+        const chats = params.chats;
+        setChatList(chats);
         break;
       }
       case "errorResponse": {

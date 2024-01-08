@@ -3,7 +3,7 @@ export interface ChatModel {
 }
 
 export interface ChatModelRequest {
-  conversation: Conversation;
+  chat: Chat;
 }
 
 export interface ChatModelResponse {
@@ -19,7 +19,7 @@ export interface ChatMessage {
 }
 
 /**
- * A section of a message. A complete message in a Conversation is made up of one or more blocks.
+ * A section of a message. A complete message in a Chat is made up of one or more blocks.
  */
 export interface MessageBlock {
   type: "text" | "code";
@@ -61,7 +61,7 @@ export enum ChatMessageFinishReason {
   ContentFilter = "content_filter",
 }
 
-export interface Conversation {
+export interface Chat {
   id: number;
   name: string;
   messages: ChatMessage[];

@@ -15,9 +15,9 @@ import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import {
   messageBlocksToString,
   stringToMessageBlocks,
-} from "../../Conversation/messageBlockHelpers";
-import { Conversation } from "../ChatModel";
-import { getExampleMessages } from "../../Conversation/getExampleMessages";
+} from "../../Chat/messageBlockHelpers";
+import { Chat } from "../ChatModel";
+import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 interface PaLMPrompt {
   context?: string;
@@ -61,7 +61,7 @@ export class PaLMChatModel implements ChatModel {
     return await this.client
       .generateMessage({
         model: this.model,
-        prompt: this.convertToPaLMPrompt(request.conversation),
+        prompt: this.convertToPaLMPrompt(request.chat),
       })
       .then((response) => {
         const candidates: PalMMessage[] | null = response[0]
@@ -99,17 +99,17 @@ export class PaLMChatModel implements ChatModel {
       });
   }
 
-  convertToPaLMPrompt(conversation: Conversation): PaLMPrompt {
-    if (conversation.contextInstruction) {
+  convertToPaLMPrompt(chat: Chat): PaLMPrompt {
+    if (chat.contextInstruction) {
       return {
-        context: conversation.contextInstruction,
+        context: chat.contextInstruction,
         examples: this.getFormattedExamples(),
-        messages: this.convertToPaLMMessages(conversation.messages),
+        messages: this.convertToPaLMMessages(chat.messages),
       };
     } else {
       return {
         examples: this.getFormattedExamples(),
-        messages: this.convertToPaLMMessages(conversation.messages),
+        messages: this.convertToPaLMMessages(chat.messages),
       };
     }
   }
@@ -141,7 +141,7 @@ export class PaLMChatModel implements ChatModel {
    * @returns Array of PaLM messages
    */
   convertToPaLMMessages(chatMessages: ChatMessage[]): PalMMessage[] {
-    // Add messages to the beginning of the conversation history to provide examples/set the stage
+    // Add messages to the beginning of the chat history to provide examples/set the stage
     const introMessages: ChatMessage[] = getExampleMessages();
 
     const messages: ChatMessage[] = [...introMessages, ...chatMessages];

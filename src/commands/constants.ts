@@ -10,10 +10,11 @@ export const LLM_MESSAGE_FORMATTING_INSTRUCTION = `The user will provide you wit
   This is necessary so the user can easily see which parts of your response are code and which parts are just descriptive/explanatory Markdown text.`;
 
 // ChatManager Keys
-export const CONVERSATIONS_KEY = "chats";
-export const CONVERSATION_IDS_KEY = "chatIds";
-export const ACTIVE_CONVERSATION_ID_KEY = "activeChatId";
-export const NEXT_ID_KEY = "nextId";
+// Note: Changes to workspace state keys will cause compatibility issues with existing workspaces that have byoLAD data unless the data is migrated.
+export const CONVERSATIONS_KEY = "conversations"; // Do not change without handling migration
+export const CONVERSATION_IDS_KEY = "conversationIds"; // Do not change without handling migration
+export const ACTIVE_CONVERSATION_ID_KEY = "activeConversationId"; // Do not change without handling migration
+export const NEXT_ID_KEY = "nextId"; // Do not change without handling migration
 
 // Settings/configuration error messages
 export const MODEL_NOT_SET_ERROR_MESSAGE =

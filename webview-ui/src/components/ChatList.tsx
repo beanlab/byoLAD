@@ -8,6 +8,9 @@ interface ChatListProps {
   changeActiveChat: (chat: Chat | null) => void;
 }
 
+/**
+ * The chat history of the user from which they can select a chat to view.
+ */
 export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   const extensionMessenger = new ExtensionMessenger();
 

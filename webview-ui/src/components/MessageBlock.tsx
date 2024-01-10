@@ -18,6 +18,11 @@ interface CodeMessageBlockProps {
   extensionMessenger: ExtensionMessenger;
   deleteMessageBlock: () => void;
 }
+
+/**
+ * A single code message block in a message.
+ * Includes syntax highlighting and buttons to interact with that code.
+ */
 export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
   languageId,
   children,
@@ -82,6 +87,9 @@ interface TextMessageBlockProps {
   deleteMessageBlock: () => void;
 }
 
+/**
+ * A single text message block in a message. Uses Markdown to render the text.
+ */
 export const TextMessageBlock: React.FC<TextMessageBlockProps> = ({
   children,
   deleteMessageBlock,

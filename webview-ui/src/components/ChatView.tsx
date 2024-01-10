@@ -16,6 +16,10 @@ interface ChatViewProps {
   errorMessage: string | null;
 }
 
+/**
+ * A single chat used to communicate with the AI. Includes chat messages and an
+ * input text box to send messages.
+ */
 export const ChatView = ({
   activeChat,
   changeActiveChat,

@@ -9,8 +9,9 @@ import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
 
 /**
- * Queries the model for a reviewed, edited version of the current file contents.
- * Presents the suggestions to the user according to their settings.
+ * Command to review the selected code (or whole file if no selection) in a chat.
+ * Sends the selection/file and the user's configured prompt as a chat message.
+ * Opens the webview and/or starts a new chat if necessary.
  */
 export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,

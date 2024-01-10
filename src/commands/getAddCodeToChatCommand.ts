@@ -5,6 +5,10 @@ import { getCodeReference } from "../helpers/getCodeReference";
 import { ChatRole, CodeBlock, MessageBlock } from "../ChatModel/ChatModel";
 import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
 
+/**
+ * Command to add the selected code (or whole file if no selection) to the active chat.
+ * Opens webview and/or starts chat if necessary.
+ */
 export const getAddCodeToChatCommand = (
   chatWebviewProvider: ChatWebviewProvider,
   chatManager: ChatManager,

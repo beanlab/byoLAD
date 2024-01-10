@@ -4,6 +4,9 @@ import { ChatMessage } from "../ChatModel/ChatModel";
 import * as constants from "../commands/constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 
+/**
+ * Manages the chat history and the active chat in the VS Code workspace state.
+ */
 export class ChatManager {
   private readonly context: ExtensionContext;
   private readonly settingsProvider: SettingsProvider;
@@ -122,12 +125,11 @@ export class ChatManager {
 
   /**
    * Returns a new Chat object with the given name and messages.
-   * Allocates a new id for the chat (1 higher than the current
-   * max or 1 if there are no chats yet).
+   * Increments the next ID to be used in a chat.
    * Note: Does not add the chat to the chat history.
    *
-   * @param name
-   * @param messages
+   * @param name Chat name
+   * @param messages Chat messages
    * @returns A new Chat object
    */
   private createChat(name: string, messages?: ChatMessage[]): Chat {

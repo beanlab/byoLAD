@@ -9,6 +9,9 @@ import { SettingsProvider } from "./SettingsProvider";
 import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
+/**
+ * Sends the given chat message to the chat model and updates the chat and side panel accordingly.
+ */
 export async function sendChatMessage(
   chatMessage: ChatMessage,
   settingsProvider: SettingsProvider,

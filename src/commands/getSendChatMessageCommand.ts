@@ -7,6 +7,10 @@ import { sendChatMessage } from "../helpers/sendChatMessage";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
 
+/**
+ * Command to send the given chat message to the active chat.
+ * Opens the webview and/or starts a new chat if necessary.
+ */
 export const getSendChatMessageCommand = (
   settingsProvider: SettingsProvider,
   chatManager: ChatManager,

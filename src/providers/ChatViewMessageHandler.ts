@@ -23,7 +23,7 @@ export class ChatViewMessageHandler {
   }
 
   /**
-   * Handles messages sent from the webview view context
+   * Handles messages sent from the webview view context.
    *
    * @param message The message sent from the webview view context. Its parameters must be coordinated with the webview view context.
    */

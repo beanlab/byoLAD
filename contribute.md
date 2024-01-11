@@ -24,12 +24,9 @@ If you desire to run this extension locally, here are the steps to have it run p
 
 - Run `npm run build:webview` (whenever you make changes within the `webview-ui` folder, you will need to run this command again).
 - Press `F5` to open a new window with the extension loaded.
-- Another "Extension Development Host" VS code window should open.
-- With a file open, right click.
-- Click "Review Code File".
-- An error message may pop up saying "APIKey not set". If not, then it should have opened a new tab showing your code and the suggested changes.
+- Another "Extension Development Host" VS code window should open with the extension installed.
 
-> Note: The instructions for setting your APIKey in setting is [here](https://code.visualstudio.com/docs/getstarted/settings)
+> Note: The instructions for setting your APIKey in settings is [here](https://code.visualstudio.com/docs/getstarted/settings)
 
 #### Helpful tips
 
@@ -42,8 +39,7 @@ If you desire to run this extension locally, here are the steps to have it run p
 - You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the VS Code window with your extension to load your changes.
 
 ### Run tests
-
-- Open the debug viewlet (`Ctrl+Shift+D` or `Cmd+Shift+D` on Mac) and from the launch configuration dropdown pick `Extension Tests`.
+- From your main VS Code window (not the Extension Host window running the extension), open the debug viewlet (`Ctrl+Shift+D` or `Cmd+Shift+D` on Mac) and from the launch configuration dropdown pick `Extension Tests`.
 - Press `F5` to run the tests in a new window with your extension loaded.
 - See the output of the test result in the debug console.
 - Make changes to `src/test/suite/extension.test.ts` or create new test files inside the `test/suite` folder.

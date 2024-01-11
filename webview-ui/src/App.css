@@ -48,8 +48,7 @@
   text-align: center;
 }
 
-/* Styles the text and content below the nav bar */
-.App-body {
+.message-list {
   font-size: var(--vscode-editor-font-size);
   /* Vertical offset of the body to render below the navbar.
      Also ensures that the edges of body content (e.g., the user icon)
@@ -58,32 +57,20 @@
   padding: 24px 1px;
 }
 
-/* Chat Bar Styling Below */
-/* styles the box around the chat bar not including the buttons below */
-.chat-box {
-  min-height: 9vh;
-}
-
-.chat-bar {
-  background-color: #717171;
+.chat-form {
+  position: relative;
   display: flex;
   align-items: center;
-  border-radius: 60px;
-  padding: 8px 8px;
 }
 
-.chat-bar input {
-  background: transparent;
-  flex: 1;
-  border: 0;
-  outline: none;
-  padding: 5px;
-  color: #aaaaaa;
-  width: 80%;
+.chat-input {
+  resize: none;
+  width: 100%;
 }
 
-::placeholder {
-  color: #aaaaaa;
+.send-button {
+  position: absolute;
+  right: 10px;
 }
 
 /* Message Styling Below */

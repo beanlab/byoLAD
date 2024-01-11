@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { ChatRole, Chat, TextBlock } from "../utilities/ChatModel";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { VSCodeButton, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react";
 import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";
+import autosize from "autosize";
 
 interface ChatViewProps {
   activeChat: Chat;
@@ -29,12 +30,25 @@ export const ChatView = ({
   errorMessage,
 }: ChatViewProps) => {
   const [userPrompt, setUserPrompt] = useState("");
-
   const extensionMessenger = new ExtensionMessenger();
+  let innerTextArea: HTMLTextAreaElement | null | undefined = null;
 
-  const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newval = event.target.value;
-    setUserPrompt(newval);
+  const handleInputOnChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setUserPrompt(event.target.value);
+    if (innerTextArea) {
+      autosize.update(innerTextArea);
+    } else {
+      innerTextArea = document
+        .getElementById("vscode-textarea-chat-input")
+        ?.shadowRoot?.querySelector("textarea");
+      if (innerTextArea) {
+        innerTextArea.style.paddingRight = "35px"; // Can't use in main CSS file because of shadow DOM
+        autosize(innerTextArea);
+      }
+      // TODO: How to handle else?
+    }
   };
 
   const handleSubmit = (
@@ -165,36 +179,36 @@ export const ChatView = ({
           </VSCodeButton>
         </VSCodeBadge>
       </div>
-      <div className="App-body">
+      <div className="message-list">
         <div>{welcomeMessage}</div>
         <div>{messages}</div>
         {loadingMessage === true && <p>Loading...</p>}
         {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
       </div>
-      <footer className="App-footer">
-        <div className="chat-box">
-          <form
-            className="chat-bar"
-            name="chatbox"
-            onSubmit={(e) => handleSubmit(e)}
-          >
-            <input
-              onChange={handleInputOnChange}
-              value={userPrompt}
-              type="text"
-              placeholder="Message"
-            />
-            <VSCodeButton
-              type="submit"
-              appearance="icon"
-              aria-label="Send message"
-              title="Send message"
-            >
-              <i className="codicon codicon-send"></i>
-            </VSCodeButton>
-          </form>
-        </div>
-      </footer>
+
+      <form
+        className="chat-form"
+        name="chatbox"
+        onSubmit={(e) => handleSubmit(e)}
+      >
+        <VSCodeTextArea
+          id="vscode-textarea-chat-input"
+          className="chat-input"
+          onInputCapture={handleInputOnChange}
+          placeholder="Your message..."
+          rows={1}
+          value={userPrompt}
+        />
+        <VSCodeButton
+          type="submit"
+          className="send-button"
+          appearance="icon"
+          aria-label="Send message"
+          title="Send message"
+        >
+          <i className="codicon codicon-send"></i>
+        </VSCodeButton>
+      </form>
     </div>
   );
 };

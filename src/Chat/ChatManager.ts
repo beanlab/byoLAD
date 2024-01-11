@@ -17,9 +17,7 @@ export class ChatManager {
   }
 
   get chats(): Chat[] {
-    return (
-      this.context.workspaceState.get<Chat[]>(constants.CONVERSATIONS_KEY) || []
-    );
+    return this.context.workspaceState.get<Chat[]>(constants.CHATS_KEY) || [];
   }
 
   set chats(value: Chat[]) {
@@ -27,14 +25,12 @@ export class ChatManager {
     if (new Set(ids).size !== ids.length) {
       throw new Error("Duplicate ids");
     }
-    this.context.workspaceState.update(constants.CONVERSATIONS_KEY, value);
+    this.context.workspaceState.update(constants.CHATS_KEY, value);
   }
 
   get chatIds(): number[] {
     return (
-      this.context.workspaceState.get<number[]>(
-        constants.CONVERSATION_IDS_KEY,
-      ) || []
+      this.context.workspaceState.get<number[]>(constants.CHAT_IDS_KEY) || []
     );
   }
 
@@ -42,14 +38,13 @@ export class ChatManager {
     if (new Set(value).size !== value.length) {
       throw new Error("Duplicate ids");
     }
-    this.context.workspaceState.update(constants.CONVERSATION_IDS_KEY, value);
+    this.context.workspaceState.update(constants.CHAT_IDS_KEY, value);
   }
 
   get activeChatId(): number | null {
     return (
-      this.context.workspaceState.get<number>(
-        constants.ACTIVE_CONVERSATION_ID_KEY,
-      ) || null
+      this.context.workspaceState.get<number>(constants.ACTIVE_CHAT_ID_KEY) ||
+      null
     );
   }
 
@@ -57,10 +52,7 @@ export class ChatManager {
     if (value && !this.chatIds.includes(value)) {
       throw new Error("Chat ID does not exist");
     }
-    this.context.workspaceState.update(
-      constants.ACTIVE_CONVERSATION_ID_KEY,
-      value,
-    );
+    this.context.workspaceState.update(constants.ACTIVE_CHAT_ID_KEY, value);
   }
 
   get nextId(): number {

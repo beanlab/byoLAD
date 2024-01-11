@@ -11,9 +11,9 @@ export const LLM_MESSAGE_FORMATTING_INSTRUCTION = `The user will provide you wit
 
 // ChatManager Keys
 // Note: Changes to workspace state keys will cause compatibility issues with existing workspaces that have byoLAD data unless the data is migrated.
-export const CONVERSATIONS_KEY = "conversations"; // Do not change without handling migration
-export const CONVERSATION_IDS_KEY = "conversationIds"; // Do not change without handling migration
-export const ACTIVE_CONVERSATION_ID_KEY = "activeConversationId"; // Do not change without handling migration
+export const CHATS_KEY = "chats"; // Do not change without handling migration
+export const CHAT_IDS_KEY = "chatIds"; // Do not change without handling migration
+export const ACTIVE_CHAT_ID_KEY = "activeChatId"; // Do not change without handling migration
 export const NEXT_ID_KEY = "nextId"; // Do not change without handling migration
 
 // Settings/configuration error messages

@@ -4,8 +4,15 @@ import * as vscode from "vscode";
 import { MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE } from "../commands/constants";
 import { ChatModel } from "../ChatModel/ChatModel";
 
+/**
+ * Provides access to the user's VS Code settings for the extension.
+ */
 export class SettingsProvider {
   private _chatModel: ChatModel;
+  /**
+   * The user's VS Code settings for the extension.
+   * This is not automatically updated when the settings change in VS Code.
+   */
   private _config: vscode.WorkspaceConfiguration;
 
   constructor(config: vscode.WorkspaceConfiguration) {

@@ -12,6 +12,9 @@ interface MessageProps {
   deleteMessageBlock: (messageBlockPosition: number) => void;
 }
 
+/**
+ * A single message in a chat consisting of one or more message blocks.
+ */
 export const Message: React.FC<MessageProps> = ({
   role,
   messageBlocks,

@@ -11,9 +11,9 @@ import OpenAI from "openai";
 import {
   messageBlocksToString,
   stringToMessageBlocks,
-} from "../../Conversation/messageBlockHelpers";
-import { Conversation } from "../ChatModel";
-import { getExampleMessages } from "../../Conversation/getExampleMessages";
+} from "../../Chat/messageBlockHelpers";
+import { Chat } from "../ChatModel";
+import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 export class GPTChatModel implements ChatModel {
   private openai: OpenAI;
@@ -29,7 +29,7 @@ export class GPTChatModel implements ChatModel {
   async chat(request: ChatModelRequest): Promise<ChatModelResponse> {
     return await this.openai.chat.completions
       .create({
-        messages: this.convertToGPTMessages(request.conversation),
+        messages: this.convertToGPTMessages(request.chat),
         model: this.model,
       })
       .then((completion) => {
@@ -60,19 +60,19 @@ export class GPTChatModel implements ChatModel {
       });
   }
 
-  private convertToGPTMessages(conversation: Conversation): GPTMessage[] {
+  private convertToGPTMessages(chat: Chat): GPTMessage[] {
     const gptMessages: GPTMessage[] = [];
 
     // The first message should provide contextual information
     // and generally applicable instructions for the model to use
-    if (conversation.contextInstruction) {
+    if (chat.contextInstruction) {
       gptMessages.push({
         role: ChatRole.System,
-        content: conversation.contextInstruction,
+        content: chat.contextInstruction,
       });
     }
 
-    // Add messages to the beginning of the conversation history to provide examples/set the stage
+    // Add messages to the beginning of the chat history to provide examples/set the stage
     const exampleMessages: ChatMessage[] = getExampleMessages();
     for (const message of exampleMessages) {
       gptMessages.push({
@@ -81,8 +81,8 @@ export class GPTChatModel implements ChatModel {
       });
     }
 
-    // Every other message in the conversation history should be sent to the model after that
-    for (const message of conversation.messages) {
+    // Every other message in the chat history should be sent to the model after that
+    for (const message of chat.messages) {
       gptMessages.push({
         role: message.role,
         content: messageBlocksToString(message.content),

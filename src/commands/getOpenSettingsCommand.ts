@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 
 /**
- * Opens settings with a search for byoLAD, which
- * shows the fields for API key and model type.
+ * Command to open the VS Code settings with a search for "byoLAD".
  */
 export const getOpenSettingsCommand = (): vscode.Disposable => {
   const openSettingsCommand = vscode.commands.registerCommand(

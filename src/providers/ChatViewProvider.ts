@@ -2,9 +2,9 @@ import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
-import { Conversation } from "../ChatModel/ChatModel";
+import { Chat } from "../ChatModel/ChatModel";
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatManager } from "../Chat/ChatManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -17,16 +17,16 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
   private readonly _settingsProvider: SettingsProvider;
-  private conversationManager: ConversationManager;
+  private chatManager: ChatManager;
 
   constructor(
     extensionUri: vscode.Uri,
     settingsProvider: SettingsProvider,
-    conversationManager: ConversationManager,
+    chatManager: ChatManager,
   ) {
     this._extensionUri = extensionUri;
     this._settingsProvider = settingsProvider;
-    this.conversationManager = conversationManager;
+    this.chatManager = chatManager;
   }
 
   public resolveWebviewView(
@@ -66,32 +66,29 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     console.log(token);
   }
 
-  public updateConversation(
-    conversations: Conversation[],
-    activeConversationId: number | null,
-  ) {
+  public updateChat(chats: Chat[], activeChatId: number | null) {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;
     }
     this._webviewView.webview.postMessage({
-      messageType: "updateConversation",
+      messageType: "updateChat",
       params: {
-        conversations: conversations,
-        activeConversationId: activeConversationId,
+        chats: chats,
+        activeChatId: activeChatId,
       },
     });
   }
 
-  public updateConversationList(conversations: Conversation[]) {
+  public updateChatList(chats: Chat[]) {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;
     }
     this._webviewView.webview.postMessage({
-      messageType: "updateConversationList",
+      messageType: "updateChatList",
       params: {
-        conversations: conversations,
+        chats: chats,
       },
     });
   }
@@ -196,7 +193,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (message) => {
       const chatViewMessageHandler = new ChatViewMessageHandler(
         this._settingsProvider,
-        this.conversationManager,
+        this.chatManager,
         this,
       );
       await chatViewMessageHandler.handleMessage(message);

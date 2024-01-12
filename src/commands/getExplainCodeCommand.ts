@@ -1,15 +1,20 @@
 import * as vscode from "vscode";
 import { ChatRole, TextBlock } from "../ChatModel/ChatModel";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatManager } from "../Chat/ChatManager";
 import { getCodeReference } from "../helpers/getCodeReference";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { ensureActiveWebviewAndConversation } from "../helpers/ensureActiveWebviewAndConversation";
+import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
 
+/**
+ * Command to explain the selected code (or whole file if no selection) in a chat.
+ * Sends the selection and the user's configured prompt as a chat message.
+ * Opens the webview and/or starts a new chat if necessary.
+ */
 export const getExplainCodeCommand = (
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager,
+  chatManager: ChatManager,
   chatWebviewProvider: ChatWebviewProvider,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.explainCode", async () => {
@@ -31,14 +36,11 @@ export const getExplainCodeCommand = (
       content: codeReference ? [textBlock, codeReference] : [textBlock],
     };
 
-    await ensureActiveWebviewAndConversation(
-      conversationManager,
-      chatWebviewProvider,
-    );
+    await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
     await sendChatMessage(
       message,
       settingsProvider,
-      conversationManager,
+      chatManager,
       chatWebviewProvider,
     );
   });

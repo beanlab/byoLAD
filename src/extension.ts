@@ -3,27 +3,24 @@ import { getReviewCodeCommand } from "./commands/getReviewCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
-import { ConversationManager } from "./Conversation/ConversationManager";
+import { ChatManager } from "./Chat/ChatManager";
 import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
-import { getNewConversationCommand } from "./commands/getNewConversationCommand";
-import { getDeleteAllConversationsCommand } from "./commands/getDeleteAllConversationsCommand";
-import { getDeleteConversationCommand } from "./commands/getDeleteConversationCommand";
+import { getNewChatCommand } from "./commands/getNewChatCommand";
+import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
+import { getDeleteChatCommand } from "./commands/getDeleteChatCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
-import { getAddCodeToConversationCommand } from "./commands/getAddCodeToConversationCommand";
+import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
-  const conversationManager = new ConversationManager(
-    context,
-    settingsProvider,
-  );
+  const chatManager = new ChatManager(context, settingsProvider);
   const chatWebviewProvider = new ChatWebviewProvider(
     context.extensionUri,
     settingsProvider,
-    conversationManager,
+    chatManager,
   );
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
@@ -31,37 +28,37 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
   );
 
-  const newConversationCommand = getNewConversationCommand(
+  const newChatCommand = getNewChatCommand(
     settingsProvider,
-    conversationManager,
+    chatManager,
     chatWebviewProvider,
   );
-  const deleteAllConversationsCommand = getDeleteAllConversationsCommand(
-    conversationManager,
+  const deleteAllChatsCommand = getDeleteAllChatsCommand(
+    chatManager,
     chatWebviewProvider,
   );
-  const deleteConversationCommand = getDeleteConversationCommand(
-    conversationManager,
+  const deleteChatCommand = getDeleteChatCommand(
+    chatManager,
     chatWebviewProvider,
   );
   const reviewFileCodeCommand = getReviewCodeCommand(
     settingsProvider,
-    conversationManager,
+    chatManager,
     chatWebviewProvider,
   );
   const explainCodeCommand = getExplainCodeCommand(
     settingsProvider,
-    conversationManager,
+    chatManager,
     chatWebviewProvider,
   );
   const sendChatMessageCommand = getSendChatMessageCommand(
     settingsProvider,
-    conversationManager,
+    chatManager,
     chatWebviewProvider,
   );
-  const addCodeToConversationCommand = getAddCodeToConversationCommand(
+  const addCodeToChatCommand = getAddCodeToChatCommand(
     chatWebviewProvider,
-    conversationManager,
+    chatManager,
   );
   const openSettingsCommand = getOpenSettingsCommand();
 
@@ -72,9 +69,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
-    newConversationCommand,
-    deleteAllConversationsCommand,
-    deleteConversationCommand,
+    newChatCommand,
+    deleteAllChatsCommand,
+    deleteChatCommand,
     reviewFileCodeCommand,
     explainCodeCommand,
     sendChatMessageCommand,
@@ -82,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
     onDidChangeConfigurationHandler,
     reviewCodeTextDocumentContentProvider,
     chatViewDisposable,
-    addCodeToConversationCommand,
+    addCodeToChatCommand,
   );
 }
 

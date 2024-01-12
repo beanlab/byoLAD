@@ -1,51 +1,54 @@
-import { Conversation } from "../utilities/ChatModel";
+import { Chat } from "../utilities/ChatModel";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
 
 interface ChatListProps {
-  chatList: Conversation[];
-  changeActiveChat: (conversation: Conversation | null) => void;
+  chatList: Chat[];
+  changeActiveChat: (chat: Chat | null) => void;
 }
 
+/**
+ * The chat history of the user from which they can select a chat to view.
+ */
 export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   const extensionMessenger = new ExtensionMessenger();
 
   if (chatList.length === 0) {
-    extensionMessenger.newConversation();
+    extensionMessenger.newChat();
     return <div>Loading...</div>;
   }
 
-  const handleOnClick = (conversation: Conversation) => {
-    changeActiveChat(conversation);
+  const handleOnClick = (chat: Chat) => {
+    changeActiveChat(chat);
   };
 
-  const listOfChats = chatList.map((conversation) => {
-    let name = conversation.name;
-    if (conversation.messages.length === 0) {
+  const listOfChats = chatList.map((chat) => {
+    let name = chat.name;
+    if (chat.messages.length === 0) {
       name = "Empty Chat";
-    } else if (conversation.messages[0].content[0].type !== "code") {
-      name = conversation.messages[0].content[0].content;
+    } else if (chat.messages[0].content[0].type !== "code") {
+      name = chat.messages[0].content[0].content;
     } else {
       name = "undefined";
-      const temp = conversation.messages[1].content[0].content;
+      const temp = chat.messages[1].content[0].content;
       const temp2 = temp.split(".");
       name = temp2[0];
     }
     return (
       <div className="convo">
         <div
-          onClick={() => handleOnClick(conversation)}
-          key={conversation.id}
+          onClick={() => handleOnClick(chat)}
+          key={chat.id}
           className="convo-id"
         >
           {name}
         </div>
         <VSCodeButton
           appearance="icon"
-          aria-label="Delete conversation"
-          title="Delete conversation"
-          onClick={() => extensionMessenger.deleteConversation(conversation.id)}
+          aria-label="Delete chat"
+          title="Delete chat"
+          onClick={() => extensionMessenger.deleteChat(chat.id)}
         >
           <i className="codicon codicon-trash"></i>
         </VSCodeButton>
@@ -56,16 +59,16 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   return (
     <div>
       {/* <div className="delete-all">
-        <VSCodeButton onClick={extensionMessenger.deleteAllConversations}>
-          Delete All Conversations
+        <VSCodeButton onClick={extensionMessenger.deleteAllChats}>
+          Delete All Chats
         </VSCodeButton>
       </div> */}
       <VSCodeBadge className="navbar">
         <VSCodeButton
           appearance="icon"
-          aria-label="New conversation"
-          title="New conversation"
-          onClick={extensionMessenger.newConversation}
+          aria-label="New chat"
+          title="New chat"
+          onClick={extensionMessenger.newChat}
         >
           <i className="codicon codicon-add"></i>
         </VSCodeButton>

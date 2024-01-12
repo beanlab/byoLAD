@@ -42,7 +42,7 @@ export enum ChatMessageFinishReason {
   ContentFilter = "content_filter",
 }
 
-export interface Conversation {
+export interface Chat {
   id: number;
   name: string;
   messages: ChatMessage[];

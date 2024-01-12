@@ -4,17 +4,18 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatRole, TextBlock } from "../ChatModel/ChatModel";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { getCodeReference } from "../helpers/getCodeReference";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { ensureActiveWebviewAndConversation } from "../helpers/ensureActiveWebviewAndConversation";
+import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
 
 /**
- * Queries the model for a reviewed, edited version of the current file contents.
- * Presents the suggestions to the user according to their settings.
+ * Command to review the selected code (or whole file if no selection) in a chat.
+ * Sends the selection/file and the user's configured prompt as a chat message.
+ * Opens the webview and/or starts a new chat if necessary.
  */
 export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager,
+  chatManager: ChatManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
@@ -38,14 +39,11 @@ export const getReviewCodeCommand = (
         content: codeReference ? [textBlock, codeReference] : [textBlock],
       };
 
-      await ensureActiveWebviewAndConversation(
-        conversationManager,
-        chatWebviewProvider,
-      );
+      await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
       await sendChatMessage(
         message,
         settingsProvider,
-        conversationManager,
+        chatManager,
         chatWebviewProvider,
       );
     },

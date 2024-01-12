@@ -4,44 +4,46 @@ import {
   ChatModelResponse,
   ChatRole,
 } from "../ChatModel/ChatModel";
-import { Conversation } from "../ChatModel/ChatModel";
+import { Chat } from "../ChatModel/ChatModel";
 import { SettingsProvider } from "./SettingsProvider";
-import { ConversationManager } from "../Conversation/ConversationManager";
+import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
+/**
+ * Sends the given chat message to the chat model and updates the chat and side panel accordingly.
+ */
 export async function sendChatMessage(
   chatMessage: ChatMessage,
   settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager,
+  chatManager: ChatManager,
   chatWebviewProvider: ChatWebviewProvider,
 ) {
-  const conversation = conversationManager.getActiveConversation();
-  if (!conversation) {
-    vscode.window.showErrorMessage("No active conversation");
+  const chat = chatManager.getActiveChat();
+  if (!chat) {
+    vscode.window.showErrorMessage("No active chat");
     return;
   }
 
   if (
-    conversation.messages.length === 0 ||
-    conversation.messages[conversation.messages.length - 1].role !==
-      ChatRole.User
+    chat.messages.length === 0 ||
+    chat.messages[chat.messages.length - 1].role !== ChatRole.User
   ) {
-    conversation.messages.push(chatMessage);
+    chat.messages.push(chatMessage);
   } else {
-    conversation.messages[conversation.messages.length - 1] = chatMessage;
+    chat.messages[chat.messages.length - 1] = chatMessage;
   }
 
   try {
     const response: ChatModelResponse = await settingsProvider
       .getChatModel()
       .chat({
-        conversation,
+        chat,
       });
     if (response.success && response.message) {
       handleSuccessfulResponse(
         response.message,
-        conversation,
-        conversationManager,
+        chat,
+        chatManager,
         chatWebviewProvider,
       );
     } else {
@@ -53,29 +55,26 @@ export async function sendChatMessage(
 }
 
 /**
- * Handle a successful response from the chat model. Update the conversation and the side panel.
+ * Handle a successful response from the chat model. Update the chat and the side panel.
  *
  * @param responseMessage Response message from the chat model
- * @param conversation Conversation to update
- * @param conversationManager Conversation manager
+ * @param chat Chat to update
+ * @param chatManager Chat manager
  * @param chatWebviewProvider Current side panel
  */
 function handleSuccessfulResponse(
   responseMessage: ChatMessage,
-  conversation: Conversation,
-  conversationManager: ConversationManager,
+  chat: Chat,
+  chatManager: ChatManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): void {
-  conversation.messages.push(responseMessage);
-  conversationManager.updateConversation(conversation);
-  chatWebviewProvider.updateConversation(
-    conversationManager.conversations,
-    conversation.id,
-  );
+  chat.messages.push(responseMessage);
+  chatManager.updateChat(chat);
+  chatWebviewProvider.updateChat(chatManager.chats, chat.id);
 }
 
 /**
- * Handle a failed response from the chat model. Show an error message on the side panel with no change to the conversation.
+ * Handle a failed response from the chat model. Show an error message on the side panel with no change to the chat.
  *
  * @param response Response from the chat model
  * @param chatWebviewProvider Current side panel

@@ -132,7 +132,7 @@ export class ChatManager {
       name,
       messages: messages ?? [],
       contextInstruction:
-        this.settingsProvider.getBasePromptInstruction() +
+        this.settingsProvider.getPromptInstruction() +
         constants.LLM_MESSAGE_FORMATTING_INSTRUCTION,
     };
     return chat;

@@ -56,26 +56,41 @@
           "markdownDescription": "**Required**\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
           "order": 2
         },
-        "vscode-byolad.basePromptInstruction": {
+        "vscode-byolad.chatPersona": {
           "type": "string",
-          "default": "You are a friendly coding assistant.\nKeep your answers as concise as possible while still being helpful.\nIf you need more information, ask.",
-          "description": "The base instructions provided to the LLM to establish its overall purpose.",
-          "editPresentation": "multilineText",
+          "default": "friendly",
+          "enum": [
+            "friendly",
+            "duck",
+            "custom"
+          ],
+          "enumDescriptions": [
+            "Default Friendly Coding Assistant",
+            "Work out your problems with help from the Rubber Duck",
+            "Custom Instruction (enter your own)"
+          ],
+          "description": "Select the instruction for the coding assistant behavior.",
           "order": 3
+        },
+        "vscode-byolad.customInstruction": {
+          "type": "string",
+          "default": "Enter your custom instructions...",
+          "editPresentation": "multilineText",
+          "order": 4
         },
         "vscode-byolad.reviewCodePrompt": {
           "type": "string",
           "default": "Review the provided code. Return code that reflects the following improvements:\n- fix bugs\n- improve code quality, best practices, readability\n- improve performance\n- provide code comments as necessary\n- add missing documentation",
           "description": "The prompt to use to review code.",
           "editPresentation": "multilineText",
-          "order": 4
+          "order": 5
         },
         "vscode-byolad.explainCodePrompt": {
           "type": "string",
           "default": "Explain the provided code in a way that is helpful given its context. You may use code samples as necessary to illustrate your explanation if needed. Make the explanation simple and easy to understand.",
           "description": "The prompt to use to explain code.",
           "editPresentation": "multilineText",
-          "order": 5
+          "order": 6
         },
         "vscode-byolad.applySuggestions.diffViewPosition": {
           "type": "string",
@@ -93,7 +108,7 @@
             "Open the diff view below the current editor group",
             "Use the value of the merge-conflict.diffViewPosition setting to determine where the diff view for AI suggestions should be opened"
           ],
-          "order": 6
+          "order": 7
         }
       }
     },

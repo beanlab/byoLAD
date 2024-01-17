@@ -3,6 +3,7 @@ import { injectChatModel } from "./injectChatModel";
 import * as vscode from "vscode";
 import { MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE } from "../commands/constants";
 import { ChatModel } from "../ChatModel/ChatModel";
+import { Personas } from "./types";
 
 /**
  * Provides access to the user's VS Code settings for the extension.
@@ -42,9 +43,25 @@ export class SettingsProvider {
     );
   }
 
-  getBasePromptInstruction(): string {
-    return this._config.get("basePromptInstruction") as string;
+  getPromptInstruction(): string {
+    const userInstruction = this._config.get('chatPersona') as Personas;
+    const customInstruction = this._config.get("customInstruction") as string;
+
+    switch (userInstruction) {
+      case Personas.Friendly:
+        return "You are a friendly coding assistant.\nKeep your answers as concise as possible while still being helpful.\nIf you need more information, ask.";
+  
+      case Personas.Duck:
+        return "You are a helpful Rubber Duck coding assistant.\nYour role is to guide the student in finding answers to their coding questions rather than providing direct solutions.\nUse leading questions, examples, and hints to help the student work through their coding problems.\nEnsure they understand the underlying concepts.";
+  
+      case Personas.Custom:
+        return customInstruction === 'Enter your custom instructions...'
+          ? "You are a friendly coding assistant.\nKeep your answers as concise as possible while still being helpful.\nIf you need more information, ask."
+          : customInstruction;
+
+    }
   }
+  
 
   getReviewCodePrompt(): string {
     return this._config.get("reviewCodePrompt") as string;

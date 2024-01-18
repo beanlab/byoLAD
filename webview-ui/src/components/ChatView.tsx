@@ -22,6 +22,14 @@ interface ChatViewProps {
 }
 
 /**
+ * Replaces all instances of "\n" with "  \n" for proper Markdown rendering.
+ * @param text Text that represents newlines with "\n".
+ */
+function convertNewlines(text: string): string {
+  return text.replace(/\n/g, "  \n");
+}
+
+/**
  * A single chat used to communicate with the AI. Includes chat messages and an
  * input text box to send messages.
  */
@@ -70,7 +78,8 @@ export const ChatView = ({
 
   const handleSubmit = () => {
     setLoadingMessage(true);
-    setUserPrompt("");
+
+    const userInput = convertNewlines(userPrompt);
 
     const newActiveChat = { ...activeChat };
     if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
@@ -79,7 +88,7 @@ export const ChatView = ({
         content: [
           {
             type: "text",
-            content: userPrompt,
+            content: userInput,
           } as TextBlock,
         ],
         role: ChatRole.User,
@@ -91,14 +100,14 @@ export const ChatView = ({
       if (lastMessage.role === ChatRole.User) {
         lastMessage.content.push({
           type: "text",
-          content: userPrompt,
+          content: userInput,
         } as TextBlock);
       } else {
         const newUserMessage = {
           content: [
             {
               type: "text",
-              content: userPrompt,
+              content: userInput,
             } as TextBlock,
           ],
           role: ChatRole.User,
@@ -111,6 +120,7 @@ export const ChatView = ({
       newActiveChat.messages[newActiveChat.messages.length - 1],
       true,
     );
+    setUserPrompt("");
   };
 
   const deleteMessageBlock = (

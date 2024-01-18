@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { ChatRole, Chat, TextBlock } from "../utilities/ChatModel";
-import { VSCodeButton, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react";
+import {
+  VSCodeButton,
+  VSCodeProgressRing,
+  VSCodeTextArea,
+} from "@vscode/webview-ui-toolkit/react";
 import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
@@ -33,10 +37,24 @@ export const ChatView = ({
   const extensionMessenger = new ExtensionMessenger();
   let innerTextArea: HTMLTextAreaElement | null | undefined = null;
 
-  const handleInputOnChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setUserPrompt(event.target.value);
+  /**
+   * Only handle sending the message if not Shift+Enter key combination.
+   */
+  const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      handleSubmit();
+    }
+  };
+
+  /**
+   * Update user prompt and resize text area if necessary and possible.
+   */
+  const onInput = (event: InputEvent) => {
+    const target = event.target as HTMLTextAreaElement;
+    setUserPrompt(target.value);
+
     if (innerTextArea) {
       autosize.update(innerTextArea);
     } else {
@@ -47,18 +65,13 @@ export const ChatView = ({
         innerTextArea.style.paddingRight = "35px"; // Can't use in main CSS file because of shadow DOM
         autosize(innerTextArea);
       }
-      // TODO: How to handle else?
     }
   };
 
-  const handleSubmit = (
-    e:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.FormEvent<HTMLFormElement>
-      | React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     setLoadingMessage(true);
+    setUserPrompt("");
+
     const newActiveChat = { ...activeChat };
     if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
       newActiveChat.messages = [];
@@ -94,7 +107,6 @@ export const ChatView = ({
       }
     }
     changeActiveChat(newActiveChat);
-    setUserPrompt("");
     extensionMessenger.sendChatMessage(
       newActiveChat.messages[newActiveChat.messages.length - 1],
       true,
@@ -182,33 +194,36 @@ export const ChatView = ({
       <div className="message-list">
         <div>{welcomeMessage}</div>
         <div>{messages}</div>
-        {loadingMessage === true && <p>Loading...</p>}
-        {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
       </div>
+      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
 
-      <form
-        className="chat-form"
-        name="chatbox"
-        onSubmit={(e) => handleSubmit(e)}
-      >
-        <VSCodeTextArea
-          id="vscode-textarea-chat-input"
-          className="chat-input"
-          onInputCapture={handleInputOnChange}
-          placeholder="Your message..."
-          rows={1}
-          value={userPrompt}
-        />
-        <VSCodeButton
-          type="submit"
-          className="send-button"
-          appearance="icon"
-          aria-label="Send message"
-          title="Send message"
-        >
-          <i className="codicon codicon-send"></i>
-        </VSCodeButton>
-      </form>
+      {loadingMessage ? (
+        <div className="message-loading-indicator">
+          <VSCodeProgressRing></VSCodeProgressRing>
+        </div>
+      ) : (
+        <form className="chat-form" name="chatbox">
+          <VSCodeTextArea
+            id="vscode-textarea-chat-input"
+            className="chat-input"
+            onInput={(e) => onInput(e as InputEvent)}
+            onKeyDown={onKeyDown}
+            placeholder="Your message..."
+            rows={1}
+            value={userPrompt}
+          />
+          <VSCodeButton
+            type="button"
+            className="send-button"
+            appearance="icon"
+            aria-label="Send message"
+            title="Send message"
+            onClick={handleSubmit}
+          >
+            <i className="codicon codicon-send"></i>
+          </VSCodeButton>
+        </form>
+      )}
     </div>
   );
 };

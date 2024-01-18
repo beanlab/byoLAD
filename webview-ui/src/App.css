@@ -54,7 +54,13 @@
      Also ensures that the edges of body content (e.g., the user icon)
      don't peek out from the edges of the navbar
   */
-  padding: 24px 1px;
+  padding: 24px 1px 5px;
+}
+
+.message-loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chat-form {
@@ -91,6 +97,10 @@
 .text-block-container {
   position: relative;
   padding: 3px 0;
+}
+
+.text-block-container > p {
+  margin: 2px;
 }
 
 .message-header {

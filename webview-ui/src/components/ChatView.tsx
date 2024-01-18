@@ -70,7 +70,9 @@ export const ChatView = ({
         .getElementById("vscode-textarea-chat-input")
         ?.shadowRoot?.querySelector("textarea");
       if (innerTextArea) {
-        innerTextArea.style.paddingRight = "35px"; // Can't use in main CSS file because of shadow DOM
+        // Can't style in main CSS file because its in the shadow DOM which is inaccessible
+        innerTextArea.style.paddingRight = "35px";
+        innerTextArea.style.maxHeight = "50vh"; // maxHeight as recommended in the `autosize` package docs (http://www.jacklmoore.com/autosize/)
         autosize(innerTextArea);
       }
     }

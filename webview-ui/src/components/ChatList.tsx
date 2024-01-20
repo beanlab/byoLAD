@@ -1,7 +1,7 @@
 import { Chat } from "../utilities/ChatModel";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
+import NavBar from "./NavBar";
 
 interface ChatListProps {
   chatList: Chat[];
@@ -57,23 +57,14 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   });
 
   return (
-    <div>
+    <div className="view-container">
       {/* <div className="delete-all">
         <VSCodeButton onClick={extensionMessenger.deleteAllChats}>
           Delete All Chats
         </VSCodeButton>
       </div> */}
-      <VSCodeBadge className="navbar">
-        <VSCodeButton
-          appearance="icon"
-          aria-label="New chat"
-          title="New chat"
-          onClick={extensionMessenger.newChat}
-        >
-          <i className="codicon codicon-add"></i>
-        </VSCodeButton>
-      </VSCodeBadge>
-      {listOfChats}
+      <NavBar showBackButton={false} changeActiveChat={changeActiveChat} />
+      <div className="chat-list">{listOfChats}</div>
     </div>
   );
 };

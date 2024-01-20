@@ -6,11 +6,12 @@ import {
   VSCodeProgressRing,
   VSCodeTextArea,
 } from "@vscode/webview-ui-toolkit/react";
-import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";
 import autosize from "autosize";
+import NavBar from "./NavBar";
+import scrollIntoView from "scroll-into-view-if-needed";
 
 interface ChatViewProps {
   activeChat: Chat;
@@ -47,11 +48,14 @@ export const ChatView = ({
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   /**
-   * Scroll to the bottom of the chat.
+   * Scroll to the bottom of the chat (if messages are long enough to scroll).
    */
-  const scrollToBottom = (scrollBehavior: ScrollBehavior) => {
+  const scrollToBottom = () => {
     if (endOfMessagesRef.current) {
-      endOfMessagesRef.current?.scrollIntoView({ behavior: scrollBehavior });
+      scrollIntoView(endOfMessagesRef.current, {
+        behavior: "smooth",
+        scrollMode: "if-needed",
+      });
     }
   };
 
@@ -183,7 +187,7 @@ export const ChatView = ({
    */
   useEffect(() => {
     if (messages.length > prevMessagesLengthRef.current) {
-      scrollToBottom("smooth");
+      scrollToBottom();
     }
     prevMessagesLengthRef.current = messages.length;
   }, [messages.length]);
@@ -206,66 +210,44 @@ export const ChatView = ({
   }
 
   return (
-    <div>
-      <div className="App-header">
-        <VSCodeBadge className="navbar">
-          <VSCodeButton
-            appearance="icon"
-            aria-label="Back to chat list"
-            title="Back to chat list"
-            onClick={() => changeActiveChat(null)}
-            className="back-button"
-          >
-            <i className="codicon codicon-chevron-left"></i>
-          </VSCodeButton>
-          <VSCodeButton
-            appearance="icon"
-            aria-label="New chat"
-            title="New chat"
-            onClick={extensionMessenger.newChat}
-          >
-            <i className="codicon codicon-add"></i>
-          </VSCodeButton>
-        </VSCodeBadge>
+    <div className="view-container">
+      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
+      <div className="message-list">
+        <div>{welcomeMessage}</div>
+        <div>{messages}</div>
+        <div ref={endOfMessagesRef}></div>
       </div>
-      <div className="chat-view-container">
-        <div className="message-list">
-          <div>{welcomeMessage}</div>
-          <div>{messages}</div>
-          <div ref={endOfMessagesRef}></div>
-        </div>
-        {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
 
-        <div className="chat-box">
-          {loadingMessage ? (
-            <div className="loading-indicator">
-              <VSCodeProgressRing></VSCodeProgressRing>
-            </div>
-          ) : (
-            <form className="chat-form">
-              <VSCodeTextArea
-                id="vscode-textarea-chat-input"
-                className="chat-input"
-                onInput={(e) => onInput(e as InputEvent)}
-                onKeyDown={onKeyDown}
-                placeholder="Your message..."
-                rows={1}
-                value={userPrompt}
-              />
-              <VSCodeButton
-                type="button"
-                className="send-button"
-                appearance="icon"
-                aria-label="Send message"
-                title="Send message"
-                onClick={handleSubmit}
-                disabled={userPrompt.trim() === ""}
-              >
-                <i className="codicon codicon-send"></i>
-              </VSCodeButton>
-            </form>
-          )}
-        </div>
+      <div className="chat-box">
+        {loadingMessage ? (
+          <div className="loading-indicator">
+            <VSCodeProgressRing></VSCodeProgressRing>
+          </div>
+        ) : (
+          <form className="chat-form">
+            <VSCodeTextArea
+              id="vscode-textarea-chat-input"
+              className="chat-input"
+              onInput={(e) => onInput(e as InputEvent)}
+              onKeyDown={onKeyDown}
+              placeholder="Your message..."
+              rows={1}
+              value={userPrompt}
+            />
+            <VSCodeButton
+              type="button"
+              className="send-button"
+              appearance="icon"
+              aria-label="Send message"
+              title="Send message"
+              onClick={handleSubmit}
+              disabled={userPrompt.trim() === ""}
+            >
+              <i className="codicon codicon-send"></i>
+            </VSCodeButton>
+          </form>
+        )}
       </div>
     </div>
   );

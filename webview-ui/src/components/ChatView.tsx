@@ -235,7 +235,7 @@ export const ChatView = ({
 
         <div className="chat-box">
           {loadingMessage ? (
-            <div className="message-loading-indicator">
+            <div className="loading-indicator">
               <VSCodeProgressRing></VSCodeProgressRing>
             </div>
           ) : (

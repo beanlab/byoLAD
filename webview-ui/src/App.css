@@ -65,7 +65,7 @@
   overflow-y: auto; /* Scrollable */
 }
 
-.message-loading-indicator {
+.loading-indicator {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,6 +1,9 @@
 import { Chat } from "../utilities/ChatModel";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import {
+  VSCodeButton,
+  VSCodeProgressRing,
+} from "@vscode/webview-ui-toolkit/react";
 import NavBar from "./NavBar";
 
 interface ChatListProps {
@@ -16,7 +19,11 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
 
   if (chatList.length === 0) {
     extensionMessenger.newChat();
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-indicator">
+        <VSCodeProgressRing></VSCodeProgressRing>
+      </div>
+    );
   }
 
   const handleOnClick = (chat: Chat) => {

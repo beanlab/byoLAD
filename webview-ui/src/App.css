@@ -41,7 +41,7 @@
 
 .message-list {
   font-size: var(--vscode-editor-font-size);
-  padding: 0 1px; /* Ensures that the edges of body content (e.g., the user icon) don't peek out from the edges of the navbar */
+  padding: 0 1px 5px; /* Side padding ensures that the edges of body content (e.g., the user icon) don't peek out from the edges of the navbar */
   flex: 1; /* Fill the remaining space above the input form */
   overflow-y: auto; /* Scrollable */
 }

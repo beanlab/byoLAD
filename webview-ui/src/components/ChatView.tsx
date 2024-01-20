@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { ChatRole, Chat, TextBlock } from "../utilities/ChatModel";
 import {
@@ -44,6 +44,16 @@ export const ChatView = ({
   const [userPrompt, setUserPrompt] = useState("");
   const extensionMessenger = new ExtensionMessenger();
   let innerTextArea: HTMLTextAreaElement | null | undefined = null;
+  const endOfMessagesRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Scroll to the bottom of the chat.
+   */
+  const scrollToBottom = (scrollBehavior: ScrollBehavior) => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current?.scrollIntoView({ behavior: scrollBehavior });
+    }
+  };
 
   /**
    * Only handle sending the message if not Shift+Enter key combination.
@@ -162,6 +172,18 @@ export const ChatView = ({
       );
     }
   });
+  const prevMessagesLengthRef = useRef(messages.length); // ref to persist across renders
+
+  /**
+   * Automatically scroll to the bottom of the chat only when new messages are added.
+   * This is done by comparing the current length of messages to the previous length of messages.
+   */
+  useEffect(() => {
+    if (messages.length > prevMessagesLengthRef.current) {
+      scrollToBottom("smooth");
+    }
+    prevMessagesLengthRef.current = messages.length;
+  }, [messages.length]);
 
   let welcomeMessage = null;
   if (activeChat.messages.length === 0) {
@@ -207,6 +229,7 @@ export const ChatView = ({
         <div className="message-list">
           <div>{welcomeMessage}</div>
           <div>{messages}</div>
+          <div ref={endOfMessagesRef}></div>
         </div>
         {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
 

@@ -89,6 +89,9 @@ export const ChatView = ({
   };
 
   const handleSubmit = () => {
+    if (userPrompt.trim() === "") {
+      return;
+    }
     setLoadingMessage(true);
 
     const userInput = convertNewlines(userPrompt);
@@ -256,6 +259,7 @@ export const ChatView = ({
                 aria-label="Send message"
                 title="Send message"
                 onClick={handleSubmit}
+                disabled={userPrompt.trim() === ""}
               >
                 <i className="codicon codicon-send"></i>
               </VSCodeButton>

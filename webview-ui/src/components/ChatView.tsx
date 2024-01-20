@@ -203,39 +203,43 @@ export const ChatView = ({
           </VSCodeButton>
         </VSCodeBadge>
       </div>
-      <div className="message-list">
-        <div>{welcomeMessage}</div>
-        <div>{messages}</div>
-      </div>
-      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
-
-      {loadingMessage ? (
-        <div className="message-loading-indicator">
-          <VSCodeProgressRing></VSCodeProgressRing>
+      <div className="chat-view-container">
+        <div className="message-list">
+          <div>{welcomeMessage}</div>
+          <div>{messages}</div>
         </div>
-      ) : (
-        <form className="chat-form" name="chatbox">
-          <VSCodeTextArea
-            id="vscode-textarea-chat-input"
-            className="chat-input"
-            onInput={(e) => onInput(e as InputEvent)}
-            onKeyDown={onKeyDown}
-            placeholder="Your message..."
-            rows={1}
-            value={userPrompt}
-          />
-          <VSCodeButton
-            type="button"
-            className="send-button"
-            appearance="icon"
-            aria-label="Send message"
-            title="Send message"
-            onClick={handleSubmit}
-          >
-            <i className="codicon codicon-send"></i>
-          </VSCodeButton>
-        </form>
-      )}
+        {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+
+        <div className="chat-box">
+          {loadingMessage ? (
+            <div className="message-loading-indicator">
+              <VSCodeProgressRing></VSCodeProgressRing>
+            </div>
+          ) : (
+            <form className="chat-form">
+              <VSCodeTextArea
+                id="vscode-textarea-chat-input"
+                className="chat-input"
+                onInput={(e) => onInput(e as InputEvent)}
+                onKeyDown={onKeyDown}
+                placeholder="Your message..."
+                rows={1}
+                value={userPrompt}
+              />
+              <VSCodeButton
+                type="button"
+                className="send-button"
+                appearance="icon"
+                aria-label="Send message"
+                title="Send message"
+                onClick={handleSubmit}
+              >
+                <i className="codicon codicon-send"></i>
+              </VSCodeButton>
+            </form>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -48,6 +48,12 @@
   text-align: center;
 }
 
+.chat-view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .message-list {
   font-size: var(--vscode-editor-font-size);
   /* Vertical offset of the body to render below the navbar.
@@ -55,12 +61,18 @@
      don't peek out from the edges of the navbar
   */
   padding: 24px 1px 5px;
+  flex: 1; /* Fill the remaining space above the input form */
+  overflow-y: auto; /* Scrollable */
 }
 
 .message-loading-indicator {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.chat-box {
+  padding: 10px 0;
 }
 
 .chat-form {
@@ -97,6 +109,7 @@
 .text-block-container {
   position: relative;
   padding: 3px 0;
+  overflow-wrap: break-word;
 }
 
 .text-block-container > p {

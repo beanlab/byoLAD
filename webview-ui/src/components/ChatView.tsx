@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { ChatRole, Chat, TextBlock } from "../utilities/ChatModel";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
+import {
+  VSCodeButton,
+  VSCodeProgressRing,
+  VSCodeTextArea,
+} from "@vscode/webview-ui-toolkit/react";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";
+import autosize from "autosize";
+import NavBar from "./NavBar";
+import scrollIntoView from "scroll-into-view-if-needed";
 
 interface ChatViewProps {
   activeChat: Chat;
@@ -14,6 +20,14 @@ interface ChatViewProps {
   loadingMessage: boolean;
   setLoadingMessage: (loading: boolean) => void;
   errorMessage: string | null;
+}
+
+/**
+ * Replaces all instances of "\n" with "  \n" for proper Markdown rendering.
+ * @param text Text that represents newlines with "\n".
+ */
+function convertNewlines(text: string): string {
+  return text.replace(/\n/g, "  \n");
 }
 
 /**
@@ -29,22 +43,65 @@ export const ChatView = ({
   errorMessage,
 }: ChatViewProps) => {
   const [userPrompt, setUserPrompt] = useState("");
-
   const extensionMessenger = new ExtensionMessenger();
+  let innerTextArea: HTMLTextAreaElement | null | undefined = null;
+  const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
-  const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newval = event.target.value;
-    setUserPrompt(newval);
+  /**
+   * Scroll to the bottom of the chat (if messages are long enough to scroll).
+   */
+  const scrollToBottom = () => {
+    if (endOfMessagesRef.current) {
+      scrollIntoView(endOfMessagesRef.current, {
+        behavior: "smooth",
+        scrollMode: "if-needed",
+      });
+    }
   };
 
-  const handleSubmit = (
-    e:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.FormEvent<HTMLFormElement>
-      | React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    e.preventDefault();
+  /**
+   * Only handle sending the message if not Shift+Enter key combination.
+   */
+  const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      handleSubmit();
+    }
+  };
+
+  /**
+   * Update user prompt and resize text area if necessary and possible.
+   */
+  const onInput = (event: InputEvent) => {
+    const target = event.target as HTMLTextAreaElement;
+    setUserPrompt(target.value);
+
+    if (innerTextArea) {
+      autosize.update(innerTextArea);
+    } else {
+      innerTextArea = target.shadowRoot?.querySelector("textarea");
+      if (innerTextArea) {
+        // Can't style in main CSS file because it's in the shadow DOM which is inaccessible
+        innerTextArea.style.paddingRight = "35px";
+        innerTextArea.style.maxHeight = "50vh"; // maxHeight as recommended in the `autosize` package docs (http://www.jacklmoore.com/autosize/)
+        autosize(innerTextArea);
+      } else {
+        // innerTextArea should be the <textarea> in the shadow DOM of the <VSCodeTextArea> component used as the chat input.
+        // Will only be null at this point if the Webview UI Toolkit changes their implementation of <VSCodeTextArea> to not even use a <textarea>.
+        console.error(
+          "innerTextArea (<textarea> within shadow DOM of <VSCodeTextArea>) is null: could not resize the <textarea>",
+        );
+      }
+    }
+  };
+
+  const handleSubmit = () => {
+    if (userPrompt.trim() === "") {
+      return;
+    }
     setLoadingMessage(true);
+
+    const userInput = convertNewlines(userPrompt);
+
     const newActiveChat = { ...activeChat };
     if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
       newActiveChat.messages = [];
@@ -52,7 +109,7 @@ export const ChatView = ({
         content: [
           {
             type: "text",
-            content: userPrompt,
+            content: userInput,
           } as TextBlock,
         ],
         role: ChatRole.User,
@@ -64,14 +121,14 @@ export const ChatView = ({
       if (lastMessage.role === ChatRole.User) {
         lastMessage.content.push({
           type: "text",
-          content: userPrompt,
+          content: userInput,
         } as TextBlock);
       } else {
         const newUserMessage = {
           content: [
             {
               type: "text",
-              content: userPrompt,
+              content: userInput,
             } as TextBlock,
           ],
           role: ChatRole.User,
@@ -80,11 +137,11 @@ export const ChatView = ({
       }
     }
     changeActiveChat(newActiveChat);
-    setUserPrompt("");
     extensionMessenger.sendChatMessage(
       newActiveChat.messages[newActiveChat.messages.length - 1],
       true,
     );
+    setUserPrompt("");
   };
 
   const deleteMessageBlock = (
@@ -124,6 +181,18 @@ export const ChatView = ({
       );
     }
   });
+  const prevMessagesLengthRef = useRef(messages.length); // ref to persist across renders
+
+  /**
+   * Automatically scroll to the bottom of the chat only when new messages are added.
+   * This is done by comparing the current length of messages to the previous length of messages.
+   */
+  useEffect(() => {
+    if (messages.length > prevMessagesLengthRef.current) {
+      scrollToBottom();
+    }
+    prevMessagesLengthRef.current = messages.length;
+  }, [messages.length]);
 
   let welcomeMessage = null;
   if (activeChat.messages.length === 0) {
@@ -143,58 +212,45 @@ export const ChatView = ({
   }
 
   return (
-    <div>
-      <div className="App-header">
-        <VSCodeBadge className="navbar">
-          <VSCodeButton
-            appearance="icon"
-            aria-label="Back to chat list"
-            title="Back to chat list"
-            onClick={() => changeActiveChat(null)}
-            className="back-button"
-          >
-            <i className="codicon codicon-chevron-left"></i>
-          </VSCodeButton>
-          <VSCodeButton
-            appearance="icon"
-            aria-label="New chat"
-            title="New chat"
-            onClick={extensionMessenger.newChat}
-          >
-            <i className="codicon codicon-add"></i>
-          </VSCodeButton>
-        </VSCodeBadge>
-      </div>
-      <div className="App-body">
+    <div className="view-container">
+      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
+      <div className="message-list">
         <div>{welcomeMessage}</div>
         <div>{messages}</div>
-        {loadingMessage === true && <p>Loading...</p>}
-        {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+        <div ref={endOfMessagesRef}></div>
       </div>
-      <footer className="App-footer">
-        <div className="chat-box">
-          <form
-            className="chat-bar"
-            name="chatbox"
-            onSubmit={(e) => handleSubmit(e)}
-          >
-            <input
-              onChange={handleInputOnChange}
+      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+
+      <div className="chat-box">
+        {loadingMessage ? (
+          <div className="loading-indicator">
+            <VSCodeProgressRing></VSCodeProgressRing>
+          </div>
+        ) : (
+          <form className="chat-form">
+            <VSCodeTextArea
+              id="vscode-textarea-chat-input"
+              className="chat-input"
+              onInput={(e) => onInput(e as InputEvent)}
+              onKeyDown={onKeyDown}
+              placeholder="Your message..."
+              rows={1}
               value={userPrompt}
-              type="text"
-              placeholder="Message"
             />
             <VSCodeButton
-              type="submit"
+              type="button"
+              className="send-button"
               appearance="icon"
               aria-label="Send message"
               title="Send message"
+              onClick={handleSubmit}
+              disabled={userPrompt.trim() === ""}
             >
               <i className="codicon codicon-send"></i>
             </VSCodeButton>
           </form>
-        </div>
-      </footer>
+        )}
+      </div>
     </div>
   );
 };

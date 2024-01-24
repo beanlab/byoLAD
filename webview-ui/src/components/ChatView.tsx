@@ -64,8 +64,6 @@ export const ChatView = ({
    */
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      event.stopPropagation();
       handleSubmit();
     }
   };
@@ -80,14 +78,18 @@ export const ChatView = ({
     if (innerTextArea) {
       autosize.update(innerTextArea);
     } else {
-      innerTextArea = document
-        .getElementById("vscode-textarea-chat-input")
-        ?.shadowRoot?.querySelector("textarea");
+      innerTextArea = target.shadowRoot?.querySelector("textarea");
       if (innerTextArea) {
-        // Can't style in main CSS file because its in the shadow DOM which is inaccessible
+        // Can't style in main CSS file because it's in the shadow DOM which is inaccessible
         innerTextArea.style.paddingRight = "35px";
         innerTextArea.style.maxHeight = "50vh"; // maxHeight as recommended in the `autosize` package docs (http://www.jacklmoore.com/autosize/)
         autosize(innerTextArea);
+      } else {
+        // innerTextArea should be the <textarea> in the shadow DOM of the <VSCodeTextArea> component used as the chat input.
+        // Will only be null at this point if the Webview UI Toolkit changes their implementation of <VSCodeTextArea> to not even use a <textarea>.
+        console.error(
+          "innerTextArea (<textarea> within shadow DOM of <VSCodeTextArea>) is null: could not resize the <textarea>",
+        );
       }
     }
   };

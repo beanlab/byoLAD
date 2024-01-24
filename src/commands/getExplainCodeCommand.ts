@@ -37,6 +37,14 @@ export const getExplainCodeCommand = (
     };
 
     await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
+
+    const chat = chatManager.getActiveChat();
+    chat?.messages.push(message);
+
+    chatWebviewProvider.updateChat(chatManager.chats, chatManager.activeChatId);
+
+    chatWebviewProvider.setLoading(true);
+
     await sendChatMessage(
       message,
       settingsProvider,

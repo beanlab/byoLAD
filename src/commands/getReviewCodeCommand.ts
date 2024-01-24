@@ -40,6 +40,17 @@ export const getReviewCodeCommand = (
       };
 
       await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
+
+      const chat = chatManager.getActiveChat();
+      chat?.messages.push(message); // Is the '?' the best way to handle this?
+
+      chatWebviewProvider.updateChat(
+        chatManager.chats,
+        chatManager.activeChatId,
+      );
+
+      chatWebviewProvider.setLoading(true);
+
       await sendChatMessage(
         message,
         settingsProvider,

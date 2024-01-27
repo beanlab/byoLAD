@@ -63,6 +63,12 @@ export class ChatViewMessageHandler {
         );
         break;
       }
+      case "editTitleOfChat": {
+        const params = message.params as EditTitleOfChatParams;
+        this.conversationManager.editTitleOfChat(params.conversationId, params.new_title);
+        this.chatViewProvider.updateConversationList(this.conversationManager.conversations)
+        break;
+      }
       case "copyToClipboard": {
         const params = message.params as CopyToClipboardMessageParams;
         await copyToClipboard(params.content);
@@ -136,4 +142,9 @@ interface DeleteConversationParams extends WebviewToExtensionMessageParams {
 
 interface UpdateChatParams extends WebviewToExtensionMessageParams {
   chat: Conversation;
+}
+
+interface EditTitleOfChatParams extends WebviewToExtensionMessageParams {
+  conversationId: number;
+  new_title: string;
 }

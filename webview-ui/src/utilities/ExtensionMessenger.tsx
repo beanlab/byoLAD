@@ -60,6 +60,17 @@ export class ExtensionMessenger {
     });
   }
 
+  editTitleOfChat(conversationId: number, new_title: string) {
+    vscode.postMessage({
+      messageType: "editTitleOfChat",
+      params: {
+        conversationId: conversationId,
+        new_title: new_title,
+      },
+    });
+  }
+
+
   deleteConversation(conversationId: number) {
     vscode.postMessage({
       messageType: "deleteConversation",

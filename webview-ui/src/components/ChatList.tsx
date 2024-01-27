@@ -23,12 +23,16 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   };
 
   const listOfChats = chatList.map((conversation) => {
-    let name = conversation.name;
+    // const name = conversation.title;
+    let name;
     if (conversation.messages.length === 0) {
       name = "Empty Chat";
+    // } else {
+    //   name = conversation.title;
+    // }
+    
     } else if (conversation.messages[0].content[0].type !== "code") {
       name = conversation.messages[0].content[0].content;
-      //TODO update this so that it actually comes up with something meaningful
     } else {
       name = "undefined";
       const temp = conversation.messages[1].content[0].content;
@@ -43,14 +47,14 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
     const handleClick = () => {
       console.log("handling click!")
       setEditing(!editing);
+      console.log("editing: ", editing)
+      if (editing === true) {
+        extensionMessenger.editTitleOfChat(conversation.id, value)
+        console.log("updating: ", conversation.id, value)
+      }
     };
     
-    // const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    //   console.log("setting")
-    //   setValue(event.target.value);
-    // };
-
-    const handleInputChange = (event: React.FormEvent<HTMLElement>) => {
+    const handleInputChange = (event: React.FormEvent<HTMLElement>) => {      
       
       setValue((event.target as HTMLInputElement).value);
       console.log(value)
@@ -58,7 +62,7 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
     };
 
     return (
-      <div className="convo">
+      <div className="convo" key={conversation.id}>
         
 
         {editing ? (
@@ -93,6 +97,7 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
             aria-label="Edit conversation title"
             title="Edit conversation title"
             onClick={() => handleClick()}
+            
             >
             <i className="codicon codicon-edit"></i>
           </VSCodeButton>

@@ -13,6 +13,7 @@ import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 
+
 function App() {
   const [fetchConversations, setFetchConversations] = useState<boolean>(true);
   const [chatList, setChatList] = useState<Conversation[] | undefined>(
@@ -85,6 +86,7 @@ function App() {
         const params = message.params as UpdateConversationListMessageParams;
         const conversations = params.conversations;
         setChatList(conversations);
+        console.log("updated: ", conversations)
         break;
       }
       case "errorResponse": {

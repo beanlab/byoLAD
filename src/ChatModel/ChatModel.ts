@@ -66,4 +66,5 @@ export interface Conversation {
   name: string;
   messages: ChatMessage[];
   contextInstruction?: string;
+  title: string;
 }

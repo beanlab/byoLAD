@@ -94,6 +94,8 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
         conversations: conversations,
       },
     });
+    console.log("updated on back end")
+    console.log("conversation list from back end: ", conversations)
   }
 
   public sendErrorResponse() {

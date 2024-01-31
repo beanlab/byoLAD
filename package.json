@@ -109,11 +109,6 @@
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.deleteChat",
-        "title": "byoLAD — Delete Chat",
-        "category": "byoLAD"
-      },
-      {
         "command": "vscode-byolad.reviewCode",
         "title": "byoLAD — Review Code",
         "category": "byoLAD",
@@ -219,6 +214,7 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
+    "@types/autosize": "^4.0.3",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
     "@types/vscode": "^1.81.0",
@@ -235,7 +231,9 @@
   },
   "dependencies": {
     "@google-ai/generativelanguage": "^1.0.1",
+    "autosize": "^6.0.1",
     "google-auth-library": "^9.0.0",
-    "openai": "^4.5.0"
+    "openai": "^4.5.0",
+    "scroll-into-view-if-needed": "^3.1.0"
   }
 }

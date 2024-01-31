@@ -14,6 +14,7 @@ import { ChatList } from "./components/ChatList";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
+import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 
 function App() {
   const [fetchChats, setFetchChats] = useState<boolean>(true);
@@ -120,7 +121,9 @@ function App() {
         // But, only if the chatList has been fetched, otherwise show a loading message
         <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
       ) : (
-        <div>Loading...</div>
+        <div className="loading-indicator">
+          <VSCodeProgressRing></VSCodeProgressRing>
+        </div>
       )}
     </VsCodeThemeContext.Provider>
   );

@@ -49,10 +49,8 @@ export class ChatViewMessageHandler {
         break;
       case "deleteChat": {
         const params = message.params as DeleteChatParams;
-        vscode.commands.executeCommand(
-          "vscode-byolad.deleteChat",
-          params.chatId,
-        );
+        this.chatManager.deleteChat(params.chatId);
+        this.chatViewProvider.updateChatList(this.chatManager.chats);
         break;
       }
       case "sendChatMessage": {

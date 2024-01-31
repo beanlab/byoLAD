@@ -1,26 +1,11 @@
 /* Styling for the back and add button at top of page */
-.navigation {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding-bottom: 4px;
-  padding-left: 5%;
-}
-
-.App-header {
-  position: fixed;
+.navbar {
   width: 100%;
-  height: 20px;
   background-color: var(--vscode-sideBar-background);
   padding-bottom: 4px;
   z-index: 1; /* Stay in front of other elements */
-}
-
-.navbar {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  height: 20px;
 }
 
 .back-button {
@@ -48,48 +33,48 @@
   text-align: center;
 }
 
-/* Styles the text and content below the nav bar */
-.App-body {
+.view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.message-list {
   font-size: var(--vscode-editor-font-size);
-  /* Vertical offset of the body to render below the navbar.
-     Also ensures that the edges of body content (e.g., the user icon)
-     don't peek out from the edges of the navbar
-  */
-  padding: 24px 1px;
+  padding: 0 1px 5px; /* Side padding ensures that the edges of body content (e.g., the user icon) don't peek out from the edges of the navbar */
+  flex: 1; /* Fill the remaining space above the input form */
+  overflow-y: auto; /* Scrollable */
 }
 
-/* Chat Bar Styling Below */
-/* styles the box around the chat bar not including the buttons below */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .chat-box {
-  min-height: 9vh;
+  padding: 10px 0;
 }
 
-.chat-bar {
-  background-color: #717171;
+.chat-form {
+  position: relative;
   display: flex;
   align-items: center;
-  border-radius: 60px;
-  padding: 8px 8px;
 }
 
-.chat-bar input {
-  background: transparent;
-  flex: 1;
-  border: 0;
-  outline: none;
-  padding: 5px;
-  color: #aaaaaa;
-  width: 80%;
+.chat-input {
+  resize: none;
+  width: 100%;
 }
 
-::placeholder {
-  color: #aaaaaa;
+.send-button {
+  position: absolute;
+  right: 10px;
 }
 
 /* Message Styling Below */
 .message {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 3px 0;
 }
 
 .role-name {
@@ -104,6 +89,11 @@
 .text-block-container {
   position: relative;
   padding: 3px 0;
+  overflow-wrap: break-word;
+}
+
+.text-block-container > p {
+  margin: 2px;
 }
 
 .message-header {
@@ -133,13 +123,16 @@
 }
 
 /* Styling for the the chat list page */
+.chat-list {
+  flex: 1;
+  overflow: auto;
+}
+
 .convo {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 10px;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding: 4px 0;
 }
 
 .convo-id {

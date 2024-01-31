@@ -13,6 +13,7 @@ import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
 import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
+import { setHasActiveChatWhenClauseState } from "./helpers";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
@@ -23,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
     settingsProvider,
     chatManager,
   );
+
+  setHasActiveChatWhenClauseState(!!chatManager.activeChatId);
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
     ChatWebviewProvider.viewType,

@@ -16,6 +16,9 @@ export const CHAT_IDS_KEY = "chatIds"; // Do not change without handling migrati
 export const ACTIVE_CHAT_ID_KEY = "activeChatId"; // Do not change without handling migration
 export const NEXT_ID_KEY = "nextId"; // Do not change without handling migration
 
+// "when" clause keys
+export const HAS_ACTIVE_CHAT_WHEN_CLAUSE_KEY = "vscode-byolad.hasActiveChat";
+
 // Settings/configuration error messages
 export const MODEL_NOT_SET_ERROR_MESSAGE =
   "Model not set. Please set a model for the byoLAD extension.";

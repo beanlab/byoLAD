@@ -11,6 +11,7 @@ import { getDeleteChatCommand } from "./commands/getDeleteChatCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
+import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -60,6 +61,10 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
     chatManager,
   );
+  const addCodeToNewChatCommand = getAddCodeToNewChatCommand(
+    chatWebviewProvider,
+    chatManager,
+  );
   const openSettingsCommand = getOpenSettingsCommand();
 
   const onDidChangeConfigurationHandler =
@@ -80,6 +85,7 @@ export function activate(context: vscode.ExtensionContext) {
     reviewCodeTextDocumentContentProvider,
     chatViewDisposable,
     addCodeToChatCommand,
+    addCodeToNewChatCommand,
   );
 }
 

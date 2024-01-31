@@ -63,19 +63,16 @@ function App() {
     switch (message.messageType) {
       case "updateChat": {
         const params = message.params as UpdateChatMessageParams;
-        const chats = params.chats;
-        const activeChatId = params.activeChatId;
-        setChatList(chats);
-        if (activeChatId) {
-          const activeChat =
-            chats.find((chat) => chat.id === activeChatId) || null;
-          setActiveChat(activeChat);
-        } else if (activeChat) {
-          const newActiveChat = chats.find((chat) => chat.id === activeChat.id);
-          if (newActiveChat) {
-            setActiveChat(newActiveChat);
-          }
+
+        setChatList(params.chats);
+
+        if (params.activeChatId) {
+          const newActiveChat: Chat | null =
+            params.chats.find((chat) => chat.id === params.activeChatId) ||
+            null;
+          setActiveChat(newActiveChat);
         }
+
         setLoadingMessage(false);
         setErrorMessage(null);
         break;

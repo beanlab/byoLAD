@@ -3,6 +3,7 @@ import { ExtensionContext } from "vscode";
 import { ChatMessage } from "../ChatModel/ChatModel";
 import * as constants from "../commands/constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
+import { setHasActiveChatWhenClauseState } from "../helpers";
 
 /**
  * Manages the chat history and the active chat in the VS Code workspace state.
@@ -49,9 +50,15 @@ export class ChatManager {
   }
 
   set activeChatId(value: number | null) {
-    if (value && !this.chatIds.includes(value)) {
+    if (!value) {
+      setHasActiveChatWhenClauseState(false);
+    } else if (!this.chatIds.includes(value)) {
+      setHasActiveChatWhenClauseState(false);
       throw new Error("Chat ID does not exist");
+    } else {
+      setHasActiveChatWhenClauseState(true);
     }
+
     this.context.workspaceState.update(constants.ACTIVE_CHAT_ID_KEY, value);
   }
 

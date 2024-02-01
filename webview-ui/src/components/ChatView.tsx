@@ -20,6 +20,7 @@ interface ChatViewProps {
   loadingMessage: boolean;
   setLoadingMessage: (loading: boolean) => void;
   errorMessage: string | null;
+  hasSelection: boolean;
 }
 
 /**
@@ -41,6 +42,7 @@ export const ChatView = ({
   loadingMessage,
   setLoadingMessage,
   errorMessage,
+  hasSelection,
 }: ChatViewProps) => {
   const [userPrompt, setUserPrompt] = useState("");
   const extensionMessenger = new ExtensionMessenger();
@@ -81,7 +83,7 @@ export const ChatView = ({
       innerTextArea = target.shadowRoot?.querySelector("textarea");
       if (innerTextArea) {
         // Can't style in main CSS file because it's in the shadow DOM which is inaccessible
-        innerTextArea.style.paddingRight = "35px";
+        innerTextArea.style.paddingRight = "50px";
         innerTextArea.style.maxHeight = "50vh"; // maxHeight as recommended in the `autosize` package docs (http://www.jacklmoore.com/autosize/)
         autosize(innerTextArea);
       } else {
@@ -181,18 +183,34 @@ export const ChatView = ({
       );
     }
   });
-  const prevMessagesLengthRef = useRef(messages.length); // ref to persist across renders
+  // Refs to persist across renders
+  const prevMessagesLengthRef = useRef(messages.length);
+  const prevBlocksInLastMessageRef = useRef(0);
 
   /**
-   * Automatically scroll to the bottom of the chat only when new messages are added.
-   * This is done by comparing the current length of messages to the previous length of messages.
+   * Automatically scroll to the bottom of the chat only when new messages/blocks are added.
+   * This is done by comparing the current length of messages/blocks to the previous length of messages/blocks.
    */
   useEffect(() => {
-    if (messages.length > prevMessagesLengthRef.current) {
-      scrollToBottom();
+    if (activeChat && activeChat.messages && activeChat.messages.length > 0) {
+      const lastMessage = activeChat.messages[activeChat.messages.length - 1];
+      if (activeChat.messages.length > prevMessagesLengthRef.current) {
+        // When new messages are added
+        scrollToBottom();
+      } else if (activeChat.messages.length === prevMessagesLengthRef.current) {
+        console.log("lastMessage", lastMessage);
+        if (
+          lastMessage &&
+          lastMessage.content.length > prevBlocksInLastMessageRef.current
+        ) {
+          // Or when new message blocks are added
+          scrollToBottom();
+        }
+      }
+      prevMessagesLengthRef.current = activeChat.messages.length; // Update count for next render
+      prevBlocksInLastMessageRef.current = lastMessage.content.length; // Update count for next render
     }
-    prevMessagesLengthRef.current = messages.length;
-  }, [messages.length]);
+  }, [activeChat.messages]);
 
   let welcomeMessage = null;
   if (activeChat.messages.length === 0) {
@@ -219,6 +237,7 @@ export const ChatView = ({
         <div>{messages}</div>
         <div ref={endOfMessagesRef}></div>
       </div>
+
       {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
 
       <div className="chat-box">
@@ -237,17 +256,36 @@ export const ChatView = ({
               rows={1}
               value={userPrompt}
             />
-            <VSCodeButton
-              type="button"
-              className="send-button"
-              appearance="icon"
-              aria-label="Send message"
-              title="Send message"
-              onClick={handleSubmit}
-              disabled={userPrompt.trim() === ""}
-            >
-              <i className="codicon codicon-send"></i>
-            </VSCodeButton>
+            <div className="chat-input-buttons">
+              {hasSelection ? (
+                <VSCodeButton
+                  title="Add selected code to chat"
+                  aria-label="Add selected code to chat"
+                  appearance="icon"
+                  onClick={extensionMessenger.addCodeToChat}
+                >
+                  <i className="codicon codicon-code"></i>
+                </VSCodeButton>
+              ) : (
+                <VSCodeButton
+                  title="Add current file to chat"
+                  aria-label="Add current file to chat"
+                  appearance="icon"
+                  onClick={extensionMessenger.addCodeToChat}
+                >
+                  <i className="codicon codicon-file-code"></i>
+                </VSCodeButton>
+              )}
+              <VSCodeButton
+                title="Send message"
+                aria-label="Send message"
+                appearance="icon"
+                onClick={handleSubmit}
+                disabled={userPrompt.trim() === ""}
+              >
+                <i className="codicon codicon-send"></i>
+              </VSCodeButton>
+            </div>
           </form>
         )}
       </div>

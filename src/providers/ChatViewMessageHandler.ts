@@ -92,6 +92,10 @@ export class ChatViewMessageHandler {
         );
         break;
       }
+      case "addCodeToChat": {
+        await vscode.commands.executeCommand("vscode-byolad.addCodeToChat");
+        break;
+      }
       default:
         // TODO: How to handle?
         vscode.window.showErrorMessage(

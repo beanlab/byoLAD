@@ -7,6 +7,7 @@ import {
   UpdateChatMessageParams,
   UpdateChatListMessageParams,
   ErrorResponseMessageParams,
+  UpdateHasSelectionMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ChatList } from "./components/ChatList";
@@ -21,6 +22,7 @@ function App() {
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [hasSelection, setHasSelection] = useState<boolean>(false);
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
@@ -89,6 +91,11 @@ function App() {
         setErrorMessage(params.errorMessage);
         break;
       }
+      case "updateHasSelection": {
+        const params = message.params as UpdateHasSelectionMessageParams;
+        setHasSelection(params.hasSelection);
+        break;
+      }
       default:
         // TODO: How to handle?
         console.log("Unknown event 'message' received: ", event);
@@ -106,6 +113,7 @@ function App() {
           loadingMessage={loadingMessage}
           setLoadingMessage={setLoadingMessage}
           errorMessage={errorMessage}
+          hasSelection={hasSelection}
         />
       ) : chatList ? (
         // When there is no active chat, show the list of chats

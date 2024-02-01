@@ -14,6 +14,7 @@ import { ChatWebviewProvider } from "./providers/ChatViewProvider";
 import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 import { setHasActiveChatWhenClauseState } from "./helpers";
+import { getOnDidChangeTextEditorSelectionHandler } from "./helpers/getOnDidChangeTextEditorSelectionHandler";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
@@ -72,6 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
+  const onDidChangeTextEditorSelectionHandler =
+    getOnDidChangeTextEditorSelectionHandler(chatWebviewProvider);
   const reviewCodeTextDocumentContentProvider =
     getReviewCodeTextDocumentContentProvider();
 
@@ -85,6 +88,7 @@ export function activate(context: vscode.ExtensionContext) {
     sendChatMessageCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,
+    onDidChangeTextEditorSelectionHandler,
     reviewCodeTextDocumentContentProvider,
     chatViewDisposable,
     addCodeToChatCommand,

@@ -23,3 +23,7 @@ export interface AddCodeBlockMessageParams {
 export interface ErrorResponseMessageParams {
   errorMessage: string;
 }
+
+export interface UpdateHasSelectionMessageParams {
+  hasSelection: boolean;
+}

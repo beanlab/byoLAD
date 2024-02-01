@@ -1,12 +1,10 @@
 import * as vscode from "vscode";
 
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ChatRole, TextBlock } from "../ChatModel/ChatModel";
-import { sendChatMessage } from "../helpers/sendChatMessage";
-import { getCodeReference } from "../helpers/getCodeReference";
 import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
+import { insertMessage } from "../helpers/insertMessage";
+import { TextBlock } from "../ChatModel/ChatModel";
 
 /**
  * Command to review the selected code (or whole file if no selection) in a chat.
@@ -32,27 +30,9 @@ export const getReviewCodeCommand = (
         content: settingsProvider.getReviewCodePrompt(),
       } as TextBlock;
 
-      const codeReference = getCodeReference(activeEditor);
-
-      const message = {
-        role: ChatRole.User,
-        content: codeReference ? [textBlock, codeReference] : [textBlock],
-      };
-
-      await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
-
-      const chat = chatManager.getActiveChat();
-      chat?.messages.push(message); // Is the '?' the best way to handle this?
-
-      chatWebviewProvider.updateChat(
-        chatManager.chats,
-        chatManager.activeChatId,
-      );
-
-      chatWebviewProvider.setLoading(true);
-
-      await sendChatMessage(
-        message,
+      insertMessage(
+        textBlock,
+        activeEditor,
         settingsProvider,
         chatManager,
         chatWebviewProvider,

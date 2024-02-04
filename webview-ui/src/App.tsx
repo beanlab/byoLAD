@@ -7,6 +7,7 @@ import {
   UpdateChatMessageParams,
   UpdateChatListMessageParams,
   ErrorResponseMessageParams,
+  SetLoadingParams,
   UpdateHasSelectionMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
@@ -63,6 +64,11 @@ function App() {
   window.addEventListener("message", (event) => {
     const message = event.data as ExtensionToWebviewMessage;
     switch (message.messageType) {
+      case "setLoading": {
+        const params = message.params as SetLoadingParams;
+        setLoadingMessage(params.loading);
+        break;
+      }
       case "updateChat": {
         const params = message.params as UpdateChatMessageParams;
 

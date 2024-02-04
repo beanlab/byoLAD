@@ -109,11 +109,6 @@
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.deleteChat",
-        "title": "byoLAD — Delete Chat",
-        "category": "byoLAD"
-      },
-      {
         "command": "vscode-byolad.reviewCode",
         "title": "byoLAD — Review Code",
         "category": "byoLAD",

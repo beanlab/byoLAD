@@ -66,6 +66,19 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     console.log(token);
   }
 
+  public setLoading(loading: boolean) {
+    if (!this._webviewView) {
+      vscode.window.showErrorMessage("No active webview view"); // How to handle?
+      return;
+    }
+    this._webviewView.webview.postMessage({
+      messageType: "setLoading",
+      params: {
+        loading: loading,
+      },
+    });
+  }
+
   public updateChat(chats: Chat[], activeChatId: number | null) {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?

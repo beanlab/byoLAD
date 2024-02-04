@@ -104,4 +104,10 @@ export class ExtensionMessenger {
       messageType: "addCodeToChat",
     });
   }
+
+  getHasSelection() {
+    vscode.postMessage({
+      messageType: "getHasSelection",
+    });
+  }
 }

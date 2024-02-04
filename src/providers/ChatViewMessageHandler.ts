@@ -94,6 +94,11 @@ export class ChatViewMessageHandler {
         await vscode.commands.executeCommand("vscode-byolad.addCodeToChat");
         break;
       }
+      case "getHasSelection": {
+        const hasSelection = !vscode.window.activeTextEditor?.selection.isEmpty;
+        this.chatViewProvider.updateHasSelection(hasSelection);
+        break;
+      }
       default:
         // TODO: How to handle?
         vscode.window.showErrorMessage(

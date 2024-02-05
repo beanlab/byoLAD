@@ -8,10 +8,10 @@ import {
   UpdateConversationListMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
-import { ChatList } from "./components/ChatList";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
+import { ChatListView } from "./components/ChatListView/ChatListView";
 
 
 function App() {
@@ -86,7 +86,7 @@ function App() {
         const params = message.params as UpdateConversationListMessageParams;
         const conversations = params.conversations;
         setChatList(conversations);
-        console.log("updated: ", conversations)
+        console.log("updated-front-endappline89: ", conversations)
         break;
       }
       case "errorResponse": {
@@ -113,7 +113,7 @@ function App() {
       ) : chatList ? (
         // When there is no active chat, show the list of chats
         // But, only if the chatList has been fetched, otherwise show a loading message
-        <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
+        <ChatListView chatList={chatList} changeActiveChat={changeActiveChat} />
       ) : (
         <div>Loading...</div>
       )}

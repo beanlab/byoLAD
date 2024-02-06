@@ -128,6 +128,11 @@
         "command": "vscode-byolad.addCodeToChat",
         "title": "byoLAD — Add Code to Chat",
         "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.editTitleOfChat",
+        "title": "byoLAD — Edit Title",
+        "category": "byoLAD"
       }
     ],
     "menus": {
@@ -157,6 +162,12 @@
           "when": "editorFocus",
           "command": "vscode-byolad.addCodeToChat",
           "group": "1_modification"
+        }
+      ],
+      "webview/context": [
+        {
+            "command": "vscode-byolad.deleteConversation",
+            "when": "webview == byoLAD.Chat"
         }
       ]
     },

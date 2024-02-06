@@ -69,4 +69,5 @@ export interface Chat {
    * Base contextual instruction to inform the LLM of its purpose/goal/role
    */
   contextInstruction?: string;
+  title: string;
 }

@@ -47,4 +47,5 @@ export interface Chat {
   name: string;
   messages: ChatMessage[];
   contextInstruction?: string;
+  title: string;
 }

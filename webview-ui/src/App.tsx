@@ -10,11 +10,12 @@ import {
   SetLoadingParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
-import { ChatList } from "./components/ChatList";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
+import { ChatListView } from "./components/ChatListView/ChatListView";
+
 
 function App() {
   const [fetchChats, setFetchChats] = useState<boolean>(true);
@@ -72,7 +73,7 @@ function App() {
         const chats = params.chats;
         const activeChatId = params.activeChatId;
         setChatList(chats);
-        if (activeChatId) {
+        if (activeChatId !== null) {
           const activeChat =
             chats.find((chat) => chat.id === activeChatId) || null;
           setActiveChat(activeChat);
@@ -119,7 +120,7 @@ function App() {
       ) : chatList ? (
         // When there is no active chat, show the list of chats
         // But, only if the chatList has been fetched, otherwise show a loading message
-        <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
+        <ChatListView chatList={chatList} changeActiveChat={changeActiveChat} />
       ) : (
         <div className="loading-indicator">
           <VSCodeProgressRing></VSCodeProgressRing>

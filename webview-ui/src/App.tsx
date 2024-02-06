@@ -65,7 +65,7 @@ function App() {
         const conversations = params.conversations;
         const activeConversationId = params.activeConversationId;
         setChatList(conversations);
-        if (activeConversationId) {
+        if (activeConversationId !== null) {
           const activeConversation =
             conversations.find(
               (conversation) => conversation.id === activeConversationId,
@@ -86,7 +86,6 @@ function App() {
         const params = message.params as UpdateConversationListMessageParams;
         const conversations = params.conversations;
         setChatList(conversations);
-        console.log("updated-front-endappline89: ", conversations)
         break;
       }
       case "errorResponse": {

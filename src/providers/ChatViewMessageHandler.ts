@@ -6,20 +6,24 @@ import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
 import { ChatMessage, Chat } from "../ChatModel/ChatModel";
+import { Persona, PersonaManager } from "../Chat/PersonaManager";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
   chatManager: ChatManager;
+  personaManager: PersonaManager;
   chatViewProvider: ChatWebviewProvider;
 
   constructor(
     settingsProvider: SettingsProvider,
     chatManager: ChatManager,
-    chatViewProvider: ChatWebviewProvider,
+    personaManager: PersonaManager,
+    chatViewProvider: ChatWebviewProvider
   ) {
     this.chatManager = chatManager;
     this.chatViewProvider = chatViewProvider;
     this.settingsProvider = settingsProvider;
+    this.personaManager = personaManager
   }
 
   /**
@@ -92,6 +96,11 @@ export class ChatViewMessageHandler {
         );
         break;
       }
+      case "setActivePersona": {
+        const params = message.params as SetActivePersonaParams;
+        this.personaManager.activePersona = params.persona;
+        break;
+      }
       default:
         // TODO: How to handle?
         vscode.window.showErrorMessage(
@@ -135,4 +144,8 @@ interface DeleteChatParams extends WebviewToExtensionMessageParams {
 
 interface UpdateChatParams extends WebviewToExtensionMessageParams {
   chat: Chat;
+}
+
+interface SetActivePersonaParams extends WebviewToExtensionMessageParams {
+  persona: Persona
 }

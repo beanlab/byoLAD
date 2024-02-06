@@ -4,6 +4,7 @@ import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
 import { ChatManager } from "./Chat/ChatManager";
+import { PersonaManager } from "./Chat/PersonaManager";
 import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
 import { getNewChatCommand } from "./commands/getNewChatCommand";
 import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
@@ -17,10 +18,12 @@ export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
   const chatManager = new ChatManager(context, settingsProvider);
+  const personaManager = new PersonaManager(context);
   const chatWebviewProvider = new ChatWebviewProvider(
     context.extensionUri,
     settingsProvider,
     chatManager,
+    personaManager
   );
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(

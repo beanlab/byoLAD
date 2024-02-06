@@ -56,21 +56,37 @@
           "markdownDescription": "**Required**\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
           "order": 2
         },
-        "vscode-byolad.chatPersona": {
+        "activeProfile": {
           "type": "string",
-          "default": "friendly",
-          "enum": [
-            "friendly",
-            "duck",
-            "custom"
-          ],
-          "enumDescriptions": [
-            "Default Friendly Coding Assistant",
-            "Work out your problems with help from the Rubber Duck",
-            "Custom Instruction (enter your own)"
-          ],
-          "description": "Select the instruction for the coding assistant behavior.",
-          "order": 3
+          "enum": {"$ref": "#properties/profileOptions"},
+          "default": "Friendly",
+          "description": "Select the active profile",
+          "scope": "window"
+        },
+        "profileOptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of available profile options",
+          "default": ["Friendly", "RubberDuck"],
+          "scope": "window"
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Profile Name"
+              },
+              "description": {
+                "type": "string",
+                "description": "Profile Description"
+              }
+            }
+          }
         },
         "vscode-byolad.customInstruction": {
           "type": "string",

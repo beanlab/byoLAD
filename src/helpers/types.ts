@@ -9,12 +9,6 @@ export enum MessageSeverity {
   Info = "information",
 }
 
-export enum Personas {
-  Friendly = "friendly",
-  Duck = "duck",
-  Custom = "custom"
-}
-
 export enum TextProviderScheme {
   AiCodeReview = "ai-code-review",
 }

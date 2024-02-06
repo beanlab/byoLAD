@@ -10,14 +10,18 @@ import {
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ChatList } from "./components/ChatList";
+import { PersonaOptions } from "./components/PersonaOptions"
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
+import { Persona } from "../../src/Chat/PersonaManager";
 
 function App() {
   const [fetchChats, setFetchChats] = useState<boolean>(true);
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const [, setActivePersona] = useState<Persona>();
+  const [personaOptions, setPersonaOptions] = useState<Persona[]>([])
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -48,6 +52,11 @@ function App() {
     setActiveChat(chat);
     setErrorMessage(null);
   };
+
+  const changeActivePersona = (persona: Persona) => {
+    extensionMessenger.setActivePersona(persona)
+    setActivePersona(persona)
+  }
 
   if (fetchChats) {
     setFetchChats(false);
@@ -112,7 +121,10 @@ function App() {
       ) : chatList ? (
         // When there is no active chat, show the list of chats
         // But, only if the chatList has been fetched, otherwise show a loading message
-        <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
+        <>
+          <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
+          <PersonaOptions changeActivePersona={changeActivePersona} ></PersonaOptions>
+        </>
       ) : (
         <div>Loading...</div>
       )}

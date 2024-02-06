@@ -5,6 +5,7 @@ import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
 import { Chat } from "../ChatModel/ChatModel";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatManager } from "../Chat/ChatManager";
+import { PersonaManager } from "../Chat/PersonaManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -18,15 +19,18 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   private readonly _extensionUri: vscode.Uri;
   private readonly _settingsProvider: SettingsProvider;
   private chatManager: ChatManager;
+  private personaManager: PersonaManager;
 
   constructor(
     extensionUri: vscode.Uri,
     settingsProvider: SettingsProvider,
     chatManager: ChatManager,
+    personaManager: PersonaManager,
   ) {
     this._extensionUri = extensionUri;
     this._settingsProvider = settingsProvider;
     this.chatManager = chatManager;
+    this.personaManager = personaManager;
   }
 
   public resolveWebviewView(
@@ -194,7 +198,8 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       const chatViewMessageHandler = new ChatViewMessageHandler(
         this._settingsProvider,
         this.chatManager,
-        this,
+        this.personaManager,
+        this
       );
       await chatViewMessageHandler.handleMessage(message);
     });

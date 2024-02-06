@@ -1,5 +1,6 @@
 import { vscode } from "./vscode";
 import { ChatMessage, Chat } from "./ChatModel";
+import { Persona } from "../../../src/Chat/PersonaManager";
 
 /**
  * Sends messages to the extension context.
@@ -103,5 +104,20 @@ export class ExtensionMessenger {
         chat: chat,
       },
     });
+  }
+
+  setActivePersona(persona: Persona) {
+    vscode.postMessage({
+      messageType: "setActivePersona",
+      params: {
+        persona
+      }
+    })
+  }
+
+  getPersonaList() {
+    vscode.postMessage({
+      messageType: "getPersonaList"
+    })
   }
 }

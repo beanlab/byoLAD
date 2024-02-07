@@ -54,7 +54,6 @@ function App() {
   mutationObserver.observe(document.body, { attributes: true });
 
   const changeActiveChat = (chat: Chat | null) => {
-    console.log("change active chat called" )
     extensionMessenger.setActiveChat(chat);
     setActiveChat(chat);
     setErrorMessage(null);
@@ -72,7 +71,6 @@ function App() {
         break;
       }
       case "updateChat": {
-        console.log("FRONT: there was a chat update")
         const params = message.params as UpdateChatMessageParams;
 
         setChatList(params.chats);

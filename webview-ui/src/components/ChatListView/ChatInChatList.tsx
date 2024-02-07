@@ -16,7 +16,6 @@ export const ChatInChatList = ({chat, handleClick, handleDeleteClick, handleTitl
     const [value, setValue] = useState(chat.title);
 
     const handleEditClick = () => {
-        console.log("handling edit click")
         setEditing(!editing);
         if (editing === true) {
           handleTitleChange(chat, value)

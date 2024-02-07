@@ -37,6 +37,11 @@ function App() {
     extensionMessenger.getHasSelection();
   }, []);
 
+  
+  const createNewChat = () => {
+    extensionMessenger.newChat();
+  }
+
   // Watches the <body> element of the webview for changes to its theme classes, tracking that state
   const mutationObserver = new MutationObserver(
     (mutations: MutationRecord[]) => {
@@ -121,11 +126,12 @@ function App() {
           setLoadingMessage={setLoadingMessage}
           errorMessage={errorMessage}
           hasSelection={hasSelection}
+          createNewChat={createNewChat}
         />
       ) : chatList ? (
         // When there is no active chat, show the list of chats
         // But, only if the chatList has been fetched, otherwise show a loading message
-        <ChatListView chatList={chatList} changeActiveChat={changeActiveChat} />
+        <ChatListView chatList={chatList} changeActiveChat={changeActiveChat} createNewChat={createNewChat} />
       ) : (
         <div className="loading-indicator">
           <VSCodeProgressRing></VSCodeProgressRing>

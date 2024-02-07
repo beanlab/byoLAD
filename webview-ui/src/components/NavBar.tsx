@@ -1,18 +1,18 @@
 import { VSCodeBadge, VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import React from "react";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { Chat } from "../utilities/ChatModel";
 
 interface NavBarProps {
   showBackButton?: boolean;
   changeActiveChat: (chat: Chat | null) => void;
+  createNewChat: () => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({
+export const NavBar: React.FC<NavBarProps> = ({
   showBackButton,
   changeActiveChat,
+  createNewChat
 }) => {
-  const extensionMessenger = new ExtensionMessenger();
 
   return (
     <div>
@@ -32,7 +32,7 @@ const NavBar: React.FC<NavBarProps> = ({
           appearance="icon"
           aria-label="New chat"
           title="New chat"
-          onClick={extensionMessenger.newChat}
+          onClick={() => createNewChat()}
         >
           <i className="codicon codicon-add"></i>
         </VSCodeButton>

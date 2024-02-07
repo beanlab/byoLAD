@@ -1,19 +1,17 @@
 import { Chat } from "../../utilities/ChatModel";
 import { ExtensionMessenger } from "../../utilities/ExtensionMessenger";
 import { ChatList } from "./ChatList";
-import { ChatListHeader } from "./ChatListHeader";
+import {NavBar} from "../NavBar"
 
 interface ChatListProps {
   chatList: Chat[];
   changeActiveChat: (chat: Chat | null) => void;
+  createNewChat: () => void;
 }
 
-export const ChatListView = ({ chatList, changeActiveChat }: ChatListProps) => {
+export const ChatListView = ({ chatList, changeActiveChat, createNewChat }: ChatListProps) => {
   const extensionMessenger = new ExtensionMessenger();
 
-  const createNewChat = () => {
-    extensionMessenger.newChat();
-  }
 
   const handleOnClick = (chat: Chat) => {
     changeActiveChat(chat);
@@ -47,9 +45,15 @@ export const ChatListView = ({ chatList, changeActiveChat }: ChatListProps) => {
         </VSCodeButton>
       </div> */}
 
-      <ChatListHeader
+      {/* <ChatListHeader
         onClick={createNewChat}
-      ></ChatListHeader>
+      ></ChatListHeader> */}
+
+      <NavBar 
+        showBackButton={false} 
+        changeActiveChat={changeActiveChat} 
+        createNewChat={createNewChat}
+        />
 
       <ChatList
         chatList={chatList}

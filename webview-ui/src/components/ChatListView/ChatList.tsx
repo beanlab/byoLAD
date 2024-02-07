@@ -1,21 +1,21 @@
-import { Conversation } from "../../utilities/ChatModel";
+import { Chat } from "../../utilities/ChatModel";
 import { ChatInChatList } from "./ChatInChatList";
 
 interface ChatListProps {
-  chatList: Conversation[];
-  handleConversationClick: (conversation: Conversation) => void;
-  handleDeleteClick: (conversation: Conversation) => void;
-  handleTitleChange: (conversation:Conversation, newTitle: string) => void;
+  chatList: Chat[];
+  handleChatClick: (chat: Chat) => void;
+  handleDeleteClick: (chat: Chat) => void;
+  handleTitleChange: (chat:Chat, newTitle: string) => void;
 }
 
 
-export const ChatList = ({ chatList, handleConversationClick, handleDeleteClick, handleTitleChange}: ChatListProps) => {
+export const ChatList = ({ chatList, handleChatClick, handleDeleteClick, handleTitleChange}: ChatListProps) => {
   return (
     <>
-      {chatList.map((conversation, i) => (
+      {chatList.map((chat, i) => (
         <ChatInChatList
-            conversation={conversation}
-            handleClick={handleConversationClick}
+            chat={chat}
+            handleClick={handleChatClick}
             handleDeleteClick={handleDeleteClick}
             handleTitleChange={handleTitleChange}
             id={i}   

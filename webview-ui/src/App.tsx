@@ -47,6 +47,7 @@ function App() {
   mutationObserver.observe(document.body, { attributes: true });
 
   const changeActiveChat = (chat: Chat | null) => {
+    console.log("change active chat called" )
     extensionMessenger.setActiveChat(chat);
     setActiveChat(chat);
     setErrorMessage(null);
@@ -69,15 +70,20 @@ function App() {
         break;
       }
       case "updateChat": {
+        console.log("FRONT: there was a chat update")
         const params = message.params as UpdateChatMessageParams;
         const chats = params.chats;
         const activeChatId = params.activeChatId;
+
         setChatList(chats);
-        if (activeChatId !== null) {
+        console.log("update chat finished", activeChatId, "active chat")
+        if (activeChatId != null) {
+          console.log("active chat id is not null", activeChatId)
           const activeChat =
             chats.find((chat) => chat.id === activeChatId) || null;
           setActiveChat(activeChat);
         } else if (activeChat) {
+          console.log("active chat id not null")
           const newActiveChat = chats.find((chat) => chat.id === activeChat.id);
           if (newActiveChat) {
             setActiveChat(newActiveChat);

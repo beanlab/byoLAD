@@ -11,7 +11,7 @@ interface ChatListProps {
 export const ChatListView = ({ chatList, changeActiveChat }: ChatListProps) => {
   const extensionMessenger = new ExtensionMessenger();
 
-  const createNewConversation = () => {
+  const createNewChat = () => {
     extensionMessenger.newChat();
   }
 
@@ -21,12 +21,13 @@ export const ChatListView = ({ chatList, changeActiveChat }: ChatListProps) => {
 
   const handleDeleteChat = (chat: Chat) => {
     // This updates the backend, which then posts a message to the front end
-    // and then the front end does a setState() for conversations
+    // and then the front end does a setState() for chats
     extensionMessenger.deleteChat(chat.id);
   }
 
   const handleTitleChange = (chat: Chat, newTitle: string) => {
-    // extensionMessenger.editTitleOfChat(conversation.id, newTitle)
+    // extensionMessenger.editTitleOfChat(chat.id, newTitle)
+    console.log("handle tile change function")
     chat.title = newTitle
     extensionMessenger.updateChat(chat)
 
@@ -42,18 +43,18 @@ export const ChatListView = ({ chatList, changeActiveChat }: ChatListProps) => {
   return (
     <div>
       {/* <div className="delete-all">
-        <VSCodeButton onClick={extensionMessenger.deleteAllConversations}>
-          Delete All Conversations
+        <VSCodeButton onClick={extensionMessenger.deleteAllChats}>
+          Delete All Chats
         </VSCodeButton>
       </div> */}
 
       <ChatListHeader
-        onClick={createNewConversation}
+        onClick={createNewChat}
       ></ChatListHeader>
 
       <ChatList
         chatList={chatList}
-        handleConversationClick={handleOnClick}
+        handleChatClick={handleOnClick}
         handleDeleteClick={handleDeleteChat}
         handleTitleChange={handleTitleChange}
       ></ChatList>

@@ -1,24 +1,25 @@
-import { Conversation } from "../../utilities/ChatModel";
+import { Chat } from "../../utilities/ChatModel";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 
 
 interface ChatInChatListProps {
-    conversation: Conversation;
-    handleClick: (conversation: Conversation) => void;
-    handleDeleteClick: (conversation: Conversation) => void;
-    handleTitleChange: (conversation:Conversation, newTitle: string) => void;
+    chat: Chat;
+    handleClick: (chat: Chat) => void;
+    handleDeleteClick: (chat: Chat) => void;
+    handleTitleChange: (chat:Chat, newTitle: string) => void;
     id: number;
 }
 
-export const ChatInChatList = ({conversation, handleClick, handleDeleteClick, handleTitleChange, id}: ChatInChatListProps) => {
+export const ChatInChatList = ({chat, handleClick, handleDeleteClick, handleTitleChange, id}: ChatInChatListProps) => {
     const [editing, setEditing] = useState<boolean>(false);
-    const [value, setValue] = useState(conversation.title);
+    const [value, setValue] = useState(chat.title);
 
     const handleEditClick = () => {
+        console.log("handling edit click")
         setEditing(!editing);
         if (editing === true) {
-          handleTitleChange(conversation, value)
+          handleTitleChange(chat, value)
         }
     };
 
@@ -33,10 +34,10 @@ export const ChatInChatList = ({conversation, handleClick, handleDeleteClick, ha
                 <input value={value} onChange={handleInputChange} />
             ) : (
                 <div
-                    onClick={() => handleClick(conversation)}
+                    onClick={() => handleClick(chat)}
                     className="convo-id"
                 >
-                    {conversation.title}
+                    {chat.title}
                 </div>
             )} 
         <div>
@@ -44,8 +45,8 @@ export const ChatInChatList = ({conversation, handleClick, handleDeleteClick, ha
         {editing ? (
           <VSCodeButton
             appearance="icon"
-            aria-label="Done editing conversation title"
-            title="Done editing conversation title"
+            aria-label="Done editing chat title"
+            title="Done editing chat title"
             onClick={() => handleEditClick()}
             >
             <i className="codicon codicon-check"></i>
@@ -53,8 +54,8 @@ export const ChatInChatList = ({conversation, handleClick, handleDeleteClick, ha
         ) : (
           <VSCodeButton
             appearance="icon"
-            aria-label="Edit conversation title"
-            title="Edit conversation title"
+            aria-label="Edit chat title"
+            title="Edit chat title"
             onClick={() => handleEditClick()}
             >
             <i className="codicon codicon-edit"></i>
@@ -62,9 +63,9 @@ export const ChatInChatList = ({conversation, handleClick, handleDeleteClick, ha
         )}
           <VSCodeButton
             appearance="icon"
-            aria-label="Delete conversation"
-            title="Delete conversation"
-            onClick={() => handleDeleteClick(conversation)}
+            aria-label="Delete chat"
+            title="Delete chat"
+            onClick={() => handleDeleteClick(chat)}
           >
             <i className="codicon codicon-trash"></i>
           </VSCodeButton>

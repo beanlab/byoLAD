@@ -11,8 +11,8 @@ export const ChatListHeader = ({onClick}: Props) => {
       <VSCodeBadge className="navbar">
         <VSCodeButton
           appearance="icon"
-          aria-label="New conversation"
-          title="New conversation"
+          aria-label="New chat"
+          title="New chat"
           onClick={() => onClick()}
         >
           <i className="codicon codicon-add"></i>

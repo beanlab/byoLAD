@@ -141,7 +141,7 @@ export class ChatManager {
       contextInstruction:
         this.settingsProvider.getBasePromptInstruction() +
         constants.LLM_MESSAGE_FORMATTING_INSTRUCTION,
-      title: "Empty Chat"
+      title: "Empty Chat",
     };
     return chat;
   }

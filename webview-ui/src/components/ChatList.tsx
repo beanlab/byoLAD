@@ -31,17 +31,20 @@ export const ChatList = ({ chatList, changeActiveChat }: ChatListProps) => {
   };
 
   const listOfChats = chatList.map((chat) => {
-    let name = chat.name;
-    if (chat.messages.length === 0) {
-      name = "Empty Chat";
-    } else if (chat.messages[0].content[0].type !== "code") {
-      name = chat.messages[0].content[0].content;
-    } else {
-      name = "undefined";
-      const temp = chat.messages[1].content[0].content;
-      const temp2 = temp.split(".");
-      name = temp2[0];
-    }
+    console.log("chat: ", chat);
+    const name = chat.name;
+    // TODO: Change how chat names are defined and displayed
+    // if (chat.messages.length === 0) {
+    //   name = "Empty Chat";
+    // } else if (chat.messages[0].content[0].type !== "code") {
+    //   name = chat.messages[0].content[0].content;
+    // } else {
+    //   name = "undefined";
+    //   console.log("chat.messages[1].content[0].content: ", chat.messages[1].content[0].content)
+    //   const temp = chat.messages[1].content[0].content;
+    //   const temp2 = temp.split(".");
+    //   name = temp2[0];
+    // }
     return (
       <div className="convo">
         <div

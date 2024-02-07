@@ -90,18 +90,24 @@ export class ExtensionMessenger {
     });
   }
 
-  getByoladMessageIcon() {
-    vscode.postMessage({
-      messageType: "getByoladMessageIcon",
-    });
-  }
-
   updateChat(chat: Chat) {
     vscode.postMessage({
       messageType: "updateChat",
       params: {
         chat: chat,
       },
+    });
+  }
+
+  addCodeToChat() {
+    vscode.postMessage({
+      messageType: "addCodeToChat",
+    });
+  }
+
+  getHasSelection() {
+    vscode.postMessage({
+      messageType: "getHasSelection",
     });
   }
 }

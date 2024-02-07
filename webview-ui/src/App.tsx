@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Chat } from "./utilities/ChatModel";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
@@ -8,6 +8,7 @@ import {
   UpdateChatListMessageParams,
   ErrorResponseMessageParams,
   SetLoadingParams,
+  UpdateHasSelectionMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ChatList } from "./components/ChatList";
@@ -17,17 +18,23 @@ import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 
 function App() {
-  const [fetchChats, setFetchChats] = useState<boolean>(true);
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [hasSelection, setHasSelection] = useState<boolean>(false);
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
 
   const theme = getVsCodeThemeFromCssClasses(document.body.className);
   const [vsCodeTheme, setVsCodeTheme] = useState(theme || VsCodeTheme.Dark);
+
+  // Run 1x on mount
+  useEffect(() => {
+    extensionMessenger.getChats();
+    extensionMessenger.getHasSelection();
+  }, []);
 
   // Watches the <body> element of the webview for changes to its theme classes, tracking that state
   const mutationObserver = new MutationObserver(
@@ -50,11 +57,6 @@ function App() {
     setActiveChat(chat);
     setErrorMessage(null);
   };
-
-  if (fetchChats) {
-    setFetchChats(false);
-    extensionMessenger.getChats();
-  }
 
   /**
    * Handle messages sent from the extension to the webview
@@ -95,6 +97,11 @@ function App() {
         setErrorMessage(params.errorMessage);
         break;
       }
+      case "updateHasSelection": {
+        const params = message.params as UpdateHasSelectionMessageParams;
+        setHasSelection(params.hasSelection);
+        break;
+      }
       default:
         // TODO: How to handle?
         console.log("Unknown event 'message' received: ", event);
@@ -112,6 +119,7 @@ function App() {
           loadingMessage={loadingMessage}
           setLoadingMessage={setLoadingMessage}
           errorMessage={errorMessage}
+          hasSelection={hasSelection}
         />
       ) : chatList ? (
         // When there is no active chat, show the list of chats

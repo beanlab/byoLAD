@@ -67,9 +67,10 @@
   width: 100%;
 }
 
-.send-button {
+.chat-input-buttons {
   position: absolute;
-  right: 10px;
+  display: flex;
+  right: 5px;
 }
 
 /* Message Styling Below */

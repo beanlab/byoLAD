@@ -27,3 +27,7 @@ export interface ErrorResponseMessageParams {
 export interface SetLoadingParams {
   loading: boolean;
 }
+
+export interface UpdateHasSelectionMessageParams {
+  hasSelection: boolean;
+}

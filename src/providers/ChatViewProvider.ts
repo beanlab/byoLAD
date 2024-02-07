@@ -80,7 +80,6 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   }
 
   public updateChat(chats: Chat[], activeChatId: number | null) {
-    console.log("BACK: there was a chat update");
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;

@@ -27,7 +27,6 @@ export const ChatListView = ({ chatList, changeActiveChat }: ChatListProps) => {
 
   const handleTitleChange = (chat: Chat, newTitle: string) => {
     // extensionMessenger.editTitleOfChat(chat.id, newTitle)
-    console.log("handle tile change function")
     chat.title = newTitle
     extensionMessenger.updateChat(chat)
 

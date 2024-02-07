@@ -16,6 +16,8 @@ interface ChatViewProps {
   setLoadingMessage: (loading: boolean) => void;
   errorMessage: string | null;
   hasSelection: boolean;
+  createNewChat: () => void;
+
 }
 
 /**
@@ -30,6 +32,7 @@ export const ChatView = ({
   setLoadingMessage,
   errorMessage,
   hasSelection,
+  createNewChat
 }: ChatViewProps) => {
   const extensionMessenger = new ExtensionMessenger();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
@@ -132,7 +135,8 @@ export const ChatView = ({
 
   return (
     <div className="view-container">
-      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
+      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} createNewChat={createNewChat}
+/>
 
       <div className="message-list">
         <div>{welcomeMessage}</div>

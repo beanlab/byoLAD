@@ -11,11 +11,12 @@ import {
   UpdateHasSelectionMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
-import { ChatList } from "./components/ChatList";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
+import { ChatListView } from "./components/ChatListView/ChatListView";
+
 
 function App() {
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
@@ -35,6 +36,11 @@ function App() {
     extensionMessenger.getChats();
     extensionMessenger.getHasSelection();
   }, []);
+
+  
+  const createNewChat = () => {
+    extensionMessenger.newChat();
+  }
 
   // Watches the <body> element of the webview for changes to its theme classes, tracking that state
   const mutationObserver = new MutationObserver(
@@ -120,11 +126,12 @@ function App() {
           setLoadingMessage={setLoadingMessage}
           errorMessage={errorMessage}
           hasSelection={hasSelection}
+          createNewChat={createNewChat}
         />
       ) : chatList ? (
         // When there is no active chat, show the list of chats
         // But, only if the chatList has been fetched, otherwise show a loading message
-        <ChatList chatList={chatList} changeActiveChat={changeActiveChat} />
+        <ChatListView chatList={chatList} changeActiveChat={changeActiveChat} createNewChat={createNewChat} />
       ) : (
         <div className="loading-indicator">
           <VSCodeProgressRing></VSCodeProgressRing>

@@ -166,6 +166,11 @@
           "when": "editorFocus && view.vscode-byolad.chat.visible && vscode-byolad.hasActiveChat",
           "command": "vscode-byolad.addCodeToChat",
           "group": "1_modification"
+        },
+        {
+          "when": "editorFocus && (!view.vscode-byolad.chat.visible || !vscode-byolad.hasActiveChat)",
+          "command": "vscode-byolad.addCodeToNewChat",
+          "group": "1_modification"
         }
       ]
     },

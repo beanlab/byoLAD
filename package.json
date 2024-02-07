@@ -130,8 +130,8 @@
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.editTitleOfChat",
-        "title": "byoLAD — Edit Title",
+        "command": "vscode-byolad.addCodeToNewChat",
+        "title": "byoLAD — Add Code to New Chat",
         "category": "byoLAD"
       }
     ],
@@ -151,7 +151,11 @@
         },
         {
           "command": "vscode-byolad.addCodeToChat",
-          "when": "editorFocus"
+          "when": "editorFocus && view.vscode-byolad.chat.visible && vscode-byolad.hasActiveChat"
+        },
+        {
+          "command": "vscode-byolad.addCodeToNewChat",
+          "when": "editorFocus && (!view.vscode-byolad.chat.visible || !vscode-byolad.hasActiveChat)"
         },
         {
           "command": "vscode-byolad.deleteAllChats"
@@ -159,15 +163,9 @@
       ],
       "editor/context": [
         {
-          "when": "editorFocus",
+          "when": "editorFocus && view.vscode-byolad.chat.visible && vscode-byolad.hasActiveChat",
           "command": "vscode-byolad.addCodeToChat",
           "group": "1_modification"
-        }
-      ],
-      "webview/context": [
-        {
-            "command": "vscode-byolad.deleteConversation",
-            "when": "webview == byoLAD.Chat"
         }
       ]
     },

@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Chat } from "./utilities/ChatModel";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
@@ -8,6 +8,7 @@ import {
   UpdateChatListMessageParams,
   ErrorResponseMessageParams,
   SetLoadingParams,
+  UpdateHasSelectionMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
@@ -18,17 +19,23 @@ import { ChatListView } from "./components/ChatListView/ChatListView";
 
 
 function App() {
-  const [fetchChats, setFetchChats] = useState<boolean>(true);
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [hasSelection, setHasSelection] = useState<boolean>(false);
 
   const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
 
   const theme = getVsCodeThemeFromCssClasses(document.body.className);
   const [vsCodeTheme, setVsCodeTheme] = useState(theme || VsCodeTheme.Dark);
+
+  // Run 1x on mount
+  useEffect(() => {
+    extensionMessenger.getChats();
+    extensionMessenger.getHasSelection();
+  }, []);
 
   // Watches the <body> element of the webview for changes to its theme classes, tracking that state
   const mutationObserver = new MutationObserver(
@@ -53,11 +60,6 @@ function App() {
     setErrorMessage(null);
   };
 
-  if (fetchChats) {
-    setFetchChats(false);
-    extensionMessenger.getChats();
-  }
-
   /**
    * Handle messages sent from the extension to the webview
    */
@@ -72,23 +74,16 @@ function App() {
       case "updateChat": {
         console.log("FRONT: there was a chat update")
         const params = message.params as UpdateChatMessageParams;
-        const chats = params.chats;
-        const activeChatId = params.activeChatId;
 
-        setChatList(chats);
-        console.log("update chat finished", activeChatId, "active chat")
-        if (activeChatId != null) {
-          console.log("active chat id is not null", activeChatId)
-          const activeChat =
-            chats.find((chat) => chat.id === activeChatId) || null;
-          setActiveChat(activeChat);
-        } else if (activeChat) {
-          console.log("active chat id not null")
-          const newActiveChat = chats.find((chat) => chat.id === activeChat.id);
-          if (newActiveChat) {
-            setActiveChat(newActiveChat);
-          }
+        setChatList(params.chats);
+
+        if (params.activeChatId) {
+          const newActiveChat: Chat | null =
+            params.chats.find((chat) => chat.id === params.activeChatId) ||
+            null;
+          setActiveChat(newActiveChat);
         }
+
         setLoadingMessage(false);
         setErrorMessage(null);
         break;
@@ -103,6 +98,11 @@ function App() {
         const params = message.params as ErrorResponseMessageParams;
         setLoadingMessage(false);
         setErrorMessage(params.errorMessage);
+        break;
+      }
+      case "updateHasSelection": {
+        const params = message.params as UpdateHasSelectionMessageParams;
+        setHasSelection(params.hasSelection);
         break;
       }
       default:
@@ -122,6 +122,7 @@ function App() {
           loadingMessage={loadingMessage}
           setLoadingMessage={setLoadingMessage}
           errorMessage={errorMessage}
+          hasSelection={hasSelection}
         />
       ) : chatList ? (
         // When there is no active chat, show the list of chats

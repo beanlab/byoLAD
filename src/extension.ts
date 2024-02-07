@@ -10,7 +10,10 @@ import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
 import { ChatWebviewProvider } from "./providers/ChatViewProvider";
+import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
+import { setHasActiveChatWhenClauseState } from "./helpers";
+import { getOnDidChangeTextEditorSelectionHandler } from "./helpers/getOnDidChangeTextEditorSelectionHandler";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
@@ -21,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
     settingsProvider,
     chatManager,
   );
+
+  setHasActiveChatWhenClauseState(!!chatManager.activeChatId);
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
     ChatWebviewProvider.viewType,
@@ -55,10 +60,16 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
     chatManager,
   );
+  const addCodeToNewChatCommand = getAddCodeToNewChatCommand(
+    chatWebviewProvider,
+    chatManager,
+  );
   const openSettingsCommand = getOpenSettingsCommand();
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
+  const onDidChangeTextEditorSelectionHandler =
+    getOnDidChangeTextEditorSelectionHandler(chatWebviewProvider);
   const reviewCodeTextDocumentContentProvider =
     getReviewCodeTextDocumentContentProvider();
 
@@ -71,9 +82,11 @@ export function activate(context: vscode.ExtensionContext) {
     sendChatMessageCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,
+    onDidChangeTextEditorSelectionHandler,
     reviewCodeTextDocumentContentProvider,
     chatViewDisposable,
     addCodeToChatCommand,
+    addCodeToNewChatCommand,
   );
 }
 

@@ -120,6 +120,19 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     });
   }
 
+  public updateHasSelection(hasSelection: boolean) {
+    if (!this._webviewView) {
+      vscode.window.showErrorMessage("No active webview view");
+      return;
+    }
+    this._webviewView.webview.postMessage({
+      messageType: "updateHasSelection",
+      params: {
+        hasSelection: hasSelection,
+      },
+    });
+  }
+
   public isWebviewVisible(): boolean {
     return this._webviewView != null && this._webviewView.visible;
   }

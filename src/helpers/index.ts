@@ -4,3 +4,4 @@ export {
 } from "./getDocumentTextAroundSelection";
 export { injectChatModel } from "./injectChatModel";
 export { getReviewCodeTextDocumentContentProvider } from "./getReviewCodeTextDocumentContentProvider";
+export { setHasActiveChatWhenClauseState } from "./setHasActiveChatWhenClauseState";

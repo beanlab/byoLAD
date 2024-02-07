@@ -24,7 +24,11 @@ export async function insertMessage(
   await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
 
   const chat = chatManager.getActiveChat();
-  chat?.messages.push(message);
+
+  if (!chat) {
+    vscode.window.showErrorMessage("Chat is not active. Operation cancelled.");
+    throw new Error("Chat is not active. Operation cancelled.");
+  }
 
   chatWebviewProvider.updateChat(chatManager.chats, chatManager.activeChatId);
 

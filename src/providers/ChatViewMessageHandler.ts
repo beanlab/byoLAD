@@ -103,12 +103,11 @@ export class ChatViewMessageHandler {
         this.chatWebviewProvider.updateHasSelection(hasSelection);
         break;
       }
-      default:
-        // TODO: How to handle?
-        vscode.window.showErrorMessage(
-          `Unknown message type received from webview: ${message.messageType}`,
-        );
-        break;
+      default: {
+        // Ensure exhaustive switch. Make sure all message types are handled in the switch statement.
+        const _exhaustiveCheck: never = message.messageType;
+        throw new Error(`Unknown message type: ${_exhaustiveCheck}`);
+      }
     }
   }
 }

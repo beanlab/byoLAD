@@ -65,10 +65,11 @@ function App() {
           setHasSelection(params.hasSelection);
           break;
         }
-        default:
-          // TODO: How to handle?
-          console.log("Unknown event 'message' received: ", event);
-          break;
+        default: {
+          // Ensure exhaustive switch. Make sure all message types are handled in the switch statement.
+          const _exhaustiveCheck: never = message.messageType;
+          throw new Error(`Unknown message type: ${_exhaustiveCheck}`);
+        }
       }
     };
     window.addEventListener("message", eventListener);

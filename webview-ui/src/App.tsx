@@ -17,7 +17,6 @@ import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 import { ChatListView } from "./components/ChatListView/ChatListView";
 
-
 function App() {
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
@@ -25,7 +24,6 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [hasSelection, setHasSelection] = useState<boolean>(false);
 
-  const extensionMessenger = new ExtensionMessenger();
   const imagePaths: ImagePaths = window.initialState?.imagePaths;
 
   const theme = getVsCodeThemeFromCssClasses(document.body.className);
@@ -33,14 +31,68 @@ function App() {
 
   // Run 1x on mount
   useEffect(() => {
-    extensionMessenger.getChats();
-    extensionMessenger.getHasSelection();
+    ExtensionMessenger.getChats();
+    ExtensionMessenger.getHasSelection();
+
+    /**
+     * Handle messages sent from the extension to the webview
+     */
+    const eventListener = (event: MessageEvent<ExtensionToWebviewMessage>) => {
+      const message = event.data as ExtensionToWebviewMessage;
+      switch (message.messageType) {
+        case "setLoading": {
+          const params = message.params as SetLoadingParams;
+          setLoadingMessage(params.loading);
+          break;
+        }
+        case "updateChat": {
+          const params = message.params as UpdateChatMessageParams;
+
+          setChatList(params.chats);
+
+          if (params.activeChatId) {
+            const newActiveChat: Chat | null =
+              params.chats.find((chat) => chat.id === params.activeChatId) ||
+              null;
+            setActiveChat(newActiveChat);
+          }
+
+          setLoadingMessage(false);
+          setErrorMessage(null);
+          break;
+        }
+        case "updateChatList": {
+          const params = message.params as UpdateChatListMessageParams;
+          const chats = params.chats;
+          setChatList(chats);
+          break;
+        }
+        case "errorResponse": {
+          const params = message.params as ErrorResponseMessageParams;
+          setLoadingMessage(false);
+          setErrorMessage(params.errorMessage);
+          break;
+        }
+        case "updateHasSelection": {
+          const params = message.params as UpdateHasSelectionMessageParams;
+          setHasSelection(params.hasSelection);
+          break;
+        }
+        default:
+          // TODO: How to handle?
+          console.log("Unknown event 'message' received: ", event);
+          break;
+      }
+    };
+    window.addEventListener("message", eventListener);
+    return () => {
+      window.removeEventListener("message", eventListener);
+    };
   }, []);
 
-  
   const createNewChat = () => {
-    extensionMessenger.newChat();
-  }
+    ExtensionMessenger.newChat();
+  };
 
   // Watches the <body> element of the webview for changes to its theme classes, tracking that state
   const mutationObserver = new MutationObserver(
@@ -59,61 +111,10 @@ function App() {
   mutationObserver.observe(document.body, { attributes: true });
 
   const changeActiveChat = (chat: Chat | null) => {
-    extensionMessenger.setActiveChat(chat);
+    ExtensionMessenger.setActiveChat(chat);
     setActiveChat(chat);
     setErrorMessage(null);
   };
-
-  /**
-   * Handle messages sent from the extension to the webview
-   */
-  window.addEventListener("message", (event) => {
-    const message = event.data as ExtensionToWebviewMessage;
-    switch (message.messageType) {
-      case "setLoading": {
-        const params = message.params as SetLoadingParams;
-        setLoadingMessage(params.loading);
-        break;
-      }
-      case "updateChat": {
-        const params = message.params as UpdateChatMessageParams;
-
-        setChatList(params.chats);
-
-        if (params.activeChatId) {
-          const newActiveChat: Chat | null =
-            params.chats.find((chat) => chat.id === params.activeChatId) ||
-            null;
-          setActiveChat(newActiveChat);
-        }
-
-        setLoadingMessage(false);
-        setErrorMessage(null);
-        break;
-      }
-      case "updateChatList": {
-        const params = message.params as UpdateChatListMessageParams;
-        const chats = params.chats;
-        setChatList(chats);
-        break;
-      }
-      case "errorResponse": {
-        const params = message.params as ErrorResponseMessageParams;
-        setLoadingMessage(false);
-        setErrorMessage(params.errorMessage);
-        break;
-      }
-      case "updateHasSelection": {
-        const params = message.params as UpdateHasSelectionMessageParams;
-        setHasSelection(params.hasSelection);
-        break;
-      }
-      default:
-        // TODO: How to handle?
-        console.log("Unknown event 'message' received: ", event);
-        break;
-    }
-  });
 
   return (
     <VsCodeThemeContext.Provider value={vsCodeTheme}>
@@ -131,7 +132,11 @@ function App() {
       ) : chatList ? (
         // When there is no active chat, show the list of chats
         // But, only if the chatList has been fetched, otherwise show a loading message
-        <ChatListView chatList={chatList} changeActiveChat={changeActiveChat} createNewChat={createNewChat} />
+        <ChatListView
+          chatList={chatList}
+          changeActiveChat={changeActiveChat}
+          createNewChat={createNewChat}
+        />
       ) : (
         <div className="loading-indicator">
           <VSCodeProgressRing></VSCodeProgressRing>

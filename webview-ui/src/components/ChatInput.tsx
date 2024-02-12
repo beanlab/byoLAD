@@ -24,7 +24,6 @@ export const ChatInput = ({
   hasSelection,
 }: ChatInputProps) => {
   const [userPrompt, setUserPrompt] = useState("");
-  const extensionMessenger = new ExtensionMessenger();
   let innerTextArea: HTMLTextAreaElement | null | undefined = null;
 
   /**
@@ -113,7 +112,7 @@ export const ChatInput = ({
       }
     }
     changeActiveChat(newActiveChat);
-    extensionMessenger.sendChatMessage(
+    ExtensionMessenger.sendChatMessage(
       newActiveChat.messages[newActiveChat.messages.length - 1],
       true,
     );
@@ -143,7 +142,7 @@ export const ChatInput = ({
                 title="Add selected code to chat"
                 aria-label="Add selected code to chat"
                 appearance="icon"
-                onClick={extensionMessenger.addCodeToChat}
+                onClick={ExtensionMessenger.addCodeToChat}
               >
                 <i className="codicon codicon-code"></i>
               </VSCodeButton>
@@ -152,7 +151,7 @@ export const ChatInput = ({
                 title="Add current file to chat"
                 aria-label="Add current file to chat"
                 appearance="icon"
-                onClick={extensionMessenger.addCodeToChat}
+                onClick={ExtensionMessenger.addCodeToChat}
               >
                 <i className="codicon codicon-file-code"></i>
               </VSCodeButton>

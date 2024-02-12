@@ -1,6 +1,5 @@
 import { VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
 import { ChatRole, CodeBlock, MessageBlock } from "../utilities/ChatModel";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { CodeMessageBlock } from "./MessageBlock";
 import { TextMessageBlock } from "./MessageBlock";
 import { ByoLadIconAdaptiveTheme } from "./ByoLadIconAdaptiveTheme";
@@ -8,7 +7,6 @@ import { ByoLadIconAdaptiveTheme } from "./ByoLadIconAdaptiveTheme";
 interface MessageProps {
   role: ChatRole;
   messageBlocks: MessageBlock[];
-  extensionMessenger: ExtensionMessenger;
   deleteMessageBlock: (messageBlockPosition: number) => void;
 }
 
@@ -18,7 +16,6 @@ interface MessageProps {
 export const Message: React.FC<MessageProps> = ({
   role,
   messageBlocks,
-  extensionMessenger,
   deleteMessageBlock,
 }) => {
   return (
@@ -40,7 +37,6 @@ export const Message: React.FC<MessageProps> = ({
               return (
                 <CodeMessageBlock
                   languageId={(messageBlock as CodeBlock).languageId}
-                  extensionMessenger={extensionMessenger}
                   deleteMessageBlock={() => deleteMessageBlock(position)}
                 >
                   {messageBlock.content}

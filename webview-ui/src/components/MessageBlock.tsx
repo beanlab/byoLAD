@@ -15,7 +15,6 @@ import { VsCodeTheme } from "../types";
 interface CodeMessageBlockProps {
   languageId: string | undefined;
   children: string;
-  extensionMessenger: ExtensionMessenger;
   deleteMessageBlock: () => void;
 }
 
@@ -26,7 +25,6 @@ interface CodeMessageBlockProps {
 export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
   languageId,
   children,
-  extensionMessenger,
   deleteMessageBlock,
 }) => {
   const syntaxStyle = getThemedSyntaxStyle();
@@ -53,7 +51,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Copy to clipboard"
           title="Copy to clipboard"
-          onClick={() => extensionMessenger.copyToClipboard(content)}
+          onClick={() => ExtensionMessenger.copyToClipboard(content)}
         >
           <i className="codicon codicon-copy" />
         </VSCodeButton>
@@ -61,7 +59,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Insert at cursor"
           title="Insert at cursor"
-          onClick={() => extensionMessenger.insertCodeBlock(content)}
+          onClick={() => ExtensionMessenger.insertCodeBlock(content)}
         >
           <i className="codicon codicon-insert" />
         </VSCodeButton>
@@ -69,7 +67,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="View diff in editor"
           title="View diff in editor"
-          onClick={() => extensionMessenger.diffClodeBlock(content)}
+          onClick={() => ExtensionMessenger.diffClodeBlock(content)}
         >
           <i className="codicon codicon-diff" />
         </VSCodeButton>

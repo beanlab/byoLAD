@@ -17,7 +17,6 @@ interface ChatViewProps {
   errorMessage: string | null;
   hasSelection: boolean;
   createNewChat: () => void;
-
 }
 
 /**
@@ -32,9 +31,8 @@ export const ChatView = ({
   setLoadingMessage,
   errorMessage,
   hasSelection,
-  createNewChat
+  createNewChat,
 }: ChatViewProps) => {
-  const extensionMessenger = new ExtensionMessenger();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -69,7 +67,7 @@ export const ChatView = ({
       }
       newChat.messages.splice(messagePosition, 1);
     }
-    extensionMessenger.updateChat(newChat);
+    ExtensionMessenger.updateChat(newChat);
   };
 
   const messages = activeChat.messages.map((message, position) => {
@@ -78,7 +76,6 @@ export const ChatView = ({
         <Message
           role={message.role}
           messageBlocks={message.content}
-          extensionMessenger={extensionMessenger}
           deleteMessageBlock={(messageBlockPosition: number) =>
             deleteMessageBlock(position, messageBlockPosition)
           }
@@ -135,8 +132,11 @@ export const ChatView = ({
 
   return (
     <div className="view-container">
-      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} createNewChat={createNewChat}
-/>
+      <NavBar
+        showBackButton={true}
+        changeActiveChat={changeActiveChat}
+        createNewChat={createNewChat}
+      />
 
       <div className="message-list">
         <div>{welcomeMessage}</div>

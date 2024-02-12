@@ -5,19 +5,19 @@ import { ChatMessage, Chat } from "./ChatModel";
  * Sends messages to the extension context.
  */
 export class ExtensionMessenger {
-  reviewCode() {
+  static reviewCode() {
     vscode.postMessage({
       messageType: "reviewCode",
     });
   }
 
-  explainCode() {
+  static explainCode() {
     vscode.postMessage({
       messageType: "explainCode",
     });
   }
 
-  sendChatMessage(userInput: ChatMessage, useCodeReference: boolean) {
+  static sendChatMessage(userInput: ChatMessage, useCodeReference: boolean) {
     vscode.postMessage({
       messageType: "sendChatMessage",
       params: {
@@ -27,7 +27,7 @@ export class ExtensionMessenger {
     });
   }
 
-  copyToClipboard(content: string): void {
+  static copyToClipboard(content: string): void {
     vscode.postMessage({
       messageType: "copyToClipboard",
       params: {
@@ -36,7 +36,7 @@ export class ExtensionMessenger {
     });
   }
 
-  diffClodeBlock(code: string) {
+  static diffClodeBlock(code: string) {
     vscode.postMessage({
       messageType: "diffCodeBlock",
       params: {
@@ -45,7 +45,7 @@ export class ExtensionMessenger {
     });
   }
 
-  insertCodeBlock(code: string) {
+  static insertCodeBlock(code: string) {
     vscode.postMessage({
       messageType: "insertCodeBlock",
       params: {
@@ -54,13 +54,13 @@ export class ExtensionMessenger {
     });
   }
 
-  deleteAllChats() {
+  static deleteAllChats() {
     vscode.postMessage({
       messageType: "deleteAllChats",
     });
   }
 
-  deleteChat(chatId: number) {
+  static deleteChat(chatId: number) {
     vscode.postMessage({
       messageType: "deleteChat",
       params: {
@@ -69,19 +69,19 @@ export class ExtensionMessenger {
     });
   }
 
-  newChat() {
+  static newChat() {
     vscode.postMessage({
       messageType: "newChat",
     });
   }
 
-  getChats() {
+  static getChats() {
     vscode.postMessage({
       messageType: "getChats",
     });
   }
 
-  setActiveChat(chat: Chat | null) {
+  static setActiveChat(chat: Chat | null) {
     vscode.postMessage({
       messageType: "setActiveChat",
       params: {
@@ -90,7 +90,7 @@ export class ExtensionMessenger {
     });
   }
 
-  updateChat(chat: Chat) {
+  static updateChat(chat: Chat) {
     vscode.postMessage({
       messageType: "updateChat",
       params: {
@@ -99,13 +99,13 @@ export class ExtensionMessenger {
     });
   }
 
-  addCodeToChat() {
+  static addCodeToChat() {
     vscode.postMessage({
       messageType: "addCodeToChat",
     });
   }
 
-  getHasSelection() {
+  static getHasSelection() {
     vscode.postMessage({
       messageType: "getHasSelection",
     });

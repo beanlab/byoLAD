@@ -74,11 +74,11 @@ export class ChatManager {
     return this.chats.find((chat) => chat.id === id);
   }
 
-  getActiveChat(): Chat | undefined {
+  getActiveChat(): Chat | null {
     if (!this.activeChatId) {
-      return undefined;
+      return null;
     }
-    return this.getChat(this.activeChatId);
+    return this.getChat(this.activeChatId) || null;
   }
 
   /**

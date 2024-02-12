@@ -1,4 +1,4 @@
-import { CodeBlock, Chat } from "./ChatModel";
+import { Chat } from "./ChatModel";
 
 export interface ExtensionToWebviewMessage {
   messageType: string;
@@ -7,27 +7,20 @@ export interface ExtensionToWebviewMessage {
 
 export interface ExtensionToWebviewMessageParams {}
 
-export interface UpdateChatMessageParams {
+export interface RefreshMessageParams extends ExtensionToWebviewMessageParams {
   chats: Chat[];
-  activeChatId?: number;
+  activeChatId: number | null;
 }
-
-export interface UpdateChatListMessageParams {
-  chats: Chat[];
-}
-
-export interface AddCodeBlockMessageParams {
-  codeBlock: CodeBlock;
-}
-
-export interface ErrorResponseMessageParams {
+export interface ErrorResponseMessageParams
+  extends ExtensionToWebviewMessageParams {
   errorMessage: string;
 }
 
-export interface SetLoadingParams {
+export interface SetLoadingParams extends ExtensionToWebviewMessageParams {
   loading: boolean;
 }
 
-export interface UpdateHasSelectionMessageParams {
+export interface UpdateHasSelectionMessageParams
+  extends ExtensionToWebviewMessageParams {
   hasSelection: boolean;
 }

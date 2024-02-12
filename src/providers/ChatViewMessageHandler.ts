@@ -10,15 +10,15 @@ import { ChatMessage, Chat } from "../ChatModel/ChatModel";
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
   chatManager: ChatManager;
-  chatViewProvider: ChatWebviewProvider;
+  chatWebviewProvider: ChatWebviewProvider;
 
   constructor(
     settingsProvider: SettingsProvider,
     chatManager: ChatManager,
-    chatViewProvider: ChatWebviewProvider,
+    chatWebviewProvider: ChatWebviewProvider,
   ) {
     this.chatManager = chatManager;
-    this.chatViewProvider = chatViewProvider;
+    this.chatWebviewProvider = chatWebviewProvider;
     this.settingsProvider = settingsProvider;
   }
 
@@ -33,10 +33,7 @@ export class ChatViewMessageHandler {
         vscode.commands.executeCommand("vscode-byolad.newChat");
         break;
       case "getChats":
-        this.chatViewProvider.updateChat(
-          this.chatManager.chats,
-          this.chatManager.activeChatId,
-        );
+        this.chatWebviewProvider.refresh();
         break;
       case "deleteAllChats":
         vscode.commands.executeCommand("vscode-byolad.deleteAllChats");
@@ -50,7 +47,7 @@ export class ChatViewMessageHandler {
       case "deleteChat": {
         const params = message.params as DeleteChatParams;
         this.chatManager.deleteChat(params.chatId);
-        this.chatViewProvider.updateChatList(this.chatManager.chats);
+        this.chatWebviewProvider.refresh();
         break;
       }
       case "sendChatMessage": {
@@ -83,11 +80,8 @@ export class ChatViewMessageHandler {
       }
       case "updateChat": {
         const params = message.params as UpdateChatParams;
-        this.chatManager.updateChat(params.chat);
-        this.chatViewProvider.updateChat(
-          this.chatManager.chats,
-          this.chatManager.activeChatId,
-        );
+        this.chatManager.updateChat(params.chat); // Save changes to backend
+        this.chatWebviewProvider.refresh();
         break;
       }
       case "addCodeToChat": {
@@ -96,7 +90,7 @@ export class ChatViewMessageHandler {
       }
       case "getHasSelection": {
         const hasSelection = !vscode.window.activeTextEditor?.selection.isEmpty;
-        this.chatViewProvider.updateHasSelection(hasSelection);
+        this.chatWebviewProvider.updateHasSelection(hasSelection);
         break;
       }
       default:

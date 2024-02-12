@@ -9,11 +9,11 @@ import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 export const getNewChatCommand = (
   settingsProvider: SettingsProvider,
   chatManager: ChatManager,
-  chatViewProvider: ChatWebviewProvider,
+  chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand("vscode-byolad.newChat", async () => {
     await vscode.commands.executeCommand("vscode-byolad.chat.focus");
-    const activeChat = chatManager.startChat("Code Chat"); // TODO: How to name?
-    chatViewProvider.updateChat(chatManager.chats, activeChat.id);
+    chatManager.startChat("Code Chat"); // TODO: How to name?
+    chatWebviewProvider.refresh();
   });
 };

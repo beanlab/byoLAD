@@ -26,7 +26,7 @@ export async function insertMessage(
   const chat = chatManager.getActiveChat();
   chat?.messages.push(message);
 
-  chatWebviewProvider.updateChat(chatManager.chats, chatManager.activeChatId);
+  chatWebviewProvider.refresh();
 
   chatWebviewProvider.setLoading(true);
 

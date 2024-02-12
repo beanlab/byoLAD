@@ -11,5 +11,5 @@ export const getDeleteAllChatsCommand = (
 ) =>
   vscode.commands.registerCommand("vscode-byolad.deleteAllChats", () => {
     chatManager.clearAllChats();
-    chatWebviewProvider.updateChat(chatManager.chats, null);
+    chatWebviewProvider.refresh();
   });

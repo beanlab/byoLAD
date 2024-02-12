@@ -79,29 +79,24 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     });
   }
 
-  public updateChat(chats: Chat[], activeChatId: number | null) {
+  public refresh() {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;
     }
+    const chats: Chat[] = this.chatManager.chats;
+    const activeChatId: number | null = this.chatManager.activeChatId;
+    if (activeChatId && !chats.find((chat) => chat.id === activeChatId)) {
+      vscode.window.showErrorMessage(
+        `Active chat with ID ${activeChatId} does not exist`,
+      );
+      return;
+    }
     this._webviewView.webview.postMessage({
-      messageType: "updateChat",
+      messageType: "refresh",
       params: {
         chats: chats,
         activeChatId: activeChatId,
-      },
-    });
-  }
-
-  public updateChatList(chats: Chat[]) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
-    }
-    this._webviewView.webview.postMessage({
-      messageType: "updateChatList",
-      params: {
-        chats: chats,
       },
     });
   }

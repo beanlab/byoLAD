@@ -14,5 +14,5 @@ export const getAddCodeToChatCommand = (
 ) =>
   vscode.commands.registerCommand("vscode-byolad.addCodeToChat", async () => {
     addSelectedCodeToChat(chatManager, chatWebviewProvider);
-    chatWebviewProvider.updateChat(chatManager.chats, chatManager.activeChatId);
+    chatWebviewProvider.refresh();
   });

@@ -70,7 +70,8 @@ function handleSuccessfulResponse(
 ): void {
   chat.messages.push(responseMessage);
   chatManager.updateChat(chat);
-  chatWebviewProvider.updateChat(chatManager.chats, chat.id);
+  chatWebviewProvider.refresh();
+  chatWebviewProvider.setLoading(false);
 }
 
 /**

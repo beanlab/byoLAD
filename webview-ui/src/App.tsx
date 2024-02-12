@@ -4,11 +4,10 @@ import { Chat } from "./utilities/ChatModel";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
   ExtensionToWebviewMessage,
-  UpdateChatMessageParams,
-  UpdateChatListMessageParams,
   ErrorResponseMessageParams,
   SetLoadingParams,
   UpdateHasSelectionMessageParams,
+  RefreshMessageParams,
 } from "./utilities/ExtensionToWebviewMessage";
 import { ChatView } from "./components/ChatView";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
@@ -45,26 +44,13 @@ function App() {
           setLoadingMessage(params.loading);
           break;
         }
-        case "updateChat": {
-          const params = message.params as UpdateChatMessageParams;
-
+        case "refresh": {
+          const params = message.params as RefreshMessageParams;
           setChatList(params.chats);
-
-          if (params.activeChatId) {
-            const newActiveChat: Chat | null =
-              params.chats.find((chat) => chat.id === params.activeChatId) ||
-              null;
-            setActiveChat(newActiveChat);
-          }
-
-          setLoadingMessage(false);
-          setErrorMessage(null);
-          break;
-        }
-        case "updateChatList": {
-          const params = message.params as UpdateChatListMessageParams;
-          const chats = params.chats;
-          setChatList(chats);
+          const newActiveChat: Chat | null =
+            params.chats.find((chat) => chat.id === params.activeChatId) ||
+            null;
+          setActiveChat(newActiveChat);
           break;
         }
         case "errorResponse": {

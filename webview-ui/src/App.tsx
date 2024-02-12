@@ -1,14 +1,11 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Chat } from "../../shared/types";
-import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
+  Chat,
   ExtensionToWebviewMessage,
-  ErrorResponseMessageParams,
-  SetLoadingParams,
-  UpdateHasSelectionMessageParams,
-  RefreshMessageParams,
-} from "./utilities/ExtensionToWebviewMessage";
+  MessageTypeParamsMap,
+} from "../../shared/types";
+import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import { ChatView } from "./components/ChatView";
 import { ExtensionMessenger } from "./utilities/ExtensionMessenger";
 import { ImagePaths, VsCodeTheme } from "./types";
@@ -39,13 +36,15 @@ function App() {
     const eventListener = (event: MessageEvent<ExtensionToWebviewMessage>) => {
       const message = event.data as ExtensionToWebviewMessage;
       switch (message.messageType) {
-        case "setLoading": {
-          const params = message.params as SetLoadingParams;
-          setLoadingMessage(params.loading);
+        case "isMessageLoading": {
+          const params =
+            message.params as MessageTypeParamsMap[typeof message.messageType];
+          setLoadingMessage(params.isLoading);
           break;
         }
         case "refresh": {
-          const params = message.params as RefreshMessageParams;
+          const params =
+            message.params as MessageTypeParamsMap[typeof message.messageType];
           setChatList(params.chats);
           const newActiveChat: Chat | null =
             params.chats.find((chat) => chat.id === params.activeChatId) ||
@@ -53,14 +52,16 @@ function App() {
           setActiveChat(newActiveChat);
           break;
         }
-        case "errorResponse": {
-          const params = message.params as ErrorResponseMessageParams;
+        case "errorMessage": {
+          const params =
+            message.params as MessageTypeParamsMap[typeof message.messageType];
           setLoadingMessage(false);
           setErrorMessage(params.errorMessage);
           break;
         }
-        case "updateHasSelection": {
-          const params = message.params as UpdateHasSelectionMessageParams;
+        case "hasSelection": {
+          const params =
+            message.params as MessageTypeParamsMap[typeof message.messageType];
           setHasSelection(params.hasSelection);
           break;
         }

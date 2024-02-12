@@ -2,7 +2,12 @@ import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
-import { Chat } from "../../shared/types";
+import {
+  Chat,
+  ExtensionToWebviewMessage,
+  MessageType,
+  MessageTypeParamsMap,
+} from "../../shared/types";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatManager } from "../Chat/ChatManager";
 
@@ -66,23 +71,15 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     console.log(token);
   }
 
-  public setLoading(loading: boolean) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
-    }
-    this._webviewView.webview.postMessage({
-      messageType: "setLoading",
-      params: {
-        loading: loading,
-      },
-    });
-  }
-
+  /**
+   * Refreshes the webview to reflect the current state of the chat manager, including
+   * the list of chats and the active chat.
+   */
   public refresh() {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;
+      // TODO: This is where the webview should be opened!
     }
     const chats: Chat[] = this.chatManager.chats;
     const activeChatId: number | null = this.chatManager.activeChatId;
@@ -92,39 +89,81 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       );
       return;
     }
+
+    const messageType: MessageType = "refresh";
     this._webviewView.webview.postMessage({
-      messageType: "refresh",
+      messageType: messageType,
       params: {
         chats: chats,
         activeChatId: activeChatId,
-      },
-    });
+      } as MessageTypeParamsMap[typeof messageType],
+    } as ExtensionToWebviewMessage);
   }
 
-  public showErrorMessage(errorMessage: string) {
+  /**
+   * Updates the webview to display an error message.
+   * @param errorMessage The error message to display.
+   */
+  public updateErrorMessage(errorMessage: string) {
     if (!this._webviewView) {
       vscode.window.showErrorMessage(errorMessage);
       return;
     }
+
+    const messageType: MessageType = "errorMessage";
     this._webviewView.webview.postMessage({
-      messageType: "errorResponse",
+      messageType: messageType,
       params: {
         errorMessage: errorMessage,
-      },
-    });
+      } as MessageTypeParamsMap[typeof messageType],
+    } as ExtensionToWebviewMessage);
   }
 
-  public updateHasSelection(hasSelection: boolean) {
+  /**
+   * Updates the webview to reflect whether or not a message is currently loading.
+   * @param isLoading If the message is loading.
+   */
+  public updateIsMessageLoading(isLoading: boolean) {
+    if (!this._webviewView) {
+      vscode.window.showErrorMessage("No active webview view"); // How to handle?
+      return;
+      // TODO: This is where the webview should be opened!
+    }
+
+    const messageType: MessageType = "isMessageLoading";
+    this._webviewView.webview.postMessage({
+      messageType: messageType,
+      params: {
+        isLoading: isLoading,
+      } as MessageTypeParamsMap[typeof messageType],
+    } as ExtensionToWebviewMessage);
+  }
+
+  /**
+   * Updates the webview to reflect whether or not there is currently a selection in the editor.
+   * @param hasSelection If something is currently selected in the editor.
+   */
+  public async updateHasSelection(hasSelection: boolean) {
+    // TODO: make sure they are using this async function right
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view");
       return;
     }
-    this._webviewView.webview.postMessage({
-      messageType: "updateHasSelection",
+
+    const messageType: MessageType = "hasSelection";
+    const ifDelivered = await this._webviewView.webview.postMessage({
+      messageType: messageType,
       params: {
         hasSelection: hasSelection,
-      },
-    });
+      } as MessageTypeParamsMap[typeof messageType],
+    } as ExtensionToWebviewMessage);
+
+    if (!ifDelivered) {
+      // TODO: Do this with all of the messages
+      vscode.window.showErrorMessage(
+        `Failed to deliver message of type ${messageType} to webview`,
+      );
+    }
   }
 
   public isWebviewVisible(): boolean {

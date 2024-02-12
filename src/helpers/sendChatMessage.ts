@@ -46,7 +46,7 @@ export async function sendChatMessage(
       handleErrorResponse(response, chatWebviewProvider);
     }
   } catch (error) {
-    chatWebviewProvider.showErrorMessage(`Unexpected error: ${error}`);
+    chatWebviewProvider.updateErrorMessage(`Unexpected error: ${error}`);
   }
 }
 
@@ -67,7 +67,7 @@ function handleSuccessfulResponse(
   chat.messages.push(responseMessage);
   chatManager.updateChat(chat);
   chatWebviewProvider.refresh();
-  chatWebviewProvider.setLoading(false);
+  chatWebviewProvider.updateIsMessageLoading(false);
 }
 
 /**
@@ -82,15 +82,15 @@ function handleErrorResponse(
 ): void {
   if (!response.success) {
     if (response.errorMessage) {
-      chatWebviewProvider.showErrorMessage(`Error: ${response.errorMessage}`);
+      chatWebviewProvider.updateErrorMessage(`Error: ${response.errorMessage}`);
     } else {
-      chatWebviewProvider.showErrorMessage("Unknown error");
+      chatWebviewProvider.updateErrorMessage("Unknown error");
     }
   } else if (!response.message) {
-    chatWebviewProvider.showErrorMessage(
+    chatWebviewProvider.updateErrorMessage(
       "Response marked successful, but no message was returned",
     );
   } else {
-    chatWebviewProvider.showErrorMessage("Unknown error");
+    chatWebviewProvider.updateErrorMessage("Unknown error");
   }
 }

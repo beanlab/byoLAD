@@ -1,5 +1,4 @@
-import { ChatRole } from "./ChatRole";
-import { MessageBlock } from "./MessageBlock";
+import { ChatRole, MessageBlock } from ".";
 
 export interface ChatMessage {
   role: ChatRole;

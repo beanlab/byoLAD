@@ -28,7 +28,7 @@ export async function insertMessage(
 
   chatWebviewProvider.refresh();
 
-  chatWebviewProvider.setLoading(true);
+  chatWebviewProvider.updateIsMessageLoading(true);
 
   await sendChatMessage(
     message,

@@ -5,8 +5,8 @@ import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
 import {
   Chat,
   ExtensionToWebviewMessage,
-  MessageType,
-  MessageTypeParamsMap,
+  ExtensionToWebviewMessageType,
+  ExtensionToWebviewMessageTypeParamsMap,
 } from "../../shared/types";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatManager } from "../Chat/ChatManager";
@@ -90,13 +90,13 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       return;
     }
 
-    const messageType: MessageType = "refresh";
+    const messageType: ExtensionToWebviewMessageType = "refresh";
     this._webviewView.webview.postMessage({
       messageType: messageType,
       params: {
         chats: chats,
         activeChatId: activeChatId,
-      } as MessageTypeParamsMap[typeof messageType],
+      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
     } as ExtensionToWebviewMessage);
   }
 
@@ -110,12 +110,12 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       return;
     }
 
-    const messageType: MessageType = "errorMessage";
+    const messageType: ExtensionToWebviewMessageType = "errorMessage";
     this._webviewView.webview.postMessage({
       messageType: messageType,
       params: {
         errorMessage: errorMessage,
-      } as MessageTypeParamsMap[typeof messageType],
+      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
     } as ExtensionToWebviewMessage);
   }
 
@@ -130,12 +130,12 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       // TODO: This is where the webview should be opened!
     }
 
-    const messageType: MessageType = "isMessageLoading";
+    const messageType: ExtensionToWebviewMessageType = "isMessageLoading";
     this._webviewView.webview.postMessage({
       messageType: messageType,
       params: {
         isLoading: isLoading,
-      } as MessageTypeParamsMap[typeof messageType],
+      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
     } as ExtensionToWebviewMessage);
   }
 
@@ -150,12 +150,12 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       return;
     }
 
-    const messageType: MessageType = "hasSelection";
+    const messageType: ExtensionToWebviewMessageType = "hasSelection";
     const ifDelivered = await this._webviewView.webview.postMessage({
       messageType: messageType,
       params: {
         hasSelection: hasSelection,
-      } as MessageTypeParamsMap[typeof messageType],
+      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
     } as ExtensionToWebviewMessage);
 
     if (!ifDelivered) {

@@ -1,23 +1,24 @@
 import { Chat } from ".";
 
 /**
- * The message sent from the extension to the webview
+ * Message sent from the extension context to the webview.
  */
 export interface ExtensionToWebviewMessage {
-  messageType: MessageType;
-  params: MessageTypeParamsMap[MessageType];
+  messageType: ExtensionToWebviewMessageType;
+  params: ExtensionToWebviewMessageTypeParamsMap[ExtensionToWebviewMessageType];
 }
 
 /**
- * Type of message sent from the extension to the webview
+ * Type of message sent from the extension context to the webview.
  */
-export type MessageType = keyof MessageTypeParamsMap;
+export type ExtensionToWebviewMessageType =
+  keyof ExtensionToWebviewMessageTypeParamsMap;
 
 /**
  * Map of message types to their respective parameters.
  * Ex) An ExtensionToWebviewMessage with messageType: "refresh" will have params of type RefreshMessageParams
  */
-export interface MessageTypeParamsMap {
+export interface ExtensionToWebviewMessageTypeParamsMap {
   refresh: RefreshMessageParams;
   errorMessage: ErrorMessageParams;
   isMessageLoading: IsMessageLoadingParams;
@@ -27,34 +28,34 @@ export interface MessageTypeParamsMap {
 
 export interface RefreshMessageParams {
   /**
-   * All Chats
+   * All Chats.
    */
   chats: Chat[];
   /**
-   * ID of the active chat, or null if no chat is active
+   * ID of the active chat, or null if no chat is active.
    */
   activeChatId: number | null;
 }
 
 export interface ErrorMessageParams {
   /**
-   * Error message to display
+   * Error message to display.
    */
   errorMessage: string;
 }
 
 export interface IsMessageLoadingParams {
   /**
-   * If the message is loading
+   * If the message is loading.
    */
   isLoading: boolean;
 }
 
 export interface HasSelectionParams {
   /**
-   * If something is currently selected in the editor
+   * If something is currently selected in the editor.
    */
   hasSelection: boolean;
 }
 
-// To add a new MessageType, add it to the MessageTypeParamsMap and export the Params here
+// To add a new ExtensionToWebviewMessageType, add it to the ExtensionToWebviewMessageTypeParamsMap and export the params interface here.

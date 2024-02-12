@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {
   Chat,
   ExtensionToWebviewMessage,
-  MessageTypeParamsMap,
+  ExtensionToWebviewMessageTypeParamsMap,
 } from "../../shared/types";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import { ChatView } from "./components/ChatView";
@@ -38,13 +38,13 @@ function App() {
       switch (message.messageType) {
         case "isMessageLoading": {
           const params =
-            message.params as MessageTypeParamsMap[typeof message.messageType];
+            message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
           setLoadingMessage(params.isLoading);
           break;
         }
         case "refresh": {
           const params =
-            message.params as MessageTypeParamsMap[typeof message.messageType];
+            message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
           setChatList(params.chats);
           const newActiveChat: Chat | null =
             params.chats.find((chat) => chat.id === params.activeChatId) ||
@@ -54,14 +54,14 @@ function App() {
         }
         case "errorMessage": {
           const params =
-            message.params as MessageTypeParamsMap[typeof message.messageType];
+            message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
           setLoadingMessage(false);
           setErrorMessage(params.errorMessage);
           break;
         }
         case "hasSelection": {
           const params =
-            message.params as MessageTypeParamsMap[typeof message.messageType];
+            message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
           setHasSelection(params.hasSelection);
           break;
         }

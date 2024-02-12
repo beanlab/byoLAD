@@ -114,7 +114,6 @@ export const ChatInput = ({
     changeActiveChat(newActiveChat);
     ExtensionMessenger.sendChatMessage(
       newActiveChat.messages[newActiveChat.messages.length - 1],
-      true,
     );
     setUserPrompt("");
   };

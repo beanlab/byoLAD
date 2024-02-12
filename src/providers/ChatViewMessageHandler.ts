@@ -5,7 +5,10 @@ import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
-import { ChatMessage, Chat } from "../../shared/types";
+import {
+  WebviewToExtensionMessage,
+  WebviewToExtensionMessageTypeMap,
+} from "../../shared/types";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
@@ -45,13 +48,15 @@ export class ChatViewMessageHandler {
         vscode.commands.executeCommand("vscode-byolad.explainCode");
         break;
       case "deleteChat": {
-        const params = message.params as DeleteChatParams;
+        const params =
+          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
         this.chatManager.deleteChat(params.chatId);
         this.chatWebviewProvider.refresh();
         break;
       }
       case "sendChatMessage": {
-        const params = message.params as SendChatMessageMessageParams;
+        const params =
+          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
         vscode.commands.executeCommand(
           "vscode-byolad.sendChatMessage",
           params.userInput,
@@ -59,27 +64,32 @@ export class ChatViewMessageHandler {
         break;
       }
       case "copyToClipboard": {
-        const params = message.params as CopyToClipboardMessageParams;
+        const params =
+          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
         await copyToClipboard(params.content);
         break;
       }
       case "diffCodeBlock": {
-        const params = message.params as DiffCodeBlockParams;
+        const params =
+          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
         await diffCode(params.code, this.settingsProvider);
         break;
       }
       case "insertCodeBlock": {
-        const params = message.params as InsertCodeBlockParams;
+        const params =
+          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
         await insertCode(params.code);
         break;
       }
       case "setActiveChat": {
-        const params = message.params as SetActiveChatParams;
+        const params =
+          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
         this.chatManager.activeChatId = params.activeChatId;
         break;
       }
       case "updateChat": {
-        const params = message.params as UpdateChatParams;
+        const params =
+          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
         this.chatManager.updateChat(params.chat); // Save changes to backend
         this.chatWebviewProvider.refresh();
         break;
@@ -101,39 +111,4 @@ export class ChatViewMessageHandler {
         break;
     }
   }
-}
-
-interface WebviewToExtensionMessage {
-  messageType: string;
-  params: WebviewToExtensionMessageParams;
-}
-
-interface WebviewToExtensionMessageParams {}
-
-interface SendChatMessageMessageParams extends WebviewToExtensionMessageParams {
-  userInput: ChatMessage;
-}
-
-interface DiffCodeBlockParams extends WebviewToExtensionMessageParams {
-  code: string;
-}
-
-interface InsertCodeBlockParams extends WebviewToExtensionMessageParams {
-  code: string;
-}
-
-interface CopyToClipboardMessageParams extends WebviewToExtensionMessageParams {
-  content: string;
-}
-
-interface SetActiveChatParams extends WebviewToExtensionMessageParams {
-  activeChatId: number;
-}
-
-interface DeleteChatParams extends WebviewToExtensionMessageParams {
-  chatId: number;
-}
-
-interface UpdateChatParams extends WebviewToExtensionMessageParams {
-  chat: Chat;
 }

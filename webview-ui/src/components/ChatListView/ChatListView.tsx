@@ -1,4 +1,4 @@
-import { Chat } from "../../utilities/ChatModel";
+import { Chat } from "../../../../shared/types";
 import { ExtensionMessenger } from "../../utilities/ExtensionMessenger";
 import { ChatList } from "./ChatList";
 import { NavBar } from "../NavBar";

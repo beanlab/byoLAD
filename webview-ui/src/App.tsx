@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Chat } from "./utilities/ChatModel";
+import { Chat } from "../../shared/types";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import {
   ExtensionToWebviewMessage,

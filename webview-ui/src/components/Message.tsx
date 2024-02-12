@@ -1,5 +1,5 @@
 import { VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
-import { ChatRole, CodeBlock, MessageBlock } from "../utilities/ChatModel";
+import { ChatRole, CodeBlock, MessageBlock } from "../../../shared/types";
 import { CodeMessageBlock } from "./MessageBlock";
 import { TextMessageBlock } from "./MessageBlock";
 import { ByoLadIconAdaptiveTheme } from "./ByoLadIconAdaptiveTheme";

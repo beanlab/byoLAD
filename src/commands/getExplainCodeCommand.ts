@@ -3,7 +3,7 @@ import { ChatManager } from "../Chat/ChatManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { insertMessage } from "../helpers/insertMessage";
-import { TextBlock } from "../ChatModel/ChatModel";
+import { TextBlock } from "../../shared/types";
 
 /**
  * Command to explain the selected code (or whole file if no selection) in a chat.

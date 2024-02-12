@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { getCodeReference } from "./getCodeReference";
-import { ChatRole, CodeBlock, MessageBlock } from "../ChatModel/ChatModel";
+import { ChatRole, CodeBlock, MessageBlock } from "../../shared/types";
 
 export function addSelectedCodeToChat(
   chatManager: ChatManager,

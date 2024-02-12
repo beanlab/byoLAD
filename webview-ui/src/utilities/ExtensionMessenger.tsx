@@ -1,5 +1,5 @@
 import { vscode } from "./vscode";
-import { ChatMessage, Chat } from "./ChatModel";
+import { ChatMessage, Chat } from "../../../shared/types";
 
 /**
  * Sends messages to the extension context.

@@ -1,4 +1,4 @@
-import { Chat } from "./ChatModel";
+import { Chat } from "../../../shared/types";
 
 export interface ExtensionToWebviewMessage {
   messageType: string;

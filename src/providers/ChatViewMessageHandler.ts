@@ -5,7 +5,7 @@ import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
-import { ChatMessage, Chat } from "../ChatModel/ChatModel";
+import { ChatMessage, Chat } from "../../shared/types";
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;

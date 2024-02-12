@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { ChatRole, Chat } from "../utilities/ChatModel";
+import { ChatRole, Chat } from "../../../shared/types";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";

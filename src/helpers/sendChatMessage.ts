@@ -1,10 +1,6 @@
 import * as vscode from "vscode";
-import {
-  ChatMessage,
-  ChatModelResponse,
-  ChatRole,
-} from "../ChatModel/ChatModel";
-import { Chat } from "../ChatModel/ChatModel";
+import { Chat, ChatMessage, ChatRole } from "../../shared/types";
+import { ChatModelResponse } from "../ChatModel/ChatModel";
 import { SettingsProvider } from "./SettingsProvider";
 import { ChatManager } from "../Chat/ChatManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";

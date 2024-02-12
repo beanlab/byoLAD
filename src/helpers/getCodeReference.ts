@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-import { CodeBlock } from "../ChatModel/ChatModel";
-
+import { CodeBlock } from "../../shared/types";
 /**
  * Gets the code block that the user has selected in the active editor.
  * If nothing is selected, the whole document is used.

@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-import { ChatMessage } from "../ChatModel/ChatModel";
-
+import { ChatMessage } from "../../shared/types";
 import { ChatManager } from "../Chat/ChatManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { sendChatMessage } from "../helpers/sendChatMessage";

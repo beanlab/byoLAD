@@ -1,6 +1,6 @@
-import { VSCodeBadge, VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import React from "react";
-import { Chat } from "../utilities/ChatModel";
+import { VSCodeBadge, VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { Chat } from "../../../shared/types";
 
 interface NavBarProps {
   showBackButton?: boolean;
@@ -11,9 +11,8 @@ interface NavBarProps {
 export const NavBar: React.FC<NavBarProps> = ({
   showBackButton,
   changeActiveChat,
-  createNewChat
+  createNewChat,
 }) => {
-
   return (
     <div>
       <VSCodeBadge className="navbar">

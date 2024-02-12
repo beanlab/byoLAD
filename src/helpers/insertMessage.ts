@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ChatManager } from "../Chat/ChatManager";
-import { ChatRole, TextBlock } from "../ChatModel/ChatModel";
+import { ChatRole, TextBlock } from "../../shared/types";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { SettingsProvider } from "./SettingsProvider";
 import { getCodeReference } from "./getCodeReference";

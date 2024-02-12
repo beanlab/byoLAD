@@ -1,9 +1,8 @@
-import { Chat } from "../ChatModel/ChatModel";
 import { ExtensionContext } from "vscode";
-import { ChatMessage } from "../ChatModel/ChatModel";
 import * as constants from "../commands/constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { setHasActiveChatWhenClauseState } from "../helpers";
+import { Chat, ChatMessage } from "../../shared/types";
 
 /**
  * Manages the chat history and the active chat in the VS Code workspace state.

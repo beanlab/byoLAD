@@ -5,7 +5,7 @@ import {
   VSCodeTextArea,
 } from "@vscode/webview-ui-toolkit/react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { Chat, ChatRole, TextBlock } from "../utilities/ChatModel";
+import { Chat, ChatRole, TextBlock } from "../../../shared/types";
 import autosize from "autosize";
 
 interface ChatInputProps {

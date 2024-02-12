@@ -1,22 +1,20 @@
 import { DiscussServiceClient } from "@google-ai/generativelanguage";
 import { GoogleAuth } from "google-auth-library";
 import {
-  ChatMessage,
-  ChatMessageFinishReason,
+  Chat,
   ChatRole,
-  ChatModel,
-  ChatModelRequest,
-  ChatModelResponse,
+  ChatMessageFinishReason,
+  ChatMessage,
   MessageBlock,
   CodeBlock,
   TextBlock,
-} from "../ChatModel";
+} from "../../../shared/types";
+import { ChatModel, ChatModelRequest, ChatModelResponse } from "../ChatModel";
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import {
   messageBlocksToString,
   stringToMessageBlocks,
 } from "../../Chat/messageBlockHelpers";
-import { Chat } from "../ChatModel";
 import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 interface PaLMPrompt {

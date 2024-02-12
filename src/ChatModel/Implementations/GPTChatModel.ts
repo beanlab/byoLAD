@@ -1,18 +1,16 @@
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import {
-  ChatModel,
-  ChatModelRequest,
-  ChatModelResponse,
+  Chat,
   ChatRole,
   ChatMessageFinishReason,
   ChatMessage,
-} from "../ChatModel";
+} from "../../../shared/types";
+import { ChatModel, ChatModelRequest, ChatModelResponse } from "../ChatModel";
 import OpenAI from "openai";
 import {
   messageBlocksToString,
   stringToMessageBlocks,
 } from "../../Chat/messageBlockHelpers";
-import { Chat } from "../ChatModel";
 import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 export class GPTChatModel implements ChatModel {

@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
-import { Chat } from "../ChatModel/ChatModel";
+import { Chat } from "../../shared/types";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatManager } from "../Chat/ChatManager";
 

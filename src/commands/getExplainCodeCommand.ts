@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { insertMessage } from "../helpers/insertMessage";
@@ -12,7 +12,7 @@ import { TextBlock } from "../../shared/types";
  */
 export const getExplainCodeCommand = (
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.explainCode", async () => {
@@ -31,7 +31,7 @@ export const getExplainCodeCommand = (
       textBlock,
       activeEditor,
       settingsProvider,
-      chatManager,
+      chatDataManager,
       chatWebviewProvider,
     );
   });

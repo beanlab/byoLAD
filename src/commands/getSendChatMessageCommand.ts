@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ChatMessage } from "../../shared/types";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
@@ -12,17 +12,17 @@ import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndCha
  */
 export const getSendChatMessageCommand = (
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     "vscode-byolad.sendChatMessage",
     async (chatMessage: ChatMessage) => {
-      await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
+      await ensureActiveWebviewAndChat(chatDataManager, chatWebviewProvider);
       await sendChatMessage(
         chatMessage,
         settingsProvider,
-        chatManager,
+        chatDataManager,
         chatWebviewProvider,
       );
     },

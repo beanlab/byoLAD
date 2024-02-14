@@ -1,15 +1,15 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { getCodeReference } from "./getCodeReference";
 import { ChatRole, CodeBlock, MessageBlock } from "../../shared/types";
 
 export function addSelectedCodeToChat(
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ) {
   console.log(chatWebviewProvider);
-  const activeChat = chatManager.getActiveChat();
+  const activeChat = chatDataManager.getActiveChat();
   if (activeChat) {
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor) {
@@ -40,7 +40,7 @@ export function addSelectedCodeToChat(
           updatedChat.messages.push(newMessage);
         }
 
-        chatManager.updateChat(updatedChat);
+        chatDataManager.updateChat(updatedChat);
       }
     }
   }

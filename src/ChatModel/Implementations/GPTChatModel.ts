@@ -10,7 +10,7 @@ import OpenAI from "openai";
 import {
   messageBlocksToString,
   stringToMessageBlocks,
-} from "../../Chat/messageBlockHelpers";
+} from "../../../shared/utils/messageBlockHelpers";
 import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 export class GPTChatModel implements ChatModel {

@@ -7,7 +7,7 @@ import { Chat, ChatMessage } from "../../shared/types";
 /**
  * Manages the chat history and the active chat in the VS Code workspace state.
  */
-export class ChatManager {
+export class ChatDataManager {
   private readonly context: ExtensionContext;
   private readonly settingsProvider: SettingsProvider;
 

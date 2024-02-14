@@ -3,7 +3,7 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { diffCode } from "../helpers/diffCode";
 import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
 import {
   WebviewToExtensionMessage,
@@ -12,15 +12,15 @@ import {
 
 export class ChatViewMessageHandler {
   private settingsProvider: SettingsProvider;
-  chatManager: ChatManager;
+  chatDataManager: ChatDataManager;
   chatWebviewProvider: ChatWebviewProvider;
 
   constructor(
     settingsProvider: SettingsProvider,
-    chatManager: ChatManager,
+    chatDataManager: ChatDataManager,
     chatWebviewProvider: ChatWebviewProvider,
   ) {
-    this.chatManager = chatManager;
+    this.chatDataManager = chatDataManager;
     this.chatWebviewProvider = chatWebviewProvider;
     this.settingsProvider = settingsProvider;
   }
@@ -50,7 +50,7 @@ export class ChatViewMessageHandler {
       case "deleteChat": {
         const params =
           message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
-        this.chatManager.deleteChat(params.chatId);
+        this.chatDataManager.deleteChat(params.chatId);
         this.chatWebviewProvider.refresh();
         break;
       }
@@ -84,13 +84,13 @@ export class ChatViewMessageHandler {
       case "setActiveChat": {
         const params =
           message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
-        this.chatManager.activeChatId = params.activeChatId;
+        this.chatDataManager.activeChatId = params.activeChatId;
         break;
       }
       case "updateChat": {
         const params =
           message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
-        this.chatManager.updateChat(params.chat); // Save changes to backend
+        this.chatDataManager.updateChat(params.chat); // Save changes to backend
         this.chatWebviewProvider.refresh();
         break;
       }

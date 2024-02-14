@@ -3,7 +3,7 @@ import { getReviewCodeCommand } from "./commands/getReviewCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
-import { ChatManager } from "./Chat/ChatManager";
+import { ChatDataManager } from "./Chat/ChatDataManager";
 import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
 import { getNewChatCommand } from "./commands/getNewChatCommand";
 import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
@@ -18,14 +18,14 @@ import { getOnDidChangeTextEditorSelectionHandler } from "./helpers/getOnDidChan
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
-  const chatManager = new ChatManager(context, settingsProvider);
+  const chatDataManager = new ChatDataManager(context, settingsProvider);
   const chatWebviewProvider = new ChatWebviewProvider(
     context.extensionUri,
     settingsProvider,
-    chatManager,
+    chatDataManager,
   );
 
-  setHasActiveChatWhenClauseState(!!chatManager.activeChatId);
+  setHasActiveChatWhenClauseState(!!chatDataManager.activeChatId);
 
   const chatViewDisposable = vscode.window.registerWebviewViewProvider(
     ChatWebviewProvider.viewType,
@@ -34,35 +34,35 @@ export function activate(context: vscode.ExtensionContext) {
 
   const newChatCommand = getNewChatCommand(
     settingsProvider,
-    chatManager,
+    chatDataManager,
     chatWebviewProvider,
   );
   const deleteAllChatsCommand = getDeleteAllChatsCommand(
-    chatManager,
+    chatDataManager,
     chatWebviewProvider,
   );
   const reviewFileCodeCommand = getReviewCodeCommand(
     settingsProvider,
-    chatManager,
+    chatDataManager,
     chatWebviewProvider,
   );
   const explainCodeCommand = getExplainCodeCommand(
     settingsProvider,
-    chatManager,
+    chatDataManager,
     chatWebviewProvider,
   );
   const sendChatMessageCommand = getSendChatMessageCommand(
     settingsProvider,
-    chatManager,
+    chatDataManager,
     chatWebviewProvider,
   );
   const addCodeToChatCommand = getAddCodeToChatCommand(
     chatWebviewProvider,
-    chatManager,
+    chatDataManager,
   );
   const addCodeToNewChatCommand = getAddCodeToNewChatCommand(
     chatWebviewProvider,
-    chatManager,
+    chatDataManager,
   );
   const openSettingsCommand = getOpenSettingsCommand();
 

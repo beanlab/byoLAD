@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { addSelectedCodeToChat } from "../helpers/addSelectedCodeToChat";
 
@@ -10,9 +10,9 @@ import { addSelectedCodeToChat } from "../helpers/addSelectedCodeToChat";
 
 export const getAddCodeToChatCommand = (
   chatWebviewProvider: ChatWebviewProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.addCodeToChat", async () => {
-    addSelectedCodeToChat(chatManager, chatWebviewProvider);
+    addSelectedCodeToChat(chatDataManager, chatWebviewProvider);
     chatWebviewProvider.refresh();
   });

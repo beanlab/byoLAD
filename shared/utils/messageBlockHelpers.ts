@@ -1,4 +1,4 @@
-import { CodeBlock, MessageBlock, TextBlock } from "../../shared/types";
+import { CodeBlock, MessageBlock, TextBlock } from "../types";
 
 /**
  * Converts a string input into an array of message blocks. Input is assumed to be Markdown.

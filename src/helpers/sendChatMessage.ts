@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { Chat, ChatMessage, ChatRole } from "../../shared/types";
 import { ChatModelResponse } from "../ChatModel/ChatModel";
 import { SettingsProvider } from "./SettingsProvider";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 /**
@@ -11,10 +11,10 @@ import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 export async function sendChatMessage(
   chatMessage: ChatMessage,
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ) {
-  const chat = chatManager.getActiveChat();
+  const chat = chatDataManager.getActiveChat();
   if (!chat) {
     vscode.window.showErrorMessage("No active chat");
     return;
@@ -39,7 +39,7 @@ export async function sendChatMessage(
       handleSuccessfulResponse(
         response.message,
         chat,
-        chatManager,
+        chatDataManager,
         chatWebviewProvider,
       );
     } else {
@@ -55,17 +55,17 @@ export async function sendChatMessage(
  *
  * @param responseMessage Response message from the chat model
  * @param chat Chat to update
- * @param chatManager Chat manager
+ * @param chatDataManager Chat manager
  * @param chatWebviewProvider Current side panel
  */
 function handleSuccessfulResponse(
   responseMessage: ChatMessage,
   chat: Chat,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): void {
   chat.messages.push(responseMessage);
-  chatManager.updateChat(chat);
+  chatDataManager.updateChat(chat);
   chatWebviewProvider.refresh();
   chatWebviewProvider.updateIsMessageLoading(false);
 }

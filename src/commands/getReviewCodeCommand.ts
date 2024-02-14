@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { insertMessage } from "../helpers/insertMessage";
 import { TextBlock } from "../../shared/types";
@@ -12,7 +12,7 @@ import { TextBlock } from "../../shared/types";
  */
 export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
@@ -33,7 +33,7 @@ export const getReviewCodeCommand = (
         textBlock,
         activeEditor,
         settingsProvider,
-        chatManager,
+        chatDataManager,
         chatWebviewProvider,
       );
     },

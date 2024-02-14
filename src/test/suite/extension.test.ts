@@ -4,7 +4,7 @@ import * as assert from "assert";
 // as well as import your extension to test it
 import * as vscode from "vscode";
 import { CodeBlock, MessageBlock, TextBlock } from "../../../shared/types";
-import { stringToMessageBlocks } from "../../Chat/messageBlockHelpers";
+import { stringToMessageBlocks } from "../../../shared/utils/messageBlockHelpers";
 
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");

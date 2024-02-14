@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
@@ -8,12 +8,12 @@ import { ChatWebviewProvider } from "../providers/ChatViewProvider";
  */
 export const getNewChatCommand = (
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand("vscode-byolad.newChat", async () => {
     await vscode.commands.executeCommand("vscode-byolad.chat.focus");
-    chatManager.startChat("Code Chat"); // TODO: How to name?
+    chatDataManager.startChat("Code Chat"); // TODO: How to name?
     chatWebviewProvider.refresh();
   });
 };

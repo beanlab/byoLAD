@@ -26,6 +26,7 @@ function App() {
   const [vsCodeTheme, setVsCodeTheme] = useState(theme || VsCodeTheme.Dark);
 
   // Run 1x on mount
+  // Adding the event listener here prevents receiving the same message multiple times
   useEffect(() => {
     ExtensionMessenger.getChats();
     ExtensionMessenger.getHasSelection();

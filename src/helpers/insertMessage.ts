@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatRole, TextBlock } from "../../shared/types";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { SettingsProvider } from "./SettingsProvider";
@@ -11,7 +11,7 @@ export async function insertMessage(
   textBlock: TextBlock,
   activeEditor: vscode.TextEditor,
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ) {
   const codeReference = getCodeReference(activeEditor);
@@ -21,9 +21,9 @@ export async function insertMessage(
     content: codeReference ? [textBlock, codeReference] : [textBlock],
   };
 
-  await ensureActiveWebviewAndChat(chatManager, chatWebviewProvider);
+  await ensureActiveWebviewAndChat(chatDataManager, chatWebviewProvider);
 
-  const chat = chatManager.getActiveChat();
+  const chat = chatDataManager.getActiveChat();
   chat?.messages.push(message);
 
   chatWebviewProvider.refresh();
@@ -33,7 +33,7 @@ export async function insertMessage(
   await sendChatMessage(
     message,
     settingsProvider,
-    chatManager,
+    chatDataManager,
     chatWebviewProvider,
   );
 }

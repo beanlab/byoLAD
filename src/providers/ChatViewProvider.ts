@@ -9,7 +9,7 @@ import {
   ExtensionToWebviewMessageTypeParamsMap,
 } from "../../shared/types";
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -22,16 +22,16 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
   private readonly _settingsProvider: SettingsProvider;
-  private chatManager: ChatManager;
+  private chatDataManager: ChatDataManager;
 
   constructor(
     extensionUri: vscode.Uri,
     settingsProvider: SettingsProvider,
-    chatManager: ChatManager,
+    chatDataManager: ChatDataManager,
   ) {
     this._extensionUri = extensionUri;
     this._settingsProvider = settingsProvider;
-    this.chatManager = chatManager;
+    this.chatDataManager = chatDataManager;
   }
 
   public resolveWebviewView(
@@ -81,8 +81,8 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       return;
       // TODO: This is where the webview should be opened!
     }
-    const chats: Chat[] = this.chatManager.chats;
-    const activeChatId: number | null = this.chatManager.activeChatId;
+    const chats: Chat[] = this.chatDataManager.chats;
+    const activeChatId: number | null = this.chatDataManager.activeChatId;
     if (activeChatId && !chats.find((chat) => chat.id === activeChatId)) {
       vscode.window.showErrorMessage(
         `Active chat with ID ${activeChatId} does not exist`,
@@ -253,7 +253,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (message) => {
       const chatViewMessageHandler = new ChatViewMessageHandler(
         this._settingsProvider,
-        this.chatManager,
+        this.chatDataManager,
         this,
       );
       await chatViewMessageHandler.handleMessage(message);

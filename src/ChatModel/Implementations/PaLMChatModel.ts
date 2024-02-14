@@ -14,7 +14,7 @@ import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import {
   messageBlocksToString,
   stringToMessageBlocks,
-} from "../../Chat/messageBlockHelpers";
+} from "../../../shared/utils/messageBlockHelpers";
 import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 interface PaLMPrompt {

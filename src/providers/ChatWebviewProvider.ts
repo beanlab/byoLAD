@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
-import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
+import { ChatWebviewMessageHandler } from "./ChatWebviewMessageHandler";
 import {
   Chat,
   ExtensionToWebviewMessage,
@@ -21,17 +21,17 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
   private readonly chatDataManager: ChatDataManager;
-  private chatViewMessageHandler?: ChatViewMessageHandler;
+  private chatWebviewMessageHandler?: ChatWebviewMessageHandler;
 
   constructor(extensionUri: vscode.Uri, chatDataManager: ChatDataManager) {
     this._extensionUri = extensionUri;
     this.chatDataManager = chatDataManager;
   }
 
-  public setChatViewMessageHandler(
-    chatViewMessageHandler: ChatViewMessageHandler,
+  public setChatWebviewMessageHandler(
+    chatWebviewMessageHandler: ChatWebviewMessageHandler,
   ) {
-    this.chatViewMessageHandler = chatViewMessageHandler;
+    this.chatWebviewMessageHandler = chatWebviewMessageHandler;
   }
 
   public resolveWebviewView(
@@ -252,14 +252,14 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
     webviewView.webview.onDidReceiveMessage(async (message) => {
-      if (!this.chatViewMessageHandler) {
+      if (!this.chatWebviewMessageHandler) {
         vscode.window.showErrorMessage(
           // TODO: Is this the right way to handle this?
-          "ChatViewMessageHandler not set in ChatWebviewProvider",
+          "ChatWebviewMessageHandler not set in ChatWebviewProvider",
         );
         return;
       }
-      await this.chatViewMessageHandler.handleMessage(message);
+      await this.chatWebviewMessageHandler.handleMessage(message);
     });
   }
 }

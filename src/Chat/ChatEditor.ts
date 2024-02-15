@@ -1,6 +1,6 @@
 import { Chat, ChatMessage, ChatRole, MessageBlock } from "../../shared/types";
 import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
+import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 import { ChatDataManager } from "./ChatDataManager";
 
 /**

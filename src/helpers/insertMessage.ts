@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { Chat, ChatRole, TextBlock } from "../../shared/types";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
+import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 import { getCodeReference } from "./getCodeReference";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";

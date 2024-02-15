@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
+import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 
 /**
  * Handler for when the VS Code text editor selection (highlight) changes.

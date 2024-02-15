@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
+import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 import { insertMessage } from "../helpers/insertMessage";
 import { TextBlock } from "../../shared/types";
 import { ChatEditor } from "../Chat/ChatEditor";

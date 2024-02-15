@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
+import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 
 /**

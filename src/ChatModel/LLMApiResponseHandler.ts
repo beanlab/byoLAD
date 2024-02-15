@@ -1,6 +1,6 @@
 import { ChatRole } from "../../shared/types";
 import { ChatModelResponse } from "./ChatModel";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
+import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 import { ChatEditor } from "../Chat/ChatEditor";
 
 export class LLMApiResponseHandler {

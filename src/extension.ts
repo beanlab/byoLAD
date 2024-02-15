@@ -8,7 +8,7 @@ import { getNewChatCommand } from "./commands/getNewChatCommand";
 import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
-import { ChatWebviewProvider } from "./providers/ChatViewProvider";
+import { ChatWebviewProvider } from "./providers/ChatWebviewProvider";
 import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 import { setHasActiveChatWhenClauseState } from "./helpers";
@@ -17,7 +17,7 @@ import { ChatEditor } from "./Chat/ChatEditor";
 import { LLMApiService } from "./ChatModel/LLMApiService";
 import { LLMApiRequestSender } from "./ChatModel/LLMApiRequestSender";
 import { LLMApiResponseHandler } from "./ChatModel/LLMApiResponseHandler";
-import { ChatViewMessageHandler } from "./providers/ChatViewMessageHandler";
+import { ChatWebviewMessageHandler } from "./providers/ChatWebviewMessageHandler";
 
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
@@ -32,17 +32,17 @@ export function activate(context: vscode.ExtensionContext) {
     new LLMApiRequestSender(settingsProvider),
     new LLMApiResponseHandler(chatEditor, chatWebviewProvider),
   );
-  const chatViewMessageHandler = new ChatViewMessageHandler(
+  const chatWebviewMessageHandler = new ChatWebviewMessageHandler(
     settingsProvider,
     chatDataManager,
     chatWebviewProvider,
     chatEditor,
     llmApiService,
   );
-  chatWebviewProvider.setChatViewMessageHandler(chatViewMessageHandler);
+  chatWebviewProvider.setChatWebviewMessageHandler(chatWebviewMessageHandler);
   setHasActiveChatWhenClauseState(!!chatDataManager.activeChatId);
 
-  const chatViewDisposable = vscode.window.registerWebviewViewProvider(
+  const chatWebviewDisposable = vscode.window.registerWebviewViewProvider(
     ChatWebviewProvider.viewType,
     chatWebviewProvider,
   );
@@ -96,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
     onDidChangeConfigurationHandler,
     onDidChangeTextEditorSelectionHandler,
     reviewCodeTextDocumentContentProvider,
-    chatViewDisposable,
+    chatWebviewDisposable,
     addCodeToChatCommand,
     addCodeToNewChatCommand,
   );

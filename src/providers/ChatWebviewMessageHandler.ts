@@ -4,7 +4,7 @@ import { diffCode } from "../helpers/diffCode";
 import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatWebviewProvider } from "./ChatViewProvider";
+import { ChatWebviewProvider } from "./ChatWebviewProvider";
 import {
   ChatRole,
   WebviewToExtensionMessage,
@@ -13,7 +13,7 @@ import {
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
 
-export class ChatViewMessageHandler {
+export class ChatWebviewMessageHandler {
   private readonly settingsProvider: SettingsProvider;
   private readonly chatDataManager: ChatDataManager;
   private readonly chatWebviewProvider: ChatWebviewProvider;

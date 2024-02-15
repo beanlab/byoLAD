@@ -6,23 +6,32 @@ import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatWebviewProvider } from "./ChatViewProvider";
 import {
+  ChatRole,
   WebviewToExtensionMessage,
   WebviewToExtensionMessageTypeMap,
 } from "../../shared/types";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { LLMApiService } from "../ChatModel/LLMApiService";
 
 export class ChatViewMessageHandler {
-  private settingsProvider: SettingsProvider;
-  chatDataManager: ChatDataManager;
-  chatWebviewProvider: ChatWebviewProvider;
+  private readonly settingsProvider: SettingsProvider;
+  private readonly chatDataManager: ChatDataManager;
+  private readonly chatWebviewProvider: ChatWebviewProvider;
+  private readonly chatEditor: ChatEditor;
+  private readonly llmApiService: LLMApiService;
 
   constructor(
     settingsProvider: SettingsProvider,
     chatDataManager: ChatDataManager,
     chatWebviewProvider: ChatWebviewProvider,
+    chatEditor: ChatEditor,
+    llmApiService: LLMApiService,
   ) {
     this.chatDataManager = chatDataManager;
     this.chatWebviewProvider = chatWebviewProvider;
     this.settingsProvider = settingsProvider;
+    this.chatEditor = chatEditor;
+    this.llmApiService = llmApiService;
   }
 
   /**
@@ -57,10 +66,13 @@ export class ChatViewMessageHandler {
       case "sendChatMessage": {
         const params =
           message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
-        vscode.commands.executeCommand(
-          "vscode-byolad.sendChatMessage",
-          params.userInput,
+        this.chatWebviewProvider.updateIsMessageLoading(true);
+        this.chatEditor.appendMarkdown(
+          params.chat,
+          ChatRole.User,
+          params.userMarkdown,
         );
+        await this.llmApiService.requestLlmApiChatResponse(params.chat);
         break;
       }
       case "copyToClipboard": {

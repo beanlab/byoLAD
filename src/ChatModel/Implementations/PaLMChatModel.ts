@@ -11,10 +11,7 @@ import {
 } from "../../../shared/types";
 import { ChatModel, ChatModelRequest, ChatModelResponse } from "../ChatModel";
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
-import {
-  messageBlocksToString,
-  stringToMessageBlocks,
-} from "../../../shared/utils/messageBlockHelpers";
+import { messageBlocksToString } from "../../../shared/utils/messageBlockHelpers";
 import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 interface PaLMPrompt {
@@ -69,23 +66,23 @@ export class PaLMChatModel implements ChatModel {
         if (candidates && candidates.length > 0) {
           return {
             success: true,
-            message: {
-              role: ChatRole.Assistant,
-              content: stringToMessageBlocks(candidates[0].content),
-            },
-          };
+            markdown: candidates[0].content,
+            chat: request.chat,
+          } as ChatModelResponse;
         } else {
           if (filters && filters.length > 0) {
             return {
               success: false,
               errorMessage: this.getFilterErrorMessage(filters),
               finish_reason: ChatMessageFinishReason.ContentFilter,
-            };
+              chat: request.chat,
+            } as ChatModelResponse;
           } else {
             return {
               success: false,
               errorMessage: NO_RESPONSE_ERROR_MESSAGE,
-            };
+              chat: request.chat,
+            } as ChatModelResponse;
           }
         }
       })
@@ -93,7 +90,8 @@ export class PaLMChatModel implements ChatModel {
         return {
           success: false,
           errorMessage: error.message,
-        };
+          chat: request.chat,
+        } as ChatModelResponse;
       });
   }
 

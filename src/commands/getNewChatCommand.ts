@@ -1,13 +1,11 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
 /**
  * Command to start a new chat and make it the active chat.
  */
 export const getNewChatCommand = (
-  settingsProvider: SettingsProvider,
   chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable => {

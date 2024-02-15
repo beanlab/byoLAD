@@ -6,8 +6,12 @@ export class UnsetChatModel implements ChatModel {
   constructor(message: string) {
     this.message = message;
   }
-
+  // TODO: Reconsider this UnsetChatModel strategy (especially if not handled through Settings)
   async chat(): Promise<ChatModelResponse> {
-    return { success: false, errorMessage: this.message };
+    return {
+      success: false,
+      errorMessage: this.message,
+      chat: {},
+    } as ChatModelResponse;
   }
 }

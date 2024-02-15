@@ -8,7 +8,6 @@ import {
   ExtensionToWebviewMessageType,
   ExtensionToWebviewMessageTypeParamsMap,
 } from "../../shared/types";
-import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
@@ -21,17 +20,18 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
-  private readonly _settingsProvider: SettingsProvider;
-  private chatDataManager: ChatDataManager;
+  private readonly chatDataManager: ChatDataManager;
+  private chatViewMessageHandler?: ChatViewMessageHandler;
 
-  constructor(
-    extensionUri: vscode.Uri,
-    settingsProvider: SettingsProvider,
-    chatDataManager: ChatDataManager,
-  ) {
+  constructor(extensionUri: vscode.Uri, chatDataManager: ChatDataManager) {
     this._extensionUri = extensionUri;
-    this._settingsProvider = settingsProvider;
     this.chatDataManager = chatDataManager;
+  }
+
+  public setChatViewMessageHandler(
+    chatViewMessageHandler: ChatViewMessageHandler,
+  ) {
+    this.chatViewMessageHandler = chatViewMessageHandler;
   }
 
   public resolveWebviewView(
@@ -79,6 +79,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     if (!this._webviewView) {
       vscode.window.showErrorMessage("No active webview view"); // How to handle?
       return;
+      // can I cause the webview to be focused on here?
       // TODO: This is where the webview should be opened!
     }
     const chats: Chat[] = this.chatDataManager.chats;
@@ -251,12 +252,14 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
     webviewView.webview.onDidReceiveMessage(async (message) => {
-      const chatViewMessageHandler = new ChatViewMessageHandler(
-        this._settingsProvider,
-        this.chatDataManager,
-        this,
-      );
-      await chatViewMessageHandler.handleMessage(message);
+      if (!this.chatViewMessageHandler) {
+        vscode.window.showErrorMessage(
+          // TODO: Is this the right way to handle this?
+          "ChatViewMessageHandler not set in ChatWebviewProvider",
+        );
+        return;
+      }
+      await this.chatViewMessageHandler.handleMessage(message);
     });
   }
 }

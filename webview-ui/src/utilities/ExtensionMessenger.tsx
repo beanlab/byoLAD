@@ -1,6 +1,5 @@
 import { vscode } from "./vscode";
 import {
-  ChatMessage,
   Chat,
   WebviewToExtensionMessage,
   WebviewToExtensionMessageTypeMap,
@@ -35,12 +34,13 @@ export class ExtensionMessenger {
    * Sends a chat message to the extension context to be sent to the LLM.
    * @param userInput The message to send.
    */
-  static sendChatMessage(userInput: ChatMessage) {
+  static sendChatMessage(userInput: string, chat: Chat) {
     const messageType: WebviewToExtensionMessageType = "sendChatMessage";
     vscode.postMessage({
       messageType: messageType,
       params: {
-        userInput: userInput,
+        userMarkdown: userInput,
+        chat: chat,
       } as WebviewToExtensionMessageTypeMap[typeof messageType],
     } as WebviewToExtensionMessage);
   }

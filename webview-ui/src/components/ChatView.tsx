@@ -148,7 +148,6 @@ export const ChatView = ({
 
       <ChatInput
         activeChat={activeChat}
-        changeActiveChat={changeActiveChat}
         loadingMessage={loadingMessage}
         setLoadingMessage={setLoadingMessage}
         hasSelection={hasSelection}

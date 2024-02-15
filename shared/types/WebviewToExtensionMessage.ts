@@ -1,4 +1,4 @@
-import { Chat, ChatMessage } from ".";
+import { Chat } from ".";
 
 /**
  * Message sent from the webview to the extension context.
@@ -33,9 +33,10 @@ export interface WebviewToExtensionMessageTypeMap {
 
 export interface SendChatMessageMessageParams {
   /**
-   * The message to send.
+   * Markdown content to send in the chat.
    */
-  userInput: ChatMessage;
+  userMarkdown: string;
+  chat: Chat;
 }
 
 export interface CopyToClipboardMessageParams {

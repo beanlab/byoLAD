@@ -1,39 +1,27 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatRole, TextBlock } from "../../shared/types";
+import { Chat, ChatRole, TextBlock } from "../../shared/types";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { SettingsProvider } from "./SettingsProvider";
 import { getCodeReference } from "./getCodeReference";
-import { ensureActiveWebviewAndChat } from "./ensureActiveWebviewAndChat";
-import { sendChatMessage } from "./sendChatMessage";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { LLMApiService } from "../ChatModel/LLMApiService";
 
 export async function insertMessage(
+  chat: Chat,
   textBlock: TextBlock,
   activeEditor: vscode.TextEditor,
-  settingsProvider: SettingsProvider,
   chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
+  chatEditor: ChatEditor,
+  llmApiService: LLMApiService,
 ) {
   const codeReference = getCodeReference(activeEditor);
+  const messageBlocks = codeReference
+    ? [textBlock, codeReference]
+    : [textBlock];
 
-  const message = {
-    role: ChatRole.User,
-    content: codeReference ? [textBlock, codeReference] : [textBlock],
-  };
-
-  await ensureActiveWebviewAndChat(chatDataManager, chatWebviewProvider);
-
-  const chat = chatDataManager.getActiveChat();
-  chat?.messages.push(message);
-
-  chatWebviewProvider.refresh();
-
+  chatEditor.appendMessageBlocks(chat, ChatRole.User, messageBlocks); // TODO: ensure it's being passed by reference so what is sent to the LLM is with the new content
   chatWebviewProvider.updateIsMessageLoading(true);
 
-  await sendChatMessage(
-    message,
-    settingsProvider,
-    chatDataManager,
-    chatWebviewProvider,
-  );
+  await llmApiService.requestLlmApiChatResponse(chat);
 }

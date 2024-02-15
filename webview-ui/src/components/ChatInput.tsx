@@ -5,12 +5,11 @@ import {
   VSCodeTextArea,
 } from "@vscode/webview-ui-toolkit/react";
 import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { Chat, ChatRole, TextBlock } from "../../../shared/types";
+import { Chat } from "../../../shared/types";
 import autosize from "autosize";
 
 interface ChatInputProps {
   activeChat: Chat;
-  changeActiveChat: (chat: Chat | null) => void;
   loadingMessage: boolean;
   setLoadingMessage: (loading: boolean) => void;
   hasSelection: boolean;
@@ -18,21 +17,20 @@ interface ChatInputProps {
 
 export const ChatInput = ({
   activeChat,
-  changeActiveChat,
   loadingMessage,
   setLoadingMessage,
   hasSelection,
 }: ChatInputProps) => {
-  const [userPrompt, setUserPrompt] = useState("");
+  const [userInput, setUserInput] = useState("");
   let innerTextArea: HTMLTextAreaElement | null | undefined = null;
 
-  /**
-   * Replaces all instances of "\n" with "  \n" for proper Markdown rendering.
-   * @param text Text that represents newlines with "\n".
-   */
-  const convertNewlines = (text: string): string => {
-    return text.replace(/\n/g, "  \n");
-  };
+  // /**
+  //  * Replaces all instances of "\n" with "  \n" for proper Markdown rendering.
+  //  * @param text Text that represents newlines with "\n".
+  //  */
+  // const convertNewlines = (text: string): string => {
+  //   return text.replace(/\n/g, "  \n");
+  // };
 
   /**
    * Only handle sending the message if not Shift+Enter key combination.
@@ -48,7 +46,7 @@ export const ChatInput = ({
    */
   const onInput = (event: InputEvent) => {
     const target = event.target as HTMLTextAreaElement;
-    setUserPrompt(target.value);
+    setUserInput(target.value);
 
     if (innerTextArea) {
       autosize.update(innerTextArea);
@@ -70,52 +68,15 @@ export const ChatInput = ({
   };
 
   const handleSubmit = () => {
-    if (userPrompt.trim() === "") {
+    if (userInput.trim() === "") {
       return;
     }
     setLoadingMessage(true);
 
-    const userInput = convertNewlines(userPrompt);
+    // const userInput = convertNewlines(userPrompt); // TODO: Do we need this?
 
-    const newActiveChat = { ...activeChat };
-    if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
-      newActiveChat.messages = [];
-      const newUserMessage = {
-        content: [
-          {
-            type: "text",
-            content: userInput,
-          } as TextBlock,
-        ],
-        role: ChatRole.User,
-      };
-      newActiveChat.messages.push(newUserMessage);
-    } else {
-      const lastMessage =
-        newActiveChat.messages[newActiveChat.messages.length - 1];
-      if (lastMessage.role === ChatRole.User) {
-        lastMessage.content.push({
-          type: "text",
-          content: userInput,
-        } as TextBlock);
-      } else {
-        const newUserMessage = {
-          content: [
-            {
-              type: "text",
-              content: userInput,
-            } as TextBlock,
-          ],
-          role: ChatRole.User,
-        };
-        newActiveChat.messages.push(newUserMessage);
-      }
-    }
-    changeActiveChat(newActiveChat);
-    ExtensionMessenger.sendChatMessage(
-      newActiveChat.messages[newActiveChat.messages.length - 1],
-    );
-    setUserPrompt("");
+    ExtensionMessenger.sendChatMessage(userInput, activeChat);
+    setUserInput("");
   };
 
   return (
@@ -133,7 +94,7 @@ export const ChatInput = ({
             onKeyDown={onKeyDown}
             placeholder="Your message..."
             rows={1}
-            value={userPrompt}
+            value={userInput}
           />
           <div className="chat-input-buttons">
             {hasSelection ? (
@@ -160,7 +121,7 @@ export const ChatInput = ({
               aria-label="Send message"
               appearance="icon"
               onClick={handleSubmit}
-              disabled={userPrompt.trim() === ""}
+              disabled={userInput.trim() === ""}
             >
               <i className="codicon codicon-send"></i>
             </VSCodeButton>

@@ -5,6 +5,9 @@ import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 import { insertMessage } from "../helpers/insertMessage";
 import { TextBlock } from "../../shared/types";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { LLMApiService } from "../ChatModel/LLMApiService";
+import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
 /**
  * Command to review the selected code (or whole file if no selection) in a chat.
  * Sends the selection/file and the user's configured prompt as a chat message.
@@ -14,6 +17,8 @@ export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,
   chatDataManager: ChatDataManager,
   chatWebviewProvider: ChatWebviewProvider,
+  chatEditor: ChatEditor,
+  llmApiService: LLMApiService,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     "vscode-byolad.reviewCode",
@@ -29,12 +34,21 @@ export const getReviewCodeCommand = (
         content: settingsProvider.getReviewCodePrompt(),
       } as TextBlock;
 
+      await ensureActiveWebviewAndChat(chatDataManager, chatWebviewProvider);
+      const chat = chatDataManager.getActiveChat();
+      if (!chat) {
+        vscode.window.showErrorMessage("No active chat"); // TODO: error handling?
+        return;
+      }
+
       insertMessage(
+        chat,
         textBlock,
         activeEditor,
-        settingsProvider,
         chatDataManager,
         chatWebviewProvider,
+        chatEditor,
+        llmApiService,
       );
     },
   );

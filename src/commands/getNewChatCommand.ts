@@ -1,17 +1,16 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
+import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
 
 /**
  * Command to start a new chat and make it the active chat.
  */
 export const getNewChatCommand = (
   chatDataManager: ChatDataManager,
-  chatWebviewProvider: ChatWebviewProvider,
+  chatWebviewMessageSender: ChatWebviewMessageSender,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand("vscode-byolad.newChat", async () => {
-    await vscode.commands.executeCommand("vscode-byolad.chat.focus");
     chatDataManager.startChat("Code Chat"); // TODO: How to name?
-    chatWebviewProvider.refresh();
+    await chatWebviewMessageSender.refresh();
   });
 };

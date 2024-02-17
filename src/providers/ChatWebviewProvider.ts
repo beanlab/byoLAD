@@ -2,12 +2,7 @@ import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatWebviewMessageHandler } from "./ChatWebviewMessageHandler";
-import {
-  Chat,
-  ExtensionToWebviewMessage,
-  ExtensionToWebviewMessageType,
-  ExtensionToWebviewMessageTypeParamsMap,
-} from "../../shared/types";
+import { ExtensionToWebviewMessage } from "../../shared/types";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
@@ -17,7 +12,7 @@ import { ChatDataManager } from "../Chat/ChatDataManager";
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/frameworks/hello-world-react-vite/src/panels/HelloWorldPanel.ts
 
 export class ChatWebviewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = "vscode-byolad.chat";
+  public readonly viewId = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
   private readonly chatDataManager: ChatDataManager;
@@ -72,99 +67,35 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   }
 
   /**
-   * Refreshes the webview to reflect the current state of the chat manager, including
-   * the list of chats and the active chat.
+   * Shows and focuses on the webview view in the sidebar.
+   * @param preserveFocus A boolean indicating whether the current focus should be preserved (defaults to false and focuses on the webview).
    */
-  public refresh() {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
-      // can I cause the webview to be focused on here?
-      // TODO: This is where the webview should be opened!
-    }
-    const chats: Chat[] = this.chatDataManager.chats;
-    const activeChatId: number | null = this.chatDataManager.activeChatId;
-    if (activeChatId && !chats.find((chat) => chat.id === activeChatId)) {
-      vscode.window.showErrorMessage(
-        `Active chat with ID ${activeChatId} does not exist`,
-      );
-      return;
-    }
-
-    const messageType: ExtensionToWebviewMessageType = "refresh";
-    this._webviewView.webview.postMessage({
-      messageType: messageType,
-      params: {
-        chats: chats,
-        activeChatId: activeChatId,
-      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
-    } as ExtensionToWebviewMessage);
-  }
-
-  /**
-   * Updates the webview to display an error message.
-   * @param errorMessage The error message to display.
-   */
-  public updateErrorMessage(errorMessage: string) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage(errorMessage);
-      return;
-    }
-
-    const messageType: ExtensionToWebviewMessageType = "errorMessage";
-    this._webviewView.webview.postMessage({
-      messageType: messageType,
-      params: {
-        errorMessage: errorMessage,
-      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
-    } as ExtensionToWebviewMessage);
-  }
-
-  /**
-   * Updates the webview to reflect whether or not a message is currently loading.
-   * @param isLoading If the message is loading.
-   */
-  public updateIsMessageLoading(isLoading: boolean) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
-      // TODO: This is where the webview should be opened!
-    }
-
-    const messageType: ExtensionToWebviewMessageType = "isMessageLoading";
-    this._webviewView.webview.postMessage({
-      messageType: messageType,
-      params: {
-        isLoading: isLoading,
-      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
-    } as ExtensionToWebviewMessage);
-  }
-
-  /**
-   * Updates the webview to reflect whether or not there is currently a selection in the editor.
-   * @param hasSelection If something is currently selected in the editor.
-   */
-  public async updateHasSelection(hasSelection: boolean) {
-    // TODO: make sure they are using this async function right
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view");
-      return;
-    }
-
-    const messageType: ExtensionToWebviewMessageType = "hasSelection";
-    const ifDelivered = await this._webviewView.webview.postMessage({
-      messageType: messageType,
-      params: {
-        hasSelection: hasSelection,
-      } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
-    } as ExtensionToWebviewMessage);
-
-    if (!ifDelivered) {
-      // TODO: Do this with all of the messages
-      vscode.window.showErrorMessage(
-        `Failed to deliver message of type ${messageType} to webview`,
+  async show(preserveFocus: boolean = false) {
+    const options = { preserveFocus: preserveFocus };
+    try {
+      await vscode.commands.executeCommand(`${this.viewId}.focus`, options);
+    } catch (error) {
+      await vscode.window.showErrorMessage(
+        error instanceof Error ? error.message : "Unknown error",
       );
     }
+  }
+
+  /**
+   * Sends a message to the webview view.
+   * @param message The message to send to the webview view.
+   * @returns A boolean indicating whether the message was posted successfully (not if it was received successfully).
+   */
+  public async postMessage(
+    message: ExtensionToWebviewMessage,
+  ): Promise<boolean> {
+    if (!this._webviewView) {
+      // TODO: Handle?
+      await vscode.window.showErrorMessage("No active webview view");
+      return false;
+    }
+
+    return await this._webviewView.webview.postMessage(message);
   }
 
   public isWebviewVisible(): boolean {

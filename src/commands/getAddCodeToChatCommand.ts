@@ -18,5 +18,5 @@ export const getAddCodeToChatCommand = (
       vscode.window.showErrorMessage("No active chat"); // TODO: error handling?
       return;
     }
-    addSelectedCodeToChat(chat, chatEditor);
+    await addSelectedCodeToChat(chat, chatEditor);
   });

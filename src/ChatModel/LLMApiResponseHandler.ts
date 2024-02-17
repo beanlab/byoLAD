@@ -1,48 +1,52 @@
 import { ChatRole } from "../../shared/types";
 import { ChatModelResponse } from "./ChatModel";
-import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 import { ChatEditor } from "../Chat/ChatEditor";
+import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
 
 export class LLMApiResponseHandler {
   private readonly chatEditor: ChatEditor;
-  private readonly chatWebviewProvider: ChatWebviewProvider;
+  private readonly chatWebviewMessageSender: ChatWebviewMessageSender;
 
   constructor(
     chatEditor: ChatEditor,
-    chatWebviewProvider: ChatWebviewProvider,
+    chatWebviewMessageSender: ChatWebviewMessageSender,
   ) {
     this.chatEditor = chatEditor;
-    this.chatWebviewProvider = chatWebviewProvider;
+    this.chatWebviewMessageSender = chatWebviewMessageSender;
   }
 
-  public handleChatResponse(response: ChatModelResponse): void {
+  public async handleChatResponse(response: ChatModelResponse): Promise<void> {
     if (response.success) {
-      this.handleSuccessfulResponse(response);
+      await this.handleSuccessfulResponse(response);
     } else {
-      this.handleErrorResponse(response);
+      await this.handleErrorResponse(response);
     }
-    this.chatWebviewProvider.updateIsMessageLoading(false);
+    await this.chatWebviewMessageSender.updateIsMessageLoading(false);
   }
 
-  private handleSuccessfulResponse(response: ChatModelResponse): void {
+  private async handleSuccessfulResponse(
+    response: ChatModelResponse,
+  ): Promise<void> {
     if (!response.markdown) {
-      this.chatWebviewProvider.updateErrorMessage(
+      await this.chatWebviewMessageSender.updateErrorMessage(
         "AI successfully replied, but its message was inexplicably empty.",
       );
       return;
     }
-    this.chatEditor.appendMarkdown(
+    await this.chatEditor.appendMarkdown(
       response.chat,
       ChatRole.Assistant,
       response.markdown,
     );
   }
 
-  private handleErrorResponse(response: ChatModelResponse): void {
+  private async handleErrorResponse(
+    response: ChatModelResponse,
+  ): Promise<void> {
     let message = "Unknown error";
     if (response.errorMessage) {
       message = `Error: ${response.errorMessage}`;
     }
-    this.chatWebviewProvider.updateErrorMessage(message);
+    await this.chatWebviewMessageSender.updateErrorMessage(message);
   }
 }

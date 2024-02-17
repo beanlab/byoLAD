@@ -11,7 +11,7 @@ export const getAddCodeToNewChatCommand = (
     "vscode-byolad.addCodeToNewChat",
     async () => {
       const chat = chatDataManager.startChat("Code Chat"); // TODO: How to name?
-      addSelectedCodeToChat(chat, chatEditor);
+      await addSelectedCodeToChat(chat, chatEditor);
       await vscode.commands.executeCommand("vscode-byolad.chat.focus");
     },
   );

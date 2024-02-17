@@ -1,12 +1,11 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
 import { insertMessage } from "../helpers/insertMessage";
 import { TextBlock } from "../../shared/types";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndChat";
+import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
 
 /**
  * Command to explain the selected code (or whole file if no selection) in a chat.
@@ -16,9 +15,9 @@ import { ensureActiveWebviewAndChat } from "../helpers/ensureActiveWebviewAndCha
 export const getExplainCodeCommand = (
   settingsProvider: SettingsProvider,
   chatDataManager: ChatDataManager,
-  chatWebviewProvider: ChatWebviewProvider,
   chatEditor: ChatEditor,
   llmApiService: LLMApiService,
+  chatWebviewMessageSender: ChatWebviewMessageSender,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.explainCode", async () => {
     const activeEditor = vscode.window.activeTextEditor;
@@ -33,7 +32,7 @@ export const getExplainCodeCommand = (
       content: settingsProvider.getExplainCodePrompt(),
     } as TextBlock;
 
-    await ensureActiveWebviewAndChat(chatDataManager, chatWebviewProvider);
+    // await ensureActiveWebviewAndChat(chatDataManager, chatWebviewProvider);
     const chat = chatDataManager.getActiveChat();
     if (!chat) {
       vscode.window.showErrorMessage("No active chat"); // TODO: error handling?
@@ -44,9 +43,8 @@ export const getExplainCodeCommand = (
       chat,
       textBlock,
       activeEditor,
-      chatDataManager,
-      chatWebviewProvider,
       chatEditor,
       llmApiService,
+      chatWebviewMessageSender,
     );
   });

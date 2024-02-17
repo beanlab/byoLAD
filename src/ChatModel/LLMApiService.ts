@@ -16,6 +16,6 @@ export class LLMApiService {
 
   public async requestLlmApiChatResponse(chat: Chat): Promise<void> {
     const response = await this.requestSender.sendChatRequest(chat);
-    this.responseHandler.handleChatResponse(response);
+    await this.responseHandler.handleChatResponse(response);
   }
 }

@@ -1,6 +1,6 @@
 import { Chat, ChatMessage, ChatRole, MessageBlock } from "../../shared/types";
 import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
-import { ChatWebviewProvider } from "../providers/ChatWebviewProvider";
+import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
 import { ChatDataManager } from "./ChatDataManager";
 
 /**
@@ -8,14 +8,14 @@ import { ChatDataManager } from "./ChatDataManager";
  */
 export class ChatEditor {
   private readonly chatDataManager: ChatDataManager;
-  private readonly chatWebviewProvider: ChatWebviewProvider;
+  private readonly chatWebviewMessageSender: ChatWebviewMessageSender;
 
   public constructor(
     chatDataManager: ChatDataManager,
-    chatWebviewProvider: ChatWebviewProvider,
+    chatWebviewProvider: ChatWebviewMessageSender,
   ) {
     this.chatDataManager = chatDataManager;
-    this.chatWebviewProvider = chatWebviewProvider;
+    this.chatWebviewMessageSender = chatWebviewProvider;
   }
 
   // TODO: error handling? at what level do we want to handle errors?
@@ -30,7 +30,7 @@ export class ChatEditor {
    * @param messageBlocks MessageBlocks to append to the chat.
    * @param updateWebview Whether to update the webview after appending the message blocks.
    */
-  public appendMessageBlocks(
+  public async appendMessageBlocks(
     chat: Chat,
     role: ChatRole,
     messageBlocks: MessageBlock[],
@@ -45,7 +45,7 @@ export class ChatEditor {
     this.chatDataManager.updateChat(chat);
 
     if (updateWebview) {
-      this.chatWebviewProvider.refresh();
+      await this.chatWebviewMessageSender.refresh();
     }
   }
 
@@ -59,14 +59,14 @@ export class ChatEditor {
    * @param markdown Markdown content be parsed and appended to the chat.
    * @param updateWebview Whether to update the webview after appending the message blocks.
    */
-  public appendMarkdown(
+  public async appendMarkdown(
     chat: Chat,
     role: ChatRole,
     markdown: string,
     updateWebview: boolean = true,
   ) {
     const messageBlocks = stringToMessageBlocks(markdown);
-    this.appendMessageBlocks(chat, role, messageBlocks, updateWebview);
+    await this.appendMessageBlocks(chat, role, messageBlocks, updateWebview);
   }
 
   /**
@@ -75,11 +75,11 @@ export class ChatEditor {
    * @param updatedChat Chat whose content will be set to the chat with the given ID.
    * @param updateWebview Whether to update the webview after setting the chat content.
    */
-  public overwriteChatContent(chat: Chat, updateWebview: boolean = true) {
+  public async overwriteChatContent(chat: Chat, updateWebview: boolean = true) {
     this.chatDataManager.updateChat(chat);
     if (updateWebview) {
-      this.chatWebviewProvider.refresh();
-      this.chatWebviewProvider.updateIsMessageLoading(false);
+      await this.chatWebviewMessageSender.refresh();
+      await this.chatWebviewMessageSender.updateIsMessageLoading(false);
     }
   }
 }

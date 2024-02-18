@@ -6,11 +6,11 @@ import {
   a11yLight,
   a11yDark,
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import Markdown from "react-markdown";
 import { useContext, useState } from "react";
 import { VsCodeThemeContext } from "../utilities/VsCodeThemeContext";
 import { VsCodeTheme } from "../types";
+import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
 
 interface CodeMessageBlockProps {
   languageId: string | undefined;
@@ -27,6 +27,8 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
   children,
   deleteMessageBlock,
 }) => {
+  const { copyToClipboard, insertCodeBlock, diffCodeBlock } =
+    useExtensionMessageContext();
   const syntaxStyle = getThemedSyntaxStyle();
   const content: string = children;
   const noMargin = {
@@ -51,7 +53,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Copy to clipboard"
           title="Copy to clipboard"
-          onClick={() => ExtensionMessenger.copyToClipboard(content)}
+          onClick={() => copyToClipboard(content)}
         >
           <i className="codicon codicon-copy" />
         </VSCodeButton>
@@ -59,7 +61,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Insert at cursor"
           title="Insert at cursor"
-          onClick={() => ExtensionMessenger.insertCodeBlock(content)}
+          onClick={() => insertCodeBlock(content)}
         >
           <i className="codicon codicon-insert" />
         </VSCodeButton>
@@ -67,7 +69,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="View diff in editor"
           title="View diff in editor"
-          onClick={() => ExtensionMessenger.diffClodeBlock(content)}
+          onClick={() => diffCodeBlock(content)}
         >
           <i className="codicon codicon-diff" />
         </VSCodeButton>

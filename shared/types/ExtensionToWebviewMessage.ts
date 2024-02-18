@@ -1,5 +1,8 @@
 import { Chat } from ".";
 
+// To add a new ExtensionToWebviewMessageType, add it to the ExtensionToWebviewMessageTypeParamsMap and export the params interface below.
+// These messages are sent from the ChatWebviewMessageSender (extension) and handled by the ExtensionMessageHandler (webview).
+
 /**
  * Message sent from the extension context to the webview.
  */
@@ -57,5 +60,3 @@ export interface HasSelectionParams {
    */
   hasSelection: boolean;
 }
-
-// To add a new ExtensionToWebviewMessageType, add it to the ExtensionToWebviewMessageTypeParamsMap and export the params interface here.

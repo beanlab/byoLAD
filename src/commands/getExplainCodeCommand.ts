@@ -5,7 +5,7 @@ import { insertMessage } from "../helpers/insertMessage";
 import { TextBlock } from "../../shared/types";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
+import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
 
 /**
  * Command to explain the selected code (or whole file if no selection) in a chat.

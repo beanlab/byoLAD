@@ -6,7 +6,7 @@ import { insertMessage } from "../helpers/insertMessage";
 import { TextBlock } from "../../shared/types";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
+import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
 /**
  * Command to review the selected code (or whole file if no selection) in a chat.
  * Sends the selection/file and the user's configured prompt as a chat message.

@@ -8,7 +8,7 @@ import { getNewChatCommand } from "./commands/getNewChatCommand";
 import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
-import { ChatWebviewProvider } from "./providers/ChatWebviewProvider";
+import { ChatWebviewProvider } from "./webview/ChatWebviewProvider";
 import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 import { setHasActiveChatWhenClauseState } from "./helpers";
@@ -17,8 +17,8 @@ import { ChatEditor } from "./Chat/ChatEditor";
 import { LLMApiService } from "./ChatModel/LLMApiService";
 import { LLMApiRequestSender } from "./ChatModel/LLMApiRequestSender";
 import { LLMApiResponseHandler } from "./ChatModel/LLMApiResponseHandler";
-import { ChatWebviewMessageHandler } from "./providers/ChatWebviewMessageHandler";
-import { ChatWebviewMessageSender } from "./providers/ChatWebviewMessageSender";
+import { ChatWebviewMessageHandler } from "./webview/ChatWebviewMessageHandler";
+import { ChatWebviewMessageSender } from "./webview/ChatWebviewMessageSender";
 
 // This method is automatically called by VS Code called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {

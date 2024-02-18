@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
+import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
 
 /**
  * Command to clear the workspace chat history and unset the active chat.

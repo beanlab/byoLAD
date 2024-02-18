@@ -8,7 +8,7 @@ import { ChatWebviewProvider } from "./ChatWebviewProvider";
 import {
   ChatRole,
   WebviewToExtensionMessage,
-  WebviewToExtensionMessageTypeMap,
+  WebviewToExtensionMessageTypeParamsMap,
 } from "../../shared/types";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
@@ -62,14 +62,14 @@ export class ChatWebviewMessageHandler {
         break;
       case "deleteChat": {
         const params =
-          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         this.chatDataManager.deleteChat(params.chatId);
         await this.chatWebviewMessageSender.refresh();
         break;
       }
       case "sendChatMessage": {
         const params =
-          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         await this.chatWebviewMessageSender.updateIsMessageLoading(true);
         await this.chatEditor.appendMarkdown(
           params.chat,
@@ -81,31 +81,31 @@ export class ChatWebviewMessageHandler {
       }
       case "copyToClipboard": {
         const params =
-          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         await copyToClipboard(params.content);
         break;
       }
       case "diffCodeBlock": {
         const params =
-          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         await diffCode(params.code, this.settingsProvider);
         break;
       }
       case "insertCodeBlock": {
         const params =
-          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         await insertCode(params.code);
         break;
       }
       case "setActiveChat": {
         const params =
-          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         this.chatDataManager.activeChatId = params.activeChatId;
         break;
       }
       case "updateChat": {
         const params =
-          message.params as WebviewToExtensionMessageTypeMap[typeof message.messageType];
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         this.chatDataManager.updateChat(params.chat); // Save changes to backend
         await this.chatWebviewMessageSender.refresh(); // Refresh the webview to reflect changes
         break;

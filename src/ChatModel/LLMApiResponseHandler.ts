@@ -1,7 +1,7 @@
 import { ChatRole } from "../../shared/types";
 import { ChatModelResponse } from "./ChatModel";
 import { ChatEditor } from "../Chat/ChatEditor";
-import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
+import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
 
 export class LLMApiResponseHandler {
   private readonly chatEditor: ChatEditor;

@@ -1,5 +1,4 @@
 import { useRef, useEffect } from "react";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { ChatRole, Chat } from "../../../shared/types";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
@@ -7,16 +6,18 @@ import ErrorMessage from "./ErrorMessage";
 import NavBar from "./NavBar";
 import scrollIntoView from "scroll-into-view-if-needed";
 import { ChatInput } from "./ChatInput";
+import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
 
 interface ChatViewProps {
-  activeChat: Chat;
-  changeActiveChat: (chat: Chat | null) => void;
   imagePaths: ImagePaths;
-  loadingMessage: boolean;
-  setLoadingMessage: (loading: boolean) => void;
+  activeChat: Chat;
   errorMessage: string | null;
   hasSelection: boolean;
-  createNewChat: () => void;
+  loadingMessageState: {
+    loadingMessage: boolean;
+    setLoadingMessage: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+  changeActiveChat: (chat: Chat | null) => void;
 }
 
 /**
@@ -24,15 +25,14 @@ interface ChatViewProps {
  * input text box to send messages.
  */
 export const ChatView = ({
-  activeChat,
-  changeActiveChat,
   imagePaths,
-  loadingMessage,
-  setLoadingMessage,
+  activeChat,
   errorMessage,
   hasSelection,
-  createNewChat,
+  loadingMessageState,
+  changeActiveChat,
 }: ChatViewProps) => {
+  const { updateChat } = useExtensionMessageContext();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -67,7 +67,7 @@ export const ChatView = ({
       }
       newChat.messages.splice(messagePosition, 1);
     }
-    ExtensionMessenger.updateChat(newChat);
+    updateChat(newChat);
   };
 
   const messages = activeChat.messages.map((message, position) => {
@@ -132,11 +132,7 @@ export const ChatView = ({
 
   return (
     <div className="view-container">
-      <NavBar
-        showBackButton={true}
-        changeActiveChat={changeActiveChat}
-        createNewChat={createNewChat}
-      />
+      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
 
       <div className="message-list">
         <div>{welcomeMessage}</div>
@@ -148,9 +144,8 @@ export const ChatView = ({
 
       <ChatInput
         activeChat={activeChat}
-        loadingMessage={loadingMessage}
-        setLoadingMessage={setLoadingMessage}
         hasSelection={hasSelection}
+        loadingMessageState={loadingMessageState}
       />
     </div>
   );

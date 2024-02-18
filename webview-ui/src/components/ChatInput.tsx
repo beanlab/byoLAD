@@ -4,33 +4,27 @@ import {
   VSCodeProgressRing,
   VSCodeTextArea,
 } from "@vscode/webview-ui-toolkit/react";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import { Chat } from "../../../shared/types";
 import autosize from "autosize";
+import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
 
 interface ChatInputProps {
   activeChat: Chat;
-  loadingMessage: boolean;
-  setLoadingMessage: (loading: boolean) => void;
   hasSelection: boolean;
+  loadingMessageState: {
+    loadingMessage: boolean;
+    setLoadingMessage: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 }
 
 export const ChatInput = ({
   activeChat,
-  loadingMessage,
-  setLoadingMessage,
   hasSelection,
+  loadingMessageState,
 }: ChatInputProps) => {
   const [userInput, setUserInput] = useState("");
+  const { sendChatMessage, addCodeToChat } = useExtensionMessageContext();
   let innerTextArea: HTMLTextAreaElement | null | undefined = null;
-
-  // /**
-  //  * Replaces all instances of "\n" with "  \n" for proper Markdown rendering.
-  //  * @param text Text that represents newlines with "\n".
-  //  */
-  // const convertNewlines = (text: string): string => {
-  //   return text.replace(/\n/g, "  \n");
-  // };
 
   /**
    * Only handle sending the message if not Shift+Enter key combination.
@@ -71,17 +65,15 @@ export const ChatInput = ({
     if (userInput.trim() === "") {
       return;
     }
-    setLoadingMessage(true);
-
+    loadingMessageState.setLoadingMessage(true);
     // const userInput = convertNewlines(userPrompt); // TODO: Do we need this?
-
-    ExtensionMessenger.sendChatMessage(userInput, activeChat);
+    sendChatMessage(userInput, activeChat);
     setUserInput("");
   };
 
   return (
     <div className="chat-box">
-      {loadingMessage ? (
+      {loadingMessageState.loadingMessage ? (
         <div className="loading-indicator">
           <VSCodeProgressRing></VSCodeProgressRing>
         </div>
@@ -102,7 +94,7 @@ export const ChatInput = ({
                 title="Add selected code to chat"
                 aria-label="Add selected code to chat"
                 appearance="icon"
-                onClick={ExtensionMessenger.addCodeToChat}
+                onClick={addCodeToChat}
               >
                 <i className="codicon codicon-code"></i>
               </VSCodeButton>
@@ -111,7 +103,7 @@ export const ChatInput = ({
                 title="Add current file to chat"
                 aria-label="Add current file to chat"
                 appearance="icon"
-                onClick={ExtensionMessenger.addCodeToChat}
+                onClick={addCodeToChat}
               >
                 <i className="codicon codicon-file-code"></i>
               </VSCodeButton>

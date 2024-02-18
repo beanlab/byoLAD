@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
+import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
 
 /**
  * Handler for when the VS Code text editor selection (highlight) changes.

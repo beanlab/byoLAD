@@ -3,7 +3,7 @@ import { Chat, ChatRole, TextBlock } from "../../shared/types";
 import { getCodeReference } from "./getCodeReference";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ChatWebviewMessageSender } from "../providers/ChatWebviewMessageSender";
+import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
 
 export async function insertMessage(
   chat: Chat,

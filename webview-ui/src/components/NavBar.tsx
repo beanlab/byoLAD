@@ -1,18 +1,19 @@
 import React from "react";
 import { VSCodeBadge, VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { Chat } from "../../../shared/types";
+import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
 
 interface NavBarProps {
   showBackButton?: boolean;
   changeActiveChat: (chat: Chat | null) => void;
-  createNewChat: () => void;
 }
 
 export const NavBar: React.FC<NavBarProps> = ({
   showBackButton,
   changeActiveChat,
-  createNewChat,
 }) => {
+  const { createNewChat } = useExtensionMessageContext();
+
   return (
     <div>
       <VSCodeBadge className="navbar">

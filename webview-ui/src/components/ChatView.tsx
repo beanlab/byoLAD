@@ -6,7 +6,7 @@ import ErrorMessage from "./ErrorMessage";
 import NavBar from "./NavBar";
 import scrollIntoView from "scroll-into-view-if-needed";
 import { ChatInput } from "./ChatInput";
-import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 
 interface ChatViewProps {
   imagePaths: ImagePaths;

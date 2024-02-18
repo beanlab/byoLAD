@@ -1,7 +1,7 @@
 import { Chat } from "../../../../shared/types";
 import { ChatList } from "./ChatList";
 import { NavBar } from "../NavBar";
-import { useExtensionMessageContext } from "../../utilities/ExtensionChatContext";
+import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 
 interface ChatListProps {
   chatList: Chat[];

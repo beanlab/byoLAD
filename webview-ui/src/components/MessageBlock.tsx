@@ -10,7 +10,7 @@ import Markdown from "react-markdown";
 import { useContext, useState } from "react";
 import { VsCodeThemeContext } from "../utilities/VsCodeThemeContext";
 import { VsCodeTheme } from "../types";
-import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 
 interface CodeMessageBlockProps {
   languageId: string | undefined;

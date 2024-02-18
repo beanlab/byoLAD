@@ -1,7 +1,7 @@
 import { Chat } from "../../../../shared/types";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
-import { useExtensionMessageContext } from "../../utilities/ExtensionChatContext";
+import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 
 interface ChatInChatListProps {
   chat: Chat;

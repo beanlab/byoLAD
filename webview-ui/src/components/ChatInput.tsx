@@ -6,7 +6,7 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { Chat } from "../../../shared/types";
 import autosize from "autosize";
-import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 
 interface ChatInputProps {
   activeChat: Chat;

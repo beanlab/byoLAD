@@ -1,7 +1,7 @@
 import React from "react";
 import { VSCodeBadge, VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { Chat } from "../../../shared/types";
-import { useExtensionMessageContext } from "../utilities/ExtensionChatContext";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 
 interface NavBarProps {
   showBackButton?: boolean;

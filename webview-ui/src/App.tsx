@@ -9,7 +9,7 @@ import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 import { ChatListView } from "./components/ChatListView/ChatListView";
-import { ExtensionMessageContextProvider } from "./utilities/ExtensionChatContext";
+import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageContext";
 
 function App() {
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);

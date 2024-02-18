@@ -56,7 +56,7 @@ export function useExtensionMessageContext() {
   const context = useContext(ExtensionMessageContext);
   if (!context) {
     throw new Error(
-      "useExtensionMessageContext must be used within a ExtensionMessageContextProvider",
+      "useExtensionMessageContext must be used within an ExtensionMessageContextProvider",
     );
   }
   return context;

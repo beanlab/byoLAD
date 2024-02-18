@@ -41,10 +41,10 @@ export function activate(context: vscode.ExtensionContext) {
   const chatWebviewMessageHandler = new ChatWebviewMessageHandler(
     settingsProvider,
     chatDataManager,
-    chatWebviewProvider,
     chatEditor,
     llmApiService,
     chatWebviewMessageSender,
+    chatWebviewProvider,
   );
   chatWebviewProvider.setChatWebviewMessageHandler(chatWebviewMessageHandler);
   setHasActiveChatWhenClauseState(!!chatDataManager.activeChatId);
@@ -68,6 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
     chatEditor,
     llmApiService,
     chatWebviewMessageSender,
+    chatWebviewProvider,
   );
   const explainCodeCommand = getExplainCodeCommand(
     settingsProvider,
@@ -75,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
     chatEditor,
     llmApiService,
     chatWebviewMessageSender,
+    chatWebviewProvider,
   );
   const addCodeToChatCommand = getAddCodeToChatCommand(
     chatEditor,
@@ -83,6 +85,7 @@ export function activate(context: vscode.ExtensionContext) {
   const addCodeToNewChatCommand = getAddCodeToNewChatCommand(
     chatDataManager,
     chatEditor,
+    chatWebviewProvider,
   );
   const openSettingsCommand = getOpenSettingsCommand();
 

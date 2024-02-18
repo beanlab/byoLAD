@@ -4,38 +4,38 @@ import { diffCode } from "../helpers/diffCode";
 import { insertCode } from "../helpers/insertCode";
 import { copyToClipboard } from "../helpers/copyToClipboard";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatWebviewProvider } from "./ChatWebviewProvider";
 import {
-  ChatRole,
   WebviewToExtensionMessage,
   WebviewToExtensionMessageTypeParamsMap,
 } from "../../shared/types";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
 import { ChatWebviewMessageSender } from "./ChatWebviewMessageSender";
+import { sendChatMessage } from "../helpers/sendChatMessage";
+import { ChatWebviewProvider } from "./ChatWebviewProvider";
 
 export class ChatWebviewMessageHandler {
   private readonly settingsProvider: SettingsProvider;
   private readonly chatDataManager: ChatDataManager;
-  private readonly chatWebviewProvider: ChatWebviewProvider;
   private readonly chatEditor: ChatEditor;
   private readonly llmApiService: LLMApiService;
   private readonly chatWebviewMessageSender: ChatWebviewMessageSender;
+  private readonly chatWebviewProvider: ChatWebviewProvider;
 
   constructor(
     settingsProvider: SettingsProvider,
     chatDataManager: ChatDataManager,
-    chatWebviewProvider: ChatWebviewProvider,
     chatEditor: ChatEditor,
     llmApiService: LLMApiService,
     chatWebviewMessageSender: ChatWebviewMessageSender,
+    chatWebviewProvider: ChatWebviewProvider,
   ) {
     this.chatDataManager = chatDataManager;
-    this.chatWebviewProvider = chatWebviewProvider;
     this.settingsProvider = settingsProvider;
     this.chatEditor = chatEditor;
     this.llmApiService = llmApiService;
     this.chatWebviewMessageSender = chatWebviewMessageSender;
+    this.chatWebviewProvider = chatWebviewProvider;
   }
 
   /**
@@ -70,13 +70,17 @@ export class ChatWebviewMessageHandler {
       case "sendChatMessage": {
         const params =
           message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
-        await this.chatWebviewMessageSender.updateIsMessageLoading(true);
-        await this.chatEditor.appendMarkdown(
+        const includeCodeFromEditor = false;
+        await sendChatMessage(
           params.chat,
-          ChatRole.User,
           params.userMarkdown,
+          includeCodeFromEditor,
+          this.chatWebviewMessageSender,
+          this.chatEditor,
+          this.chatDataManager,
+          this.llmApiService,
+          this.chatWebviewProvider,
         );
-        await this.llmApiService.requestLlmApiChatResponse(params.chat);
         break;
       }
       case "copyToClipboard": {
@@ -106,8 +110,8 @@ export class ChatWebviewMessageHandler {
       case "updateChat": {
         const params =
           message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
-        this.chatDataManager.updateChat(params.chat); // Save changes to backend
-        await this.chatWebviewMessageSender.refresh(); // Refresh the webview to reflect changes
+        const updateWebiew = true;
+        await this.chatEditor.overwriteChatContent(params.chat, updateWebiew);
         break;
       }
       case "addCodeToChat": {

@@ -12,10 +12,10 @@ export class ChatEditor {
 
   public constructor(
     chatDataManager: ChatDataManager,
-    chatWebviewProvider: ChatWebviewMessageSender,
+    chatWebviewMessageSender: ChatWebviewMessageSender,
   ) {
     this.chatDataManager = chatDataManager;
-    this.chatWebviewMessageSender = chatWebviewProvider;
+    this.chatWebviewMessageSender = chatWebviewMessageSender;
   }
 
   // TODO: error handling? at what level do we want to handle errors?

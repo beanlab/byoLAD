@@ -1,16 +1,16 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 
 /**
  * Command to start a new chat and make it the active chat.
  */
 export const getNewChatCommand = (
   chatDataManager: ChatDataManager,
-  chatWebviewMessageSender: ChatWebviewMessageSender,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand("vscode-byolad.newChat", async () => {
     chatDataManager.startChat();
-    await chatWebviewMessageSender.refresh();
+    await extensionToWebviewMessageSender.refresh();
   });
 };

@@ -10,16 +10,16 @@ import {
 } from "../../shared/types";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ChatWebviewMessageSender } from "./ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "./ExtensionToWebviewMessageSender";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { ChatWebviewProvider } from "./ChatWebviewProvider";
 
-export class ChatWebviewMessageHandler {
+export class WebviewToExtensionMessageHandler {
   private readonly settingsProvider: SettingsProvider;
   private readonly chatDataManager: ChatDataManager;
   private readonly chatEditor: ChatEditor;
   private readonly llmApiService: LLMApiService;
-  private readonly chatWebviewMessageSender: ChatWebviewMessageSender;
+  private readonly extensionToWebviewMessageSender: ExtensionToWebviewMessageSender;
   private readonly chatWebviewProvider: ChatWebviewProvider;
 
   constructor(
@@ -27,14 +27,14 @@ export class ChatWebviewMessageHandler {
     chatDataManager: ChatDataManager,
     chatEditor: ChatEditor,
     llmApiService: LLMApiService,
-    chatWebviewMessageSender: ChatWebviewMessageSender,
+    extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
     chatWebviewProvider: ChatWebviewProvider,
   ) {
     this.chatDataManager = chatDataManager;
     this.settingsProvider = settingsProvider;
     this.chatEditor = chatEditor;
     this.llmApiService = llmApiService;
-    this.chatWebviewMessageSender = chatWebviewMessageSender;
+    this.extensionToWebviewMessageSender = extensionToWebviewMessageSender;
     this.chatWebviewProvider = chatWebviewProvider;
   }
 
@@ -49,7 +49,7 @@ export class ChatWebviewMessageHandler {
         await vscode.commands.executeCommand("vscode-byolad.newChat");
         break;
       case "getChats":
-        await this.chatWebviewMessageSender.refresh();
+        await this.extensionToWebviewMessageSender.refresh();
         break;
       case "deleteAllChats":
         await vscode.commands.executeCommand("vscode-byolad.deleteAllChats");
@@ -64,7 +64,7 @@ export class ChatWebviewMessageHandler {
         const params =
           message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         this.chatDataManager.deleteChat(params.chatId);
-        await this.chatWebviewMessageSender.refresh();
+        await this.extensionToWebviewMessageSender.refresh();
         break;
       }
       case "sendChatMessage": {
@@ -75,7 +75,7 @@ export class ChatWebviewMessageHandler {
           params.chat,
           params.userMarkdown,
           includeCodeFromEditor,
-          this.chatWebviewMessageSender,
+          this.extensionToWebviewMessageSender,
           this.chatEditor,
           this.chatDataManager,
           this.llmApiService,
@@ -120,7 +120,9 @@ export class ChatWebviewMessageHandler {
       }
       case "getHasSelection": {
         const hasSelection = !vscode.window.activeTextEditor?.selection.isEmpty;
-        await this.chatWebviewMessageSender.updateHasSelection(hasSelection);
+        await this.extensionToWebviewMessageSender.updateHasSelection(
+          hasSelection,
+        );
         break;
       }
       default: {

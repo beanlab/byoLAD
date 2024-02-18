@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Chat, ExtensionToWebviewMessage } from "../../shared/types";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import { ChatView } from "./components/ChatView";
-import { ExtensionMessageSender } from "./utilities/ExtensionMessageSender";
-import { ExtensionMessageHandler } from "./utilities/ExtensionMessageHandler";
+import { WebviewToExtensionMessageSender } from "./utilities/WebviewToExtensionMessageSender";
+import { ExtensionToWebviewMessageHandler } from "./utilities/ExtensionToWebviewMessageHandler";
 import { ImagePaths, VsCodeTheme } from "./types";
 import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
@@ -23,8 +23,8 @@ function App() {
   const theme = getVsCodeThemeFromCssClasses(document.body.className);
   const [vsCodeTheme, setVsCodeTheme] = useState(theme || VsCodeTheme.Dark);
 
-  const extensionMessageSender = new ExtensionMessageSender();
-  const extensionMessageHandler = new ExtensionMessageHandler(
+  const webviewToExtensionMessageSender = new WebviewToExtensionMessageSender();
+  const extenionToWebviewMessageHandler = new ExtensionToWebviewMessageHandler(
     setChatList,
     setActiveChat,
     setLoadingMessage,
@@ -36,15 +36,15 @@ function App() {
   // Adding the event listener here prevents receiving the same message multiple times
   useEffect(() => {
     // Get initial state from the extension
-    extensionMessageSender.getChats();
-    extensionMessageSender.getHasSelection();
+    webviewToExtensionMessageSender.getChats();
+    webviewToExtensionMessageSender.getHasSelection();
 
     /**
      * Handle messages sent from the extension to the webview
      */
     const eventListener = (event: MessageEvent<ExtensionToWebviewMessage>) => {
       const message = event.data as ExtensionToWebviewMessage;
-      extensionMessageHandler.handleMessage(message);
+      extenionToWebviewMessageHandler.handleMessage(message);
     };
     window.addEventListener("message", eventListener);
     return () => {
@@ -69,7 +69,7 @@ function App() {
   mutationObserver.observe(document.body, { attributes: true });
 
   const changeActiveChat = (chat: Chat | null) => {
-    extensionMessageSender.setActiveChat(chat);
+    webviewToExtensionMessageSender.setActiveChat(chat);
     setActiveChat(chat);
     setErrorMessage(null);
   };
@@ -77,7 +77,7 @@ function App() {
   return (
     <VsCodeThemeContext.Provider value={vsCodeTheme}>
       <ExtensionMessageContextProvider
-        extensionMessageSender={extensionMessageSender}
+        webviewToExtensionMessageSender={webviewToExtensionMessageSender}
       >
         {activeChat ? (
           <ChatView

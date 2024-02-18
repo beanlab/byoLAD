@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { ExtensionMessageSender } from "./ExtensionMessageSender";
+import { WebviewToExtensionMessageSender } from "./WebviewToExtensionMessageSender";
 import { Chat } from "../../../shared/types";
 
 type ExtensionMessageContextType = {
@@ -26,21 +26,21 @@ const ExtensionMessageContext = createContext<ExtensionMessageContextType>({
 });
 
 export const ExtensionMessageContextProvider = ({
-  extensionMessageSender,
+  webviewToExtensionMessageSender,
   children,
 }: {
-  extensionMessageSender: ExtensionMessageSender;
+  webviewToExtensionMessageSender: WebviewToExtensionMessageSender;
   children: React.ReactNode;
 }) => {
   const context: ExtensionMessageContextType = {
-    createNewChat: extensionMessageSender.newChat,
-    updateChat: extensionMessageSender.updateChat,
-    deleteChat: extensionMessageSender.deleteChat,
-    addCodeToChat: extensionMessageSender.addCodeToChat,
-    sendChatMessage: extensionMessageSender.sendChatMessage,
-    copyToClipboard: extensionMessageSender.copyToClipboard,
-    insertCodeBlock: extensionMessageSender.insertCodeBlock,
-    diffCodeBlock: extensionMessageSender.diffCodeBlock,
+    createNewChat: webviewToExtensionMessageSender.newChat,
+    updateChat: webviewToExtensionMessageSender.updateChat,
+    deleteChat: webviewToExtensionMessageSender.deleteChat,
+    addCodeToChat: webviewToExtensionMessageSender.addCodeToChat,
+    sendChatMessage: webviewToExtensionMessageSender.sendChatMessage,
+    copyToClipboard: webviewToExtensionMessageSender.copyToClipboard,
+    insertCodeBlock: webviewToExtensionMessageSender.insertCodeBlock,
+    diffCodeBlock: webviewToExtensionMessageSender.diffCodeBlock,
   };
   return (
     <ExtensionMessageContext.Provider value={context}>

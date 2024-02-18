@@ -3,7 +3,7 @@ import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
 
@@ -17,7 +17,7 @@ export const getReviewCodeCommand = (
   chatDataManager: ChatDataManager,
   chatEditor: ChatEditor,
   llmApiService: LLMApiService,
-  chatWebviewMessageSender: ChatWebviewMessageSender,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   chatWebviewProvider: ChatWebviewProvider,
 ): vscode.Disposable =>
   vscode.commands.registerCommand("vscode-byolad.reviewCode", async () => {
@@ -27,7 +27,7 @@ export const getReviewCodeCommand = (
       chatDataManager.getActiveChat(),
       prompt,
       includeCodeFromEditor,
-      chatWebviewMessageSender,
+      extensionToWebviewMessageSender,
       chatEditor,
       chatDataManager,
       llmApiService,

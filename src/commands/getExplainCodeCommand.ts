@@ -3,7 +3,7 @@ import { ChatDataManager } from "../Chat/ChatDataManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
 
@@ -17,7 +17,7 @@ export const getExplainCodeCommand = (
   chatDataManager: ChatDataManager,
   chatEditor: ChatEditor,
   llmApiService: LLMApiService,
-  chatWebviewMessageSender: ChatWebviewMessageSender,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   chatWebviewProvider: ChatWebviewProvider,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.explainCode", async () => {
@@ -27,7 +27,7 @@ export const getExplainCodeCommand = (
       chatDataManager.getActiveChat(),
       prompt,
       includeCodeFromEditor,
-      chatWebviewMessageSender,
+      extensionToWebviewMessageSender,
       chatEditor,
       chatDataManager,
       llmApiService,

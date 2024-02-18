@@ -1,6 +1,6 @@
 import { Chat, ChatMessage, ChatRole, MessageBlock } from "../../shared/types";
 import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
-import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { ChatDataManager } from "./ChatDataManager";
 
 /**
@@ -8,14 +8,14 @@ import { ChatDataManager } from "./ChatDataManager";
  */
 export class ChatEditor {
   private readonly chatDataManager: ChatDataManager;
-  private readonly chatWebviewMessageSender: ChatWebviewMessageSender;
+  private readonly extensionToWebviewMessageSender: ExtensionToWebviewMessageSender;
 
   public constructor(
     chatDataManager: ChatDataManager,
-    chatWebviewMessageSender: ChatWebviewMessageSender,
+    extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   ) {
     this.chatDataManager = chatDataManager;
-    this.chatWebviewMessageSender = chatWebviewMessageSender;
+    this.extensionToWebviewMessageSender = extensionToWebviewMessageSender;
   }
 
   /**
@@ -43,7 +43,7 @@ export class ChatEditor {
     this.chatDataManager.updateChat(chat);
 
     if (updateWebview) {
-      await this.chatWebviewMessageSender.refresh();
+      await this.extensionToWebviewMessageSender.refresh();
     }
   }
 
@@ -76,8 +76,8 @@ export class ChatEditor {
   public async overwriteChatContent(chat: Chat, updateWebview: boolean = true) {
     this.chatDataManager.updateChat(chat);
     if (updateWebview) {
-      await this.chatWebviewMessageSender.refresh();
-      await this.chatWebviewMessageSender.updateIsMessageLoading(false);
+      await this.extensionToWebviewMessageSender.refresh();
+      await this.extensionToWebviewMessageSender.updateIsMessageLoading(false);
     }
   }
 }

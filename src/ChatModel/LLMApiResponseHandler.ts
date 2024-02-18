@@ -1,18 +1,18 @@
 import { ChatRole } from "../../shared/types";
 import { ChatModelResponse } from "./ChatModel";
 import { ChatEditor } from "../Chat/ChatEditor";
-import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 
 export class LLMApiResponseHandler {
   private readonly chatEditor: ChatEditor;
-  private readonly chatWebviewMessageSender: ChatWebviewMessageSender;
+  private readonly extensionToWebviewMessageSender: ExtensionToWebviewMessageSender;
 
   constructor(
     chatEditor: ChatEditor,
-    chatWebviewMessageSender: ChatWebviewMessageSender,
+    extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   ) {
     this.chatEditor = chatEditor;
-    this.chatWebviewMessageSender = chatWebviewMessageSender;
+    this.extensionToWebviewMessageSender = extensionToWebviewMessageSender;
   }
 
   public async handleChatResponse(response: ChatModelResponse): Promise<void> {
@@ -21,14 +21,14 @@ export class LLMApiResponseHandler {
     } else {
       await this.handleErrorResponse(response);
     }
-    await this.chatWebviewMessageSender.updateIsMessageLoading(false);
+    await this.extensionToWebviewMessageSender.updateIsMessageLoading(false);
   }
 
   private async handleSuccessfulResponse(
     response: ChatModelResponse,
   ): Promise<void> {
     if (!response.markdown) {
-      await this.chatWebviewMessageSender.updateErrorMessage(
+      await this.extensionToWebviewMessageSender.updateErrorMessage(
         "AI successfully replied, but its message was inexplicably empty.",
       );
       return;
@@ -47,6 +47,6 @@ export class LLMApiResponseHandler {
     if (response.errorMessage) {
       message = `Error: ${response.errorMessage}`;
     }
-    await this.chatWebviewMessageSender.updateErrorMessage(message);
+    await this.extensionToWebviewMessageSender.updateErrorMessage(message);
   }
 }

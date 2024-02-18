@@ -9,7 +9,7 @@ import {
 /**
  * Sends messages to the extension context.
  */
-export class ExtensionMessageSender {
+export class WebviewToExtensionMessageSender {
   /**
    * Triggers a review of the code.
    */

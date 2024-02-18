@@ -1,15 +1,15 @@
 import * as vscode from "vscode";
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 
 /**
  * Command to clear the workspace chat history and unset the active chat.
  */
 export const getDeleteAllChatsCommand = (
   chatDataManager: ChatDataManager,
-  chatWebviewMessageSender: ChatWebviewMessageSender,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.deleteAllChats", async () => {
     chatDataManager.clearAllChats();
-    await chatWebviewMessageSender.refresh();
+    await extensionToWebviewMessageSender.refresh();
   });

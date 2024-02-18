@@ -4,7 +4,7 @@ import {
   ExtensionToWebviewMessageTypeParamsMap,
 } from "../../../shared/types";
 
-export class ExtensionMessageHandler {
+export class ExtensionToWebviewMessageHandler {
   private setChatList: (chatList: Chat[] | undefined) => void;
   private setActiveChat: (activeChat: Chat | null) => void;
   private setLoadingMessage: (isLoading: boolean) => void;

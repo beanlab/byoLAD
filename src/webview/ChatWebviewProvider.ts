@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
-import { ChatWebviewMessageHandler } from "./ChatWebviewMessageHandler";
+import { WebviewToExtensionMessageHandler } from "./WebviewToExtensionMessageHandler";
 import { ExtensionToWebviewMessage } from "../../shared/types";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
@@ -14,16 +14,16 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   public readonly viewId = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
-  private chatWebviewMessageHandler?: ChatWebviewMessageHandler;
+  private webviewToExtensionMessageHandler?: WebviewToExtensionMessageHandler;
 
   constructor(extensionUri: vscode.Uri) {
     this._extensionUri = extensionUri;
   }
 
   public setChatWebviewMessageHandler(
-    chatWebviewMessageHandler: ChatWebviewMessageHandler,
+    webviewToExtensionMessageHandler: WebviewToExtensionMessageHandler,
   ) {
-    this.chatWebviewMessageHandler = chatWebviewMessageHandler;
+    this.webviewToExtensionMessageHandler = webviewToExtensionMessageHandler;
   }
 
   public resolveWebviewView(
@@ -180,13 +180,13 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
     webviewView.webview.onDidReceiveMessage(async (message) => {
-      if (!this.chatWebviewMessageHandler) {
+      if (!this.webviewToExtensionMessageHandler) {
         vscode.window.showErrorMessage(
           "Extension unable to receive communication from the webview. Please try reloading the window or restarting the extension.",
         );
         return;
       }
-      await this.chatWebviewMessageHandler.handleMessage(message);
+      await this.webviewToExtensionMessageHandler.handleMessage(message);
     });
   }
 }

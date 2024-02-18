@@ -8,7 +8,7 @@ import {
 } from "../../shared/types";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 
-export class ChatWebviewMessageSender {
+export class ExtensionToWebviewMessageSender {
   private readonly chatWebviewProvider: ChatWebviewProvider;
   private readonly chatDataManager: ChatDataManager;
 

@@ -4,7 +4,7 @@ import {
   getFileContentAsCodeBlock,
   getSelectedTextAsCodeBlock,
 } from "./getCodeReference";
-import { ChatWebviewMessageSender } from "../webview/ChatWebviewMessageSender";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { LLMApiService } from "../ChatModel/LLMApiService";
@@ -24,7 +24,7 @@ export async function sendChatMessage(
   chat: Chat | null,
   markdown: string,
   includeCodeFromEditor: boolean,
-  chatWebviewMessageSender: ChatWebviewMessageSender,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   chatEditor: ChatEditor,
   chatDataManager: ChatDataManager,
   llmApiService: LLMApiService,
@@ -60,7 +60,7 @@ export async function sendChatMessage(
   }
 
   // Update the webview, chat itself, and send the message to the LLM API
-  await chatWebviewMessageSender.updateIsMessageLoading(true);
+  await extensionToWebviewMessageSender.updateIsMessageLoading(true);
   await chatEditor.appendMessageBlocks(chat, ChatRole.User, messageBlocks);
   await llmApiService.requestLlmApiChatResponse(chat);
 }

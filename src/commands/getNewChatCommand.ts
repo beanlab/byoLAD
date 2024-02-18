@@ -10,7 +10,7 @@ export const getNewChatCommand = (
   chatWebviewMessageSender: ChatWebviewMessageSender,
 ): vscode.Disposable => {
   return vscode.commands.registerCommand("vscode-byolad.newChat", async () => {
-    chatDataManager.startChat("Code Chat"); // TODO: How to name?
+    chatDataManager.startChat();
     await chatWebviewMessageSender.refresh();
   });
 };

@@ -25,10 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
   const chatDataManager = new ChatDataManager(context, settingsProvider);
-  const chatWebviewProvider = new ChatWebviewProvider(
-    context.extensionUri,
-    chatDataManager,
-  );
+  const chatWebviewProvider = new ChatWebviewProvider(context.extensionUri);
   const chatWebviewMessageSender = new ChatWebviewMessageSender(
     chatWebviewProvider,
     chatDataManager,
@@ -54,6 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
   );
 
+  // Get all commands and event handlers
   const newChatCommand = getNewChatCommand(
     chatDataManager,
     chatWebviewMessageSender,

@@ -10,7 +10,7 @@ export const getAddCodeToChatCommand = (
   vscode.commands.registerCommand("vscode-byolad.addCodeToChat", async () => {
     const chat = chatDataManager.getActiveChat();
     if (!chat) {
-      vscode.window.showErrorMessage("No active chat"); // TODO: error handling?
+      vscode.window.showErrorMessage("No active chat");
       return;
     }
     await addCodeToChat(chat, chatEditor);

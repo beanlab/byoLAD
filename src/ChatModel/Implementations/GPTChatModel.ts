@@ -66,7 +66,7 @@ export class GPTChatModel implements ChatModel {
     }
 
     // Add messages to the beginning of the chat history to provide examples/set the stage
-    const exampleMessages: ChatMessage[] = getExampleMessages(); // TODO: All of these getExampleThings and the whole ChatModel architecture
+    const exampleMessages: ChatMessage[] = getExampleMessages();
     for (const message of exampleMessages) {
       gptMessages.push({
         role: message.role,

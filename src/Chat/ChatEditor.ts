@@ -18,8 +18,6 @@ export class ChatEditor {
     this.chatWebviewMessageSender = chatWebviewMessageSender;
   }
 
-  // TODO: error handling? at what level do we want to handle errors?
-
   /**
    * Appends MessageBlocks to the given chat with the given role.
    * Adds to the last message if it has the same role or creates a new message.

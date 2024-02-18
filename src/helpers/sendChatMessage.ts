@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Chat, ChatRole, MessageBlock, TextBlock } from "../../shared/types";
+import { Chat, ChatRole } from "../../shared/types";
 import {
   getFileContentAsCodeBlock,
   getSelectedTextAsCodeBlock,
@@ -9,6 +9,7 @@ import { ChatEditor } from "../Chat/ChatEditor";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { LLMApiService } from "../ChatModel/LLMApiService";
 import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
+import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
 
 /**
  * Primary function to send a chat message. Starts a new chat if needed,
@@ -32,21 +33,16 @@ export async function sendChatMessage(
   // Open the webview if needed and start a new chat
   if (!chatWebviewProvider.isWebviewVisible()) {
     await chatWebviewProvider.show();
-    chat = chatDataManager.startChat("New Chat"); // TODO: How to name?
+    chat = chatDataManager.startChat();
   }
 
   // Start a new chat if needed
   if (!chat) {
-    chat = chatDataManager.startChat("New Chat"); // TODO: How to name?
+    chat = chatDataManager.startChat();
   }
 
-  // Include the markdown at the top of the message
-  const messageBlocks: MessageBlock[] = [
-    {
-      type: "text",
-      content: markdown,
-    } as TextBlock,
-  ];
+  // Include the markdown at the top of the message, first parsing it into message blocks
+  const messageBlocks = stringToMessageBlocks(markdown);
 
   // Include the selected code (or whole code file) from the editor if desired
   if (includeCodeFromEditor) {

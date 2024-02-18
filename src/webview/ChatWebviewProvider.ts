@@ -3,7 +3,6 @@ import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { ChatWebviewMessageHandler } from "./ChatWebviewMessageHandler";
 import { ExtensionToWebviewMessage } from "../../shared/types";
-import { ChatDataManager } from "../Chat/ChatDataManager";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -15,12 +14,10 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
   public readonly viewId = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
-  private readonly chatDataManager: ChatDataManager;
   private chatWebviewMessageHandler?: ChatWebviewMessageHandler;
 
-  constructor(extensionUri: vscode.Uri, chatDataManager: ChatDataManager) {
+  constructor(extensionUri: vscode.Uri) {
     this._extensionUri = extensionUri;
-    this.chatDataManager = chatDataManager;
   }
 
   public setChatWebviewMessageHandler(
@@ -61,7 +58,6 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     // and executes code based on the message that is recieved
     this._setWebviewMessageListener(this._webviewView);
 
-    // TODO: Figure out what these are for and if they are needed
     console.log(context);
     console.log(token);
   }
@@ -90,8 +86,9 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     message: ExtensionToWebviewMessage,
   ): Promise<boolean> {
     if (!this._webviewView) {
-      // TODO: Handle?
-      await vscode.window.showErrorMessage("No active webview view");
+      await vscode.window.showErrorMessage(
+        "No active webview to communicate with. Please try reloading the window or restarting the extension.",
+      );
       return false;
     }
 
@@ -185,8 +182,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (message) => {
       if (!this.chatWebviewMessageHandler) {
         vscode.window.showErrorMessage(
-          // TODO: Is this the right way to handle this?
-          "ChatWebviewMessageHandler not set in ChatWebviewProvider",
+          "Extension unable to receive communication from the webview. Please try reloading the window or restarting the extension.",
         );
         return;
       }

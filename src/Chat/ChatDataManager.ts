@@ -81,31 +81,14 @@ export class ChatDataManager {
   }
 
   /**
-   *
-   * @returns An array of chat previews, each containing the chat id and name.
-   */
-  getChatPreviews(): {
-    id: number;
-    name: string;
-  }[] {
-    return this.chats.map((chat) => {
-      return {
-        id: chat.id,
-        name: chat.name,
-      };
-    });
-  }
-
-  /**
    * Adds a chat to the chat history and sets it as the active chat.
    * Throws an error if a chat with the same id already exists.
    *
-   * @param name Chat name
    * @param messages Chat messages
    * @returns The created chat
    */
-  startChat(name: string, messages?: ChatMessage[]): Chat {
-    const chat = this.createChat(name, messages);
+  startChat(messages?: ChatMessage[]): Chat {
+    const chat = this.createChat(messages);
     // this.chats = [...this.chats, chat];
     this.chats.push(chat);
     try {
@@ -130,12 +113,11 @@ export class ChatDataManager {
    * @param messages Chat messages
    * @returns A new Chat object
    */
-  private createChat(name: string, messages?: ChatMessage[]): Chat {
+  private createChat(messages?: ChatMessage[]): Chat {
     const newId = this.nextId;
     this.nextId = newId + 1;
     const chat: Chat = {
       id: newId,
-      name,
       messages: messages ?? [],
       contextInstruction:
         this.settingsProvider.getBasePromptInstruction() +

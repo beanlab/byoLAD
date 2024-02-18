@@ -1,40 +1,39 @@
 import { Chat } from "../../../../shared/types";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
+import { useExtensionMessageContext } from "../../utilities/ExtensionChatContext";
 
 interface ChatInChatListProps {
   chat: Chat;
   handleClick: (chat: Chat) => void;
-  handleDeleteClick: (chat: Chat) => void;
-  handleTitleChange: (chat: Chat, newTitle: string) => void;
   id: number;
 }
 
 export const ChatInChatList = ({
   chat,
   handleClick,
-  handleDeleteClick,
-  handleTitleChange,
   id,
 }: ChatInChatListProps) => {
+  const { deleteChat, updateChat } = useExtensionMessageContext();
   const [editing, setEditing] = useState<boolean>(false);
-  const [value, setValue] = useState(chat.title);
+  const [title, setTitle] = useState<string>(chat.title);
 
   const handleEditClick = () => {
     setEditing(!editing);
     if (editing === true) {
-      handleTitleChange(chat, value);
+      chat.title = title;
+      updateChat(chat);
     }
   };
 
   const handleInputChange = (event: React.FormEvent<HTMLElement>) => {
-    setValue((event.target as HTMLInputElement).value);
+    setTitle((event.target as HTMLInputElement).value);
   };
 
   return (
     <div className="convo" key={id}>
       {editing ? (
-        <input value={value} onChange={handleInputChange} />
+        <input value={title} onChange={handleInputChange} />
       ) : (
         <div onClick={() => handleClick(chat)} className="convo-id">
           {chat.title}
@@ -64,7 +63,7 @@ export const ChatInChatList = ({
           appearance="icon"
           aria-label="Delete chat"
           title="Delete chat"
-          onClick={() => handleDeleteClick(chat)}
+          onClick={() => deleteChat(chat.id)}
         >
           <i className="codicon codicon-trash"></i>
         </VSCodeButton>

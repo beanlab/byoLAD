@@ -13,7 +13,7 @@ export const getAddCodeToNewChatCommand = (
     "vscode-byolad.addCodeToNewChat",
     async () => {
       await chatWebviewProvider.show();
-      const chat = chatDataManager.startChat("Code Chat"); // TODO: How to name?
+      const chat = chatDataManager.startChat();
       await addCodeToChat(chat, chatEditor);
     },
   );

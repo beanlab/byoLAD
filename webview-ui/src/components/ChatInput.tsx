@@ -66,7 +66,6 @@ export const ChatInput = ({
       return;
     }
     loadingMessageState.setLoadingMessage(true);
-    // const userInput = convertNewlines(userPrompt); // TODO: Do we need this?
     sendChatMessage(userInput, activeChat);
     setUserInput("");
   };

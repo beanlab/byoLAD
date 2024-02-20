@@ -1,4 +1,4 @@
-import { ChatRole } from "../../shared/types";
+import { Chat, ChatRole } from "../../shared/types";
 import { ChatModelResponse } from "./ChatModel";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
@@ -15,9 +15,12 @@ export class LLMApiResponseHandler {
     this.extensionToWebviewMessageSender = extensionToWebviewMessageSender;
   }
 
-  public async handleChatResponse(response: ChatModelResponse): Promise<void> {
+  public async handleChatResponse(
+    chat: Chat,
+    response: ChatModelResponse,
+  ): Promise<void> {
     if (response.success) {
-      await this.handleSuccessfulResponse(response);
+      await this.handleSuccessfulResponse(chat, response);
     } else {
       await this.handleErrorResponse(response);
     }
@@ -25,18 +28,19 @@ export class LLMApiResponseHandler {
   }
 
   private async handleSuccessfulResponse(
+    chat: Chat,
     response: ChatModelResponse,
   ): Promise<void> {
-    if (!response.markdown) {
+    if (!response.content) {
       await this.extensionToWebviewMessageSender.updateErrorMessage(
         "AI successfully replied, but its message was inexplicably empty.",
       );
       return;
     }
     await this.chatEditor.appendMarkdown(
-      response.chat,
+      chat,
       ChatRole.Assistant,
-      response.markdown,
+      response.content,
     );
   }
 

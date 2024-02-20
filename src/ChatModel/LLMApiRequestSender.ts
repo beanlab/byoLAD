@@ -1,5 +1,5 @@
 import { Chat } from "../../shared/types";
-import { ChatModelResponse } from "./ChatModel";
+import { ChatModelRequest, ChatModelResponse } from "./ChatModel";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 
 export class LLMApiRequestSender {
@@ -12,6 +12,6 @@ export class LLMApiRequestSender {
   public async sendChatRequest(chat: Chat): Promise<ChatModelResponse> {
     return await this.settingsProvider.getChatModel().chat({
       chat,
-    });
+    } as ChatModelRequest);
   }
 }

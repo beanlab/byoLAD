@@ -3,7 +3,7 @@ import { Chat, ChatRole } from "../../shared/types";
 import {
   getFileContentAsCodeBlock,
   getSelectedTextAsCodeBlock,
-} from "./getCodeReference";
+} from "./getCodeBlock";
 import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { ChatDataManager } from "../Chat/ChatDataManager";

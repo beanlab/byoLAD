@@ -31,7 +31,7 @@ export class GPTChatModel implements ChatModel {
         if (completion.choices.length > 0) {
           return {
             success: true,
-            markdown: completion.choices[0].message.content as string,
+            content: completion.choices[0].message.content as string,
             finishReason: completion.choices[0]
               .finish_reason as ChatMessageFinishReason,
             chat: request.chat,

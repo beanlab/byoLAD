@@ -20,7 +20,8 @@ export class ChatEditor {
 
   /**
    * Appends MessageBlocks to the given chat with the given role.
-   * Adds to the last message if it has the same role or creates a new message.
+   * Adds to the last message if it has the same role, or creates a new message (some
+   * LLMs require adjacent messages to have different roles, and our UI works similarly).
    * Performs the necessary updates to the chat in the ChatDataManager.
    * If updateWebview is true, the webview will be updated after appending the message blocks.
    * @param chat Chat to update.

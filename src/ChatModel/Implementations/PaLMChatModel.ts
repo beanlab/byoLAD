@@ -66,7 +66,7 @@ export class PaLMChatModel implements ChatModel {
         if (candidates && candidates.length > 0) {
           return {
             success: true,
-            markdown: candidates[0].content,
+            content: candidates[0].content,
             chat: request.chat,
           } as ChatModelResponse;
         } else {

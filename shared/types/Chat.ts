@@ -9,11 +9,10 @@ export interface Chat {
   id: number;
   messages: ChatMessage[];
   /**
-   * Base contextual instruction to inform the LLM of its purpose/goal/role before the
-   * rest of the conversation.
-   * @example "You are a helpful coding assistant. You should help the user fix their code."
+   * Reference to the Persona of the LLM in this chat. This is used to determine the LLM's
+   * behavior and responses in the chat.
    */
-  contextInstruction?: string;
+  personaId: number;
   /**
    * User-facing title/name
    */

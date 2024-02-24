@@ -56,7 +56,10 @@ export class PaLMChatModel implements ChatModel {
     return await this.client
       .generateMessage({
         model: this.model,
-        prompt: this.convertToPaLMPrompt(request.chat),
+        prompt: this.convertToPaLMPrompt(
+          request.chat,
+          request.persona.instructions,
+        ),
       })
       .then((response) => {
         const candidates: PalMMessage[] | null = response[0]
@@ -95,19 +98,12 @@ export class PaLMChatModel implements ChatModel {
       });
   }
 
-  convertToPaLMPrompt(chat: Chat): PaLMPrompt {
-    if (chat.contextInstruction) {
-      return {
-        context: chat.contextInstruction,
-        examples: this.getFormattedExamples(),
-        messages: this.convertToPaLMMessages(chat.messages),
-      };
-    } else {
-      return {
-        examples: this.getFormattedExamples(),
-        messages: this.convertToPaLMMessages(chat.messages),
-      };
-    }
+  convertToPaLMPrompt(chat: Chat, baseInstructions: string): PaLMPrompt {
+    return {
+      context: baseInstructions,
+      examples: this.getFormattedExamples(),
+      messages: this.convertToPaLMMessages(chat.messages),
+    };
   }
 
   /**

@@ -3,6 +3,7 @@ import * as constants from "../commands/constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { setHasActiveChatWhenClauseState } from "../helpers";
 import { Chat, ChatMessage } from "../../shared/types";
+import { PersonaDataManager } from "../Persona/PersonaDataManager";
 
 /**
  * Manages the chat history and the active chat in the VS Code workspace state.
@@ -10,10 +11,16 @@ import { Chat, ChatMessage } from "../../shared/types";
 export class ChatDataManager {
   private readonly context: ExtensionContext;
   private readonly settingsProvider: SettingsProvider;
+  private readonly personaDataManager: PersonaDataManager;
 
-  constructor(context: ExtensionContext, settingsProvider: SettingsProvider) {
+  constructor(
+    context: ExtensionContext,
+    settingsProvider: SettingsProvider,
+    personaDataManager: PersonaDataManager,
+  ) {
     this.context = context;
     this.settingsProvider = settingsProvider;
+    this.personaDataManager = personaDataManager;
   }
 
   get chats(): Chat[] {
@@ -36,7 +43,7 @@ export class ChatDataManager {
 
   set chatIds(value: number[]) {
     if (new Set(value).size !== value.length) {
-      throw new Error("Duplicate ids");
+      throw new Error("Duplicate Chat IDs");
     }
     this.context.workspaceState.update(constants.CHAT_IDS_KEY, value);
   }
@@ -119,9 +126,7 @@ export class ChatDataManager {
     const chat: Chat = {
       id: newId,
       messages: messages ?? [],
-      contextInstruction:
-        this.settingsProvider.getBasePromptInstruction() +
-        constants.LLM_MESSAGE_FORMATTING_INSTRUCTION,
+      personaId: this.personaDataManager.defaultPersonaId,
       title: "Empty Chat",
     };
     return chat;

@@ -24,7 +24,10 @@ export class GPTChatModel implements ChatModel {
   async chat(request: ChatModelRequest): Promise<ChatModelResponse> {
     return await this.openai.chat.completions
       .create({
-        messages: this.convertToGPTMessages(request.chat),
+        messages: this.convertToGPTMessages(
+          request.chat,
+          request.persona.instructions,
+        ),
         model: this.model,
       })
       .then((completion) => {
@@ -53,17 +56,18 @@ export class GPTChatModel implements ChatModel {
       });
   }
 
-  private convertToGPTMessages(chat: Chat): GPTMessage[] {
+  private convertToGPTMessages(
+    chat: Chat,
+    baseInstructions: string,
+  ): GPTMessage[] {
     const gptMessages: GPTMessage[] = [];
 
     // The first message should provide contextual information
     // and generally applicable instructions for the model to use
-    if (chat.contextInstruction) {
-      gptMessages.push({
-        role: ChatRole.System,
-        content: chat.contextInstruction,
-      });
-    }
+    gptMessages.push({
+      role: ChatRole.System,
+      content: baseInstructions,
+    });
 
     // Add messages to the beginning of the chat history to provide examples/set the stage
     const exampleMessages: ChatMessage[] = getExampleMessages();

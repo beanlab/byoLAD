@@ -81,4 +81,16 @@ export class ChatEditor {
       await this.extensionToWebviewMessageSender.updateIsMessageLoading(false);
     }
   }
+
+  /**
+   * Changes the persona of the given chat to the persona with the given ID.
+   * Saves the updated chat to the ChatDataManager and updates the webview.
+   * @param chat Chat whose persona will be changed.
+   * @param personaId ID of the persona to change to.
+   */
+  public async changePersona(chat: Chat, personaId: number) {
+    chat.personaId = personaId;
+    this.chatDataManager.updateChat(chat);
+    await this.extensionToWebviewMessageSender.refresh();
+  }
 }

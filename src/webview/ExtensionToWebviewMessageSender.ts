@@ -26,6 +26,7 @@ export class ExtensionToWebviewMessageSender {
    * Requests the webview to be shown.
    */
   public async refresh() {
+    // TODO: also needs to include information on the Personas
     await this.chatWebviewProvider.show();
     const chats: Chat[] = this.chatDataManager.chats;
     let activeChatId: number | null = this.chatDataManager.activeChatId;

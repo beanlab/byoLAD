@@ -1,4 +1,4 @@
-import { Chat, ChatMessageFinishReason } from "../../shared/types";
+import { Chat, ChatMessageFinishReason, Persona } from "../../shared/types";
 
 export interface ChatModel {
   chat: (request: ChatModelRequest) => Promise<ChatModelResponse>;
@@ -9,6 +9,7 @@ export interface ChatModel {
  */
 export interface ChatModelRequest {
   chat: Chat;
+  persona: Persona;
 }
 
 /**

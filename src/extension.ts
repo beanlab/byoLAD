@@ -19,12 +19,18 @@ import { LLMApiRequestSender } from "./ChatModel/LLMApiRequestSender";
 import { LLMApiResponseHandler } from "./ChatModel/LLMApiResponseHandler";
 import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMessageHandler";
 import { ExtensionToWebviewMessageSender } from "./webview/ExtensionToWebviewMessageSender";
+import { PersonaDataManager } from "./Persona/PersonaDataManager";
 
 // This method is automatically called by VS Code called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
-  const chatDataManager = new ChatDataManager(context, settingsProvider);
+  const personaDataManager = new PersonaDataManager(context);
+  const chatDataManager = new ChatDataManager(
+    context,
+    settingsProvider,
+    personaDataManager,
+  );
   const chatWebviewProvider = new ChatWebviewProvider(context.extensionUri);
   const extensionToWebviewMessageSender = new ExtensionToWebviewMessageSender(
     chatWebviewProvider,
@@ -35,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
     extensionToWebviewMessageSender,
   );
   const llmApiService = new LLMApiService(
-    new LLMApiRequestSender(settingsProvider),
+    new LLMApiRequestSender(settingsProvider, personaDataManager, chatEditor),
     new LLMApiResponseHandler(chatEditor, extensionToWebviewMessageSender),
   );
   const webviewToExtensionMessageHandler = new WebviewToExtensionMessageHandler(

@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Chat, ExtensionToWebviewMessage } from "../../shared/types";
+import { Chat, ExtensionToWebviewMessage, Persona } from "../../shared/types";
 import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
 import { ChatView } from "./components/ChatView";
 import { WebviewToExtensionMessageSender } from "./utilities/WebviewToExtensionMessageSender";
@@ -13,6 +13,9 @@ import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageCon
 
 function App() {
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
+  const [personaList, setPersonaList] = useState<Persona[] | undefined>(
+    undefined,
+  );
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -26,6 +29,7 @@ function App() {
   const webviewToExtensionMessageSender = new WebviewToExtensionMessageSender();
   const extenionToWebviewMessageHandler = new ExtensionToWebviewMessageHandler(
     setChatList,
+    setPersonaList,
     setActiveChat,
     setLoadingMessage,
     setErrorMessage,
@@ -74,6 +78,18 @@ function App() {
     setErrorMessage(null);
   };
 
+  const getChatPersona = (chat: Chat): Persona => {
+    const persona = personaList?.find(
+      (persona) => persona.id === chat.personaId,
+    );
+    if (!persona) {
+      throw new Error(
+        `Could not find persona with id ${chat.personaId} for chat with id ${chat.id}`,
+      );
+    }
+    return persona;
+  };
+
   return (
     <VsCodeThemeContext.Provider value={vsCodeTheme}>
       <ExtensionMessageContextProvider
@@ -83,6 +99,7 @@ function App() {
           <ChatView
             imagePaths={imagePaths}
             activeChat={activeChat}
+            persona={getChatPersona(activeChat)}
             errorMessage={errorMessage}
             hasSelection={hasSelection}
             loadingMessageState={{ loadingMessage, setLoadingMessage }}

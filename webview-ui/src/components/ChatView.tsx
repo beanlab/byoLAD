@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { ChatRole, Chat } from "../../../shared/types";
+import { ChatRole, Chat, Persona } from "../../../shared/types";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";
@@ -11,6 +11,7 @@ import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext
 interface ChatViewProps {
   imagePaths: ImagePaths;
   activeChat: Chat;
+  persona: Persona;
   errorMessage: string | null;
   hasSelection: boolean;
   loadingMessageState: {
@@ -27,6 +28,7 @@ interface ChatViewProps {
 export const ChatView = ({
   imagePaths,
   activeChat,
+  persona,
   errorMessage,
   hasSelection,
   loadingMessageState,
@@ -133,7 +135,7 @@ export const ChatView = ({
   return (
     <div className="view-container">
       <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
-
+      <div>Persona: {persona.name}</div>
       <div className="message-list">
         <div>{welcomeMessage}</div>
         <div>{messages}</div>

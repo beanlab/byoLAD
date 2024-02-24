@@ -5,19 +5,24 @@ import {
   ExtensionToWebviewMessageTypeParamsMap,
   ExtensionToWebviewMessage,
   Chat,
+  Persona,
 } from "../../shared/types";
 import { ChatDataManager } from "../Chat/ChatDataManager";
+import { PersonaDataManager } from "../Persona/PersonaDataManager";
 
 export class ExtensionToWebviewMessageSender {
   private readonly chatWebviewProvider: ChatWebviewProvider;
   private readonly chatDataManager: ChatDataManager;
+  private readonly personaDataManager: PersonaDataManager;
 
   public constructor(
     chatWebviewProvider: ChatWebviewProvider,
     chatDataManager: ChatDataManager,
+    personaDataManager: PersonaDataManager,
   ) {
     this.chatWebviewProvider = chatWebviewProvider;
     this.chatDataManager = chatDataManager;
+    this.personaDataManager = personaDataManager;
   }
 
   /**
@@ -26,7 +31,6 @@ export class ExtensionToWebviewMessageSender {
    * Requests the webview to be shown.
    */
   public async refresh() {
-    // TODO: also needs to include information on the Personas
     await this.chatWebviewProvider.show();
     const chats: Chat[] = this.chatDataManager.chats;
     let activeChatId: number | null = this.chatDataManager.activeChatId;
@@ -36,6 +40,7 @@ export class ExtensionToWebviewMessageSender {
       activeChatId = null;
       return;
     }
+    const personas: Persona[] = this.personaDataManager.personas;
 
     const messageType: ExtensionToWebviewMessageType = "refresh";
     await this.postMessage({
@@ -43,6 +48,7 @@ export class ExtensionToWebviewMessageSender {
       params: {
         chats: chats,
         activeChatId: activeChatId,
+        personas: personas,
       } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
     } as ExtensionToWebviewMessage);
   }

@@ -35,6 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
   const extensionToWebviewMessageSender = new ExtensionToWebviewMessageSender(
     chatWebviewProvider,
     chatDataManager,
+    personaDataManager,
   );
   const chatEditor = new ChatEditor(
     chatDataManager,

@@ -1,4 +1,4 @@
-import { Chat } from ".";
+import { Chat, Persona } from ".";
 
 // To add a new ExtensionToWebviewMessageType, add it to the ExtensionToWebviewMessageTypeParamsMap and export the params interface below.
 // These messages are sent from the ExtensionToWebviewMessageSender (extension) and handled by the ExtensionToWebviewMessageHandler (webview).
@@ -38,6 +38,10 @@ export interface RefreshMessageParams {
    * ID of the active chat, or null if no chat is active.
    */
   activeChatId: number | null;
+  /**
+   * All Personas.
+   */
+  personas: Persona[];
 }
 
 export interface ErrorMessageParams {

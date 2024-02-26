@@ -17,6 +17,9 @@ function App() {
     undefined,
   );
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const [defaultPersonaId, setDefaultPersonaId] = useState<number | undefined>(
+    undefined,
+  );
   const [loadingMessage, setLoadingMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [hasSelection, setHasSelection] = useState<boolean>(false);
@@ -31,6 +34,7 @@ function App() {
     setChatList,
     setPersonaList,
     setActiveChat,
+    setDefaultPersonaId,
     setLoadingMessage,
     setErrorMessage,
     setHasSelection,
@@ -78,16 +82,14 @@ function App() {
     setErrorMessage(null);
   };
 
-  const getChatPersona = (chat: Chat): Persona => {
-    const persona = personaList?.find(
-      (persona) => persona.id === chat.personaId,
-    );
-    if (!persona) {
-      throw new Error(
-        `Could not find persona with id ${chat.personaId} for chat with id ${chat.id}`,
-      );
-    }
-    return persona;
+  const changeDefaultPersonaId = (id: number) => {
+    webviewToExtensionMessageSender.setDefaultPersonaId(id);
+    setDefaultPersonaId(id);
+  };
+
+  const changeChatPersonaId = (chat: Chat, id: number) => {
+    chat.personaId = id;
+    webviewToExtensionMessageSender.updateChat(chat);
   };
 
   return (
@@ -95,22 +97,26 @@ function App() {
       <ExtensionMessageContextProvider
         webviewToExtensionMessageSender={webviewToExtensionMessageSender}
       >
-        {activeChat ? (
+        {activeChat && personaList && defaultPersonaId ? (
           <ChatView
             imagePaths={imagePaths}
             activeChat={activeChat}
-            persona={getChatPersona(activeChat)}
+            personaList={personaList}
             errorMessage={errorMessage}
             hasSelection={hasSelection}
             loadingMessageState={{ loadingMessage, setLoadingMessage }}
             changeActiveChat={changeActiveChat}
+            changeChatPersonaId={changeChatPersonaId}
           />
-        ) : chatList ? (
+        ) : chatList && personaList && defaultPersonaId ? (
           // When there is no active chat, show the list of chats
-          // But, only if the chatList has been fetched, otherwise show a loading message
+          // But, only if the chatList/personaList has been fetched, otherwise show a loading message
           <ChatListView
             chatList={chatList}
             changeActiveChat={changeActiveChat}
+            personasList={personaList}
+            defaultPersonaId={defaultPersonaId}
+            changeDefaultPersonaId={changeDefaultPersonaId}
           />
         ) : (
           <div className="loading-indicator">

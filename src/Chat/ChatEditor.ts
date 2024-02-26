@@ -70,27 +70,14 @@ export class ChatEditor {
 
   /**
    * Saves the entire given chat to the ChatDataManager, overwriting the chat with the same ID.
-   * If updateWebview is true, the webview will be updated after appending the message blocks.
+   * If updateWebview is true, the webview will be updated after saving the chat data.
    * @param updatedChat Chat whose content will be set to the chat with the given ID.
    * @param updateWebview Whether to update the webview after setting the chat content.
    */
-  public async overwriteChatContent(chat: Chat, updateWebview: boolean = true) {
+  public async overwriteChatData(chat: Chat, updateWebview: boolean = true) {
     this.chatDataManager.updateChat(chat);
     if (updateWebview) {
       await this.extensionToWebviewMessageSender.refresh();
-      await this.extensionToWebviewMessageSender.updateIsMessageLoading(false);
     }
-  }
-
-  /**
-   * Changes the persona of the given chat to the persona with the given ID.
-   * Saves the updated chat to the ChatDataManager and updates the webview.
-   * @param chat Chat whose persona will be changed.
-   * @param personaId ID of the persona to change to.
-   */
-  public async changePersona(chat: Chat, personaId: number) {
-    chat.personaId = personaId;
-    this.chatDataManager.updateChat(chat);
-    await this.extensionToWebviewMessageSender.refresh();
   }
 }

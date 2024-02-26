@@ -142,11 +142,11 @@ export class ChatDataManager {
     if (!this.chats.some((convo) => convo.id === updatedChat.id)) {
       throw new Error("No chat with id exists");
     }
-    this.chats = this.chats.map((convo) => {
-      if (convo.id === updatedChat.id) {
+    this.chats = this.chats.map((chat) => {
+      if (chat.id === updatedChat.id) {
         return updatedChat;
       }
-      return convo;
+      return chat;
     });
   }
 

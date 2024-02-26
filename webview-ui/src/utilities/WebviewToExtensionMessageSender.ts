@@ -178,4 +178,18 @@ export class WebviewToExtensionMessageSender {
       messageType: messageType,
     } as WebviewToExtensionMessage);
   }
+
+  /**
+   * Requests that the default persona ID be set.
+   * @param personaId The ID of the persona to set as default.
+   */
+  public setDefaultPersonaId(personaId: number) {
+    const messageType: WebviewToExtensionMessageType = "setDefaultPersonaId";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        personaId: personaId,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
 }

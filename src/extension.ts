@@ -48,6 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
   const webviewToExtensionMessageHandler = new WebviewToExtensionMessageHandler(
     settingsProvider,
     chatDataManager,
+    personaDataManager,
     chatEditor,
     llmApiService,
     extensionToWebviewMessageSender,

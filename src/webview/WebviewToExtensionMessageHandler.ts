@@ -13,10 +13,12 @@ import { LLMApiService } from "../ChatModel/LLMApiService";
 import { ExtensionToWebviewMessageSender } from "./ExtensionToWebviewMessageSender";
 import { sendChatMessage } from "../helpers/sendChatMessage";
 import { ChatWebviewProvider } from "./ChatWebviewProvider";
+import { PersonaDataManager } from "../Persona/PersonaDataManager";
 
 export class WebviewToExtensionMessageHandler {
   private readonly settingsProvider: SettingsProvider;
   private readonly chatDataManager: ChatDataManager;
+  private readonly personaDataManager: PersonaDataManager;
   private readonly chatEditor: ChatEditor;
   private readonly llmApiService: LLMApiService;
   private readonly extensionToWebviewMessageSender: ExtensionToWebviewMessageSender;
@@ -25,13 +27,15 @@ export class WebviewToExtensionMessageHandler {
   constructor(
     settingsProvider: SettingsProvider,
     chatDataManager: ChatDataManager,
+    personaDataManager: PersonaDataManager,
     chatEditor: ChatEditor,
     llmApiService: LLMApiService,
     extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
     chatWebviewProvider: ChatWebviewProvider,
   ) {
-    this.chatDataManager = chatDataManager;
     this.settingsProvider = settingsProvider;
+    this.chatDataManager = chatDataManager;
+    this.personaDataManager = personaDataManager;
     this.chatEditor = chatEditor;
     this.llmApiService = llmApiService;
     this.extensionToWebviewMessageSender = extensionToWebviewMessageSender;
@@ -46,6 +50,7 @@ export class WebviewToExtensionMessageHandler {
   public async handleMessage(message: WebviewToExtensionMessage) {
     switch (message.messageType) {
       case "newChat":
+        console.log("Handling newChat message");
         await vscode.commands.executeCommand("vscode-byolad.newChat");
         break;
       case "getChats":
@@ -108,10 +113,11 @@ export class WebviewToExtensionMessageHandler {
         break;
       }
       case "updateChat": {
+        console.log("Handling updateChat message with params ", message.params);
         const params =
           message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         const updateWebiew = true;
-        await this.chatEditor.overwriteChatContent(params.chat, updateWebiew);
+        await this.chatEditor.overwriteChatData(params.chat, updateWebiew);
         break;
       }
       case "addCodeToChat": {
@@ -123,6 +129,13 @@ export class WebviewToExtensionMessageHandler {
         await this.extensionToWebviewMessageSender.updateHasSelection(
           hasSelection,
         );
+        break;
+      }
+      case "setDefaultPersonaId": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        this.personaDataManager.defaultPersonaId = params.personaId;
+        await this.extensionToWebviewMessageSender.refresh();
         break;
       }
       default: {

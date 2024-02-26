@@ -140,26 +140,7 @@ export class PersonaDataManager {
   }
 }
 
-// Helpers
-
 function hasDuplicateIds(personas: Persona[]): boolean {
   const ids = personas.map((persona) => persona.id);
   return new Set(ids).size !== ids.length;
 }
-
-// function getPersonasWithoutStandardPersonaIds(personas: Persona[]): Persona[] {
-//   return personas.filter(
-//     (persona) => !STANDARD_PERSONAS.some((sp) => sp.id === persona.id),
-//   );
-// }
-
-// function getPersonasWithoutDuplicateIds(personas: Persona[]): Persona[] {
-//   const ids = new Set<number>();
-//   return personas.filter((persona) => {
-//     if (ids.has(persona.id)) {
-//       return false;
-//     }
-//     ids.add(persona.id);
-//     return true;
-//   });
-// }

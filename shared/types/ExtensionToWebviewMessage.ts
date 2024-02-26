@@ -42,6 +42,10 @@ export interface RefreshMessageParams {
    * All Personas.
    */
   personas: Persona[];
+  /**
+   * ID of the default persona.
+   */
+  defaultPersonaId: number;
 }
 
 export interface ErrorMessageParams {

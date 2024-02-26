@@ -41,6 +41,7 @@ export class ExtensionToWebviewMessageSender {
       return;
     }
     const personas: Persona[] = this.personaDataManager.personas;
+    const defaultPersonaId: number = this.personaDataManager.defaultPersonaId;
 
     const messageType: ExtensionToWebviewMessageType = "refresh";
     await this.postMessage({
@@ -49,6 +50,7 @@ export class ExtensionToWebviewMessageSender {
         chats: chats,
         activeChatId: activeChatId,
         personas: personas,
+        defaultPersonaId: defaultPersonaId,
       } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
     } as ExtensionToWebviewMessage);
   }

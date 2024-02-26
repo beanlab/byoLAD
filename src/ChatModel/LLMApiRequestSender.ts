@@ -25,9 +25,9 @@ export class LLMApiRequestSender {
     if (!persona) {
       // Get default persona
       persona = this.personaDataManager.getDefaultPersona();
-
+      chat.personaId = persona.id;
       // Save default persona as the chat's persona
-      await this.chatEditor.changePersona(chat, persona.id);
+      await this.chatEditor.overwriteChatData(chat);
       vscode.window.showWarningMessage(
         "Persona for chat not found. Using default persona.",
       );

@@ -7,11 +7,12 @@ import NavBar from "./NavBar";
 import scrollIntoView from "scroll-into-view-if-needed";
 import { ChatInput } from "./ChatInput";
 import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
+import { PersonaDropdown } from "./PersonaDropdown";
 
 interface ChatViewProps {
   imagePaths: ImagePaths;
   activeChat: Chat;
-  persona: Persona;
+  personaList: Persona[];
   errorMessage: string | null;
   hasSelection: boolean;
   loadingMessageState: {
@@ -19,6 +20,7 @@ interface ChatViewProps {
     setLoadingMessage: React.Dispatch<React.SetStateAction<boolean>>;
   };
   changeActiveChat: (chat: Chat | null) => void;
+  changeChatPersonaId: (chat: Chat, personaId: number) => void;
 }
 
 /**
@@ -28,11 +30,12 @@ interface ChatViewProps {
 export const ChatView = ({
   imagePaths,
   activeChat,
-  persona,
+  personaList,
   errorMessage,
   hasSelection,
   loadingMessageState,
   changeActiveChat,
+  changeChatPersonaId,
 }: ChatViewProps) => {
   const { updateChat } = useExtensionMessageContext();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
@@ -135,7 +138,15 @@ export const ChatView = ({
   return (
     <div className="view-container">
       <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
-      <div>Persona: {persona.name}</div>
+      <div className="page-header">
+        <h2>{activeChat.title}</h2>
+        <PersonaDropdown
+          label="Persona"
+          personas={personaList}
+          selectedPersonaId={activeChat.personaId}
+          changeSelectedPersonaId={(id) => changeChatPersonaId(activeChat, id)}
+        />
+      </div>
       <div className="message-list">
         <div>{welcomeMessage}</div>
         <div>{messages}</div>

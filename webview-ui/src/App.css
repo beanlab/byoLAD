@@ -139,7 +139,11 @@
 .convo-id {
   padding-right: 20px;
   cursor: pointer;
-  padding-top: 10px;
+}
+
+.convo-action-buttons {
+  display: flex;
+  align-items: center;
 }
 
 .delete-all {

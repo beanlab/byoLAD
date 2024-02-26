@@ -1,7 +1,11 @@
 import { Chat } from "../../../../shared/types";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import {
+  VSCodeButton,
+  VSCodeTextField,
+} from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
+import React from "react";
 
 interface ChatInChatListProps {
   chat: Chat;
@@ -26,20 +30,24 @@ export const ChatInChatList = ({
     }
   };
 
-  const handleInputChange = (event: React.FormEvent<HTMLElement>) => {
+  const handleInputChange = (event: InputEvent) => {
     setTitle((event.target as HTMLInputElement).value);
   };
 
   return (
     <div className="convo" key={id}>
       {editing ? (
-        <input value={title} onChange={handleInputChange} />
+        <VSCodeTextField
+          value={title}
+          onInput={(e) => handleInputChange(e as InputEvent)}
+          autofocus
+        />
       ) : (
         <div onClick={() => handleClick(chat)} className="convo-id">
           {chat.title}
         </div>
       )}
-      <div>
+      <div className="convo-action-buttons">
         {editing ? (
           <VSCodeButton
             appearance="icon"

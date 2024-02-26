@@ -192,4 +192,14 @@ export class WebviewToExtensionMessageSender {
       } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
     } as WebviewToExtensionMessage);
   }
+
+  /**
+   * Requests that the personas be edited.
+   */
+  public editPersonas() {
+    const messageType: WebviewToExtensionMessageType = "editPersonas";
+    vscode.postMessage({
+      messageType: messageType,
+    } as WebviewToExtensionMessage);
+  }
 }

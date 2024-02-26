@@ -11,6 +11,7 @@ type ExtensionMessageContextType = {
   copyToClipboard: (text: string) => void;
   insertCodeBlock: (code: string) => void;
   diffCodeBlock: (code: string) => void;
+  editPersonas: () => void;
 };
 
 // Default context value should never be used, but is required to be defined
@@ -23,6 +24,7 @@ const ExtensionMessageContext = createContext<ExtensionMessageContextType>({
   copyToClipboard: () => {},
   insertCodeBlock: () => {},
   diffCodeBlock: () => {},
+  editPersonas: () => {},
 });
 
 export const ExtensionMessageContextProvider = ({
@@ -41,6 +43,7 @@ export const ExtensionMessageContextProvider = ({
     copyToClipboard: webviewToExtensionMessageSender.copyToClipboard,
     insertCodeBlock: webviewToExtensionMessageSender.insertCodeBlock,
     diffCodeBlock: webviewToExtensionMessageSender.diffCodeBlock,
+    editPersonas: webviewToExtensionMessageSender.editPersonas,
   };
   return (
     <ExtensionMessageContext.Provider value={context}>

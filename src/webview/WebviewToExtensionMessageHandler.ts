@@ -136,6 +136,10 @@ export class WebviewToExtensionMessageHandler {
         await this.extensionToWebviewMessageSender.refresh();
         break;
       }
+      case "editPersonas": {
+        await vscode.commands.executeCommand("vscode-byolad.managePersonas");
+        break;
+      }
       default: {
         // Ensure exhaustive switch. Make sure all message types are handled in the switch statement.
         const _exhaustiveCheck: never = message.messageType;

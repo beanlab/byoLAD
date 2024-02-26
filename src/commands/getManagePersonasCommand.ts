@@ -13,9 +13,11 @@ export const getManagePersonasCommand = (
   vscode.commands.registerCommand("vscode-byolad.managePersonas", async () => {
     // Step 1: User selects persona (or inputs a name for a new persona)
     const personaPickResult: string | vscode.QuickPickItem | undefined =
-      await pickPersona(personaDataManager.customPersonas, (name) => {
-        personaDataManager.validateNewPersonaName(name);
-      });
+      await pickPersona(
+        personaDataManager.customPersonas,
+        () => personaDataManager.clearAllCustomPersonas(),
+        (name) => personaDataManager.validateNewPersonaName(name),
+      );
 
     if (personaPickResult) {
       // Step 2: User edits the instructions for the persona (or inputs new instructions for a new persona)
@@ -28,6 +30,7 @@ export const getManagePersonasCommand = (
         initialInstructionsValue = existingPersona.instructions;
       }
       const newInstructions = await getInstructionsInput(
+        personaName,
         initialInstructionsValue,
       );
 
@@ -55,17 +58,23 @@ export const getManagePersonasCommand = (
 /**
  * Prompts the user to select a Persona from the list of existing Personas or to create a new one.
  * @param personas The list of existing Personas to pick from.
- * @param validateNewPersonaName Function to validate the persona name. Throws an error if the name is invalid.
- * @returns The name of the selected Persona or undefined if the user cancels the selection.
+ * @param validateNewPersonaName Function to validate the new persona name. Throws an error if the name is invalid.
+ * @returns The name of the selected Persona or undefined if the user cancels the selection or deletes all custom Personas.
  */
 const pickPersona = async (
   personas: Persona[],
+  clearAllCustomPersonas: () => void,
   validateNewPersonaName: (name: string) => void,
 ): Promise<string | vscode.QuickPickItem | undefined> => {
   const newItemLabel = "Create new Persona";
+  const clearAllLabel = "Delete all custom Personas";
   const items: vscode.QuickPickItem[] = [
+    { kind: vscode.QuickPickItemKind.Separator, label: "New" },
+    { label: newItemLabel, alwaysShow: true },
+    { kind: vscode.QuickPickItemKind.Separator, label: "Existing" },
     ...personas.map((persona) => ({ label: persona.name })),
-    { label: newItemLabel },
+    { kind: vscode.QuickPickItemKind.Separator, label: "Delete" },
+    { label: clearAllLabel },
   ];
 
   const pick = await vscode.window.showQuickPick(items, {
@@ -93,6 +102,16 @@ const pickPersona = async (
         // User is editing an existing Persona
         return newPersonaName;
       }
+    } else if (pick.label === clearAllLabel) {
+      // User is deleting all custom Personas
+      const confirmed = await askForConfirmation(
+        "Are you sure you want to delete all custom Personas? This action cannot be undone.",
+      );
+      if (confirmed) {
+        clearAllCustomPersonas();
+        vscode.window.showInformationMessage("Deleted all custom Personas");
+        return undefined;
+      }
     } else {
       return pick;
     }
@@ -105,12 +124,27 @@ const pickPersona = async (
  * @returns The new instructions or null if the user cancels the input.
  */
 async function getInstructionsInput(
+  personaName: string,
   initialInstructionsValue: string | undefined,
 ): Promise<string | null> {
   return (
     (await vscode.window.showInputBox({
-      prompt: "Enter the base instructions for the Persona",
+      title: `${personaName}: Instructions`,
+      prompt: `Enter the base instructions for the Persona: ${personaName}`,
       value: initialInstructionsValue,
     })) ?? null
   );
+}
+
+/**
+ * Prompts the user to confirm an action.
+ * @param message The message to display to the user.
+ * @returns True if the user confirms the action, false otherwise.
+ */
+async function askForConfirmation(message: string): Promise<boolean> {
+  const selection = await vscode.window.showQuickPick(["Yes", "No"], {
+    placeHolder: message,
+  });
+
+  return selection === "Yes";
 }

@@ -36,6 +36,7 @@ export interface WebviewToExtensionMessageTypeParamsMap {
   addCodeToChat: null;
   getHasSelection: null;
   setDefaultPersonaId: SetDefaultPersonaIdParams;
+  editPersonas: null;
   // Add new message types here...
 }
 

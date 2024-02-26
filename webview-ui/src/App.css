@@ -182,6 +182,11 @@
   margin-bottom: 2px;
 }
 
+.dropdown-container > div {
+  display: flex;
+  align-items: center;
+}
+
 /* Page Header */
 .page-header {
   display: flex;

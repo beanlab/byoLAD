@@ -40,7 +40,6 @@ export const ChatInChatList = ({
         <VSCodeTextField
           value={title}
           onInput={(e) => handleInputChange(e as InputEvent)}
-          autofocus
         />
       ) : (
         <div onClick={() => handleClick(chat)} className="convo-id">

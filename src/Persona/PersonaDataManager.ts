@@ -27,15 +27,18 @@ export class PersonaDataManager {
     }
   }
 
+  get customPersonas(): Persona[] {
+    return (
+      this.context.workspaceState.get<Persona[]>(this.PERSONAS_CUSTOM_KEY) || []
+    );
+  }
+
   /**
    * All Personas, including standard and custom Personas saved in the workspace state.
    * Checks for and purges any duplicate IDs, persisting the changes to the workspace state as well.
    */
   get personas(): Persona[] {
-    const customPersonas =
-      this.context.workspaceState.get<Persona[]>(this.PERSONAS_CUSTOM_KEY) ||
-      [];
-    return [...STANDARD_PERSONAS, ...customPersonas];
+    return [...STANDARD_PERSONAS, ...this.customPersonas];
   }
 
   /**
@@ -92,21 +95,26 @@ export class PersonaDataManager {
   }
 
   getDefaultPersona(): Persona {
-    return this.getPersona(this.defaultPersonaId) ?? STANDARD_PERSONAS[0];
+    return this.getPersonaById(this.defaultPersonaId) ?? STANDARD_PERSONAS[0];
   }
 
   setDefaultPersona(persona: Persona): void {
     this.defaultPersonaId = persona.id;
   }
 
-  getPersona(id: number): Persona | undefined {
+  getPersonaById(id: number): Persona | undefined {
     return this.personas.find((persona) => persona.id === id);
+  }
+
+  getPersonaByName(name: string): Persona | null {
+    return this.personas.find((persona) => persona.name === name) || null;
   }
 
   /**
    * Adds a new Persona to the workspace state and returns that Persona.
    */
   addNewPersona(name: string, instructions: string): Persona {
+    this.vaidateNameProperties(name);
     const newPersona: Persona = {
       id: this.nextId,
       name,
@@ -120,14 +128,17 @@ export class PersonaDataManager {
   /**
    * Updates a Persona with the given ID in the workspace state.
    * Throws an error if the ID does not exist.
-   * @param persona
+   * @param id The ID of the Persona to update.
+   * @param instructions The new instructions for the Persona.
    */
-  updatePersona(updatedPersona: Persona): void {
-    if (!this.personas.some((p) => p.id === updatedPersona.id)) {
-      throw new Error("Persona ID does not exist");
+  updatePersonaInstructions(personaId: number, instructions: string): void {
+    const persona = this.getPersonaById(personaId);
+    if (!persona) {
+      throw new Error(`Persona with ID ${personaId} does not exist`);
     }
+    persona.instructions = instructions;
     this.personas = this.personas.map((p) =>
-      p.id === updatedPersona.id ? updatedPersona : p,
+      p.id === personaId ? persona : p,
     );
   }
 
@@ -137,6 +148,26 @@ export class PersonaDataManager {
 
   clearAllCustomPersonas(): void {
     this.personas = [];
+  }
+
+  validateNewPersonaName(name: string): void {
+    this.vaidateNameProperties(name);
+    this.validateNameUniqueness(name);
+  }
+
+  validateNameUniqueness(name: string): void {
+    if (this.personas.some((persona) => persona.name === name)) {
+      throw new Error(`Persona with name "${name}" already exists`);
+    }
+  }
+
+  vaidateNameProperties(name: string) {
+    if (!name.trim()) {
+      throw new Error("Persona name cannot be empty or whitespace");
+    }
+    if (name.length > 25) {
+      throw new Error("Persona name cannot be more than 25 characters");
+    }
   }
 }
 

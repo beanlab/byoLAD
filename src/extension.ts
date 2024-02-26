@@ -20,6 +20,7 @@ import { LLMApiResponseHandler } from "./ChatModel/LLMApiResponseHandler";
 import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMessageHandler";
 import { ExtensionToWebviewMessageSender } from "./webview/ExtensionToWebviewMessageSender";
 import { PersonaDataManager } from "./Persona/PersonaDataManager";
+import { getManagePersonasCommand } from "./commands/getManagePersonasCommand";
 
 // This method is automatically called by VS Code called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -99,6 +100,10 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
   );
   const openSettingsCommand = getOpenSettingsCommand();
+  const managePersonasCommand = getManagePersonasCommand(
+    personaDataManager,
+    extensionToWebviewMessageSender,
+  );
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
@@ -120,6 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewDisposable,
     addCodeToChatCommand,
     addCodeToNewChatCommand,
+    managePersonasCommand,
   );
 }
 

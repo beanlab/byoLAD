@@ -21,7 +21,7 @@ export class LLMApiRequestSender {
   }
 
   public async sendChatRequest(chat: Chat): Promise<ChatModelResponse> {
-    let persona = this.personaDataManager.getPersona(chat.personaId);
+    let persona = this.personaDataManager.getPersonaById(chat.personaId);
     if (!persona) {
       // Get default persona
       persona = this.personaDataManager.getDefaultPersona();

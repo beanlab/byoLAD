@@ -8,7 +8,7 @@ import { Chat } from ".";
  */
 export interface WebviewToExtensionMessage {
   messageType: WebviewToExtensionMessageType;
-  params: WebviewToExtensionMessageTypeParamsMap[keyof WebviewToExtensionMessageTypeParamsMap];
+  params: WebviewToExtensionMessageTypeParamsMap[WebviewToExtensionMessageType];
 }
 
 /**

@@ -104,7 +104,6 @@ export const ChatView = ({
         // When new messages are added
         scrollToBottom();
       } else if (activeChat.messages.length === prevMessagesLengthRef.current) {
-        console.log("lastMessage", lastMessage);
         if (
           lastMessage &&
           lastMessage.content.length > prevBlocksInLastMessageRef.current

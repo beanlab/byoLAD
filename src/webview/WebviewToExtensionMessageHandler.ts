@@ -50,7 +50,6 @@ export class WebviewToExtensionMessageHandler {
   public async handleMessage(message: WebviewToExtensionMessage) {
     switch (message.messageType) {
       case "newChat":
-        console.log("Handling newChat message");
         await vscode.commands.executeCommand("vscode-byolad.newChat");
         break;
       case "getChats":
@@ -113,7 +112,6 @@ export class WebviewToExtensionMessageHandler {
         break;
       }
       case "updateChat": {
-        console.log("Handling updateChat message with params ", message.params);
         const params =
           message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         const updateWebiew = true;

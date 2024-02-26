@@ -73,7 +73,7 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
         </div>
       );
     case ChatRole.System:
-      console.log("System messages should not be displayed");
+      console.error("System messages should not be displayed");
       return <></>;
     default:
       return <></>;

@@ -1,18 +1,19 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { addSelectedCodeToChat } from "../helpers/addSelectedCodeToChat";
+import { ChatDataManager } from "../Chat/ChatDataManager";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { addCodeToChat } from "../helpers/addCodeToChat";
+import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
 
 export const getAddCodeToNewChatCommand = (
+  chatDataManager: ChatDataManager,
+  chatEditor: ChatEditor,
   chatWebviewProvider: ChatWebviewProvider,
-  chatManager: ChatManager,
 ) =>
   vscode.commands.registerCommand(
     "vscode-byolad.addCodeToNewChat",
     async () => {
-      const activeChat = chatManager.startChat("Code Chat"); // TODO: How to name?
-      addSelectedCodeToChat(chatManager, chatWebviewProvider);
-      await vscode.commands.executeCommand("vscode-byolad.chat.focus");
-      chatWebviewProvider.updateChat(chatManager.chats, activeChat.id);
+      await chatWebviewProvider.show();
+      const chat = chatDataManager.startChat();
+      await addCodeToChat(chat, chatEditor);
     },
   );

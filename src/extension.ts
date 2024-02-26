@@ -3,73 +3,99 @@ import { getReviewCodeCommand } from "./commands/getReviewCodeCommand";
 import { SettingsProvider } from "./helpers/SettingsProvider";
 import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
 import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
-import { ChatManager } from "./Chat/ChatManager";
-import { getSendChatMessageCommand } from "./commands/getSendChatMessageCommand";
+import { ChatDataManager } from "./Chat/ChatDataManager";
 import { getNewChatCommand } from "./commands/getNewChatCommand";
 import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
-import { ChatWebviewProvider } from "./providers/ChatViewProvider";
+import { ChatWebviewProvider } from "./webview/ChatWebviewProvider";
 import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 import { setHasActiveChatWhenClauseState } from "./helpers";
 import { getOnDidChangeTextEditorSelectionHandler } from "./helpers/getOnDidChangeTextEditorSelectionHandler";
+import { ChatEditor } from "./Chat/ChatEditor";
+import { LLMApiService } from "./ChatModel/LLMApiService";
+import { LLMApiRequestSender } from "./ChatModel/LLMApiRequestSender";
+import { LLMApiResponseHandler } from "./ChatModel/LLMApiResponseHandler";
+import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMessageHandler";
+import { ExtensionToWebviewMessageSender } from "./webview/ExtensionToWebviewMessageSender";
 
+// This method is automatically called by VS Code called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
-  const chatManager = new ChatManager(context, settingsProvider);
-  const chatWebviewProvider = new ChatWebviewProvider(
-    context.extensionUri,
-    settingsProvider,
-    chatManager,
+  const chatDataManager = new ChatDataManager(context, settingsProvider);
+  const chatWebviewProvider = new ChatWebviewProvider(context.extensionUri);
+  const extensionToWebviewMessageSender = new ExtensionToWebviewMessageSender(
+    chatWebviewProvider,
+    chatDataManager,
   );
+  const chatEditor = new ChatEditor(
+    chatDataManager,
+    extensionToWebviewMessageSender,
+  );
+  const llmApiService = new LLMApiService(
+    new LLMApiRequestSender(settingsProvider),
+    new LLMApiResponseHandler(chatEditor, extensionToWebviewMessageSender),
+  );
+  const webviewToExtensionMessageHandler = new WebviewToExtensionMessageHandler(
+    settingsProvider,
+    chatDataManager,
+    chatEditor,
+    llmApiService,
+    extensionToWebviewMessageSender,
+    chatWebviewProvider,
+  );
+  chatWebviewProvider.setChatWebviewMessageHandler(
+    webviewToExtensionMessageHandler,
+  );
+  setHasActiveChatWhenClauseState(!!chatDataManager.activeChatId);
 
-  setHasActiveChatWhenClauseState(!!chatManager.activeChatId);
-
-  const chatViewDisposable = vscode.window.registerWebviewViewProvider(
-    ChatWebviewProvider.viewType,
+  const chatWebviewDisposable = vscode.window.registerWebviewViewProvider(
+    chatWebviewProvider.viewId,
     chatWebviewProvider,
   );
 
+  // Get all commands and event handlers
   const newChatCommand = getNewChatCommand(
-    settingsProvider,
-    chatManager,
-    chatWebviewProvider,
+    chatDataManager,
+    extensionToWebviewMessageSender,
   );
   const deleteAllChatsCommand = getDeleteAllChatsCommand(
-    chatManager,
-    chatWebviewProvider,
+    chatDataManager,
+    extensionToWebviewMessageSender,
   );
   const reviewFileCodeCommand = getReviewCodeCommand(
     settingsProvider,
-    chatManager,
+    chatDataManager,
+    chatEditor,
+    llmApiService,
+    extensionToWebviewMessageSender,
     chatWebviewProvider,
   );
   const explainCodeCommand = getExplainCodeCommand(
     settingsProvider,
-    chatManager,
-    chatWebviewProvider,
-  );
-  const sendChatMessageCommand = getSendChatMessageCommand(
-    settingsProvider,
-    chatManager,
+    chatDataManager,
+    chatEditor,
+    llmApiService,
+    extensionToWebviewMessageSender,
     chatWebviewProvider,
   );
   const addCodeToChatCommand = getAddCodeToChatCommand(
-    chatWebviewProvider,
-    chatManager,
+    chatEditor,
+    chatDataManager,
   );
   const addCodeToNewChatCommand = getAddCodeToNewChatCommand(
+    chatDataManager,
+    chatEditor,
     chatWebviewProvider,
-    chatManager,
   );
   const openSettingsCommand = getOpenSettingsCommand();
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
   const onDidChangeTextEditorSelectionHandler =
-    getOnDidChangeTextEditorSelectionHandler(chatWebviewProvider);
+    getOnDidChangeTextEditorSelectionHandler(extensionToWebviewMessageSender);
   const reviewCodeTextDocumentContentProvider =
     getReviewCodeTextDocumentContentProvider();
 
@@ -79,16 +105,15 @@ export function activate(context: vscode.ExtensionContext) {
     deleteAllChatsCommand,
     reviewFileCodeCommand,
     explainCodeCommand,
-    sendChatMessageCommand,
     openSettingsCommand,
     onDidChangeConfigurationHandler,
     onDidChangeTextEditorSelectionHandler,
     reviewCodeTextDocumentContentProvider,
-    chatViewDisposable,
+    chatWebviewDisposable,
     addCodeToChatCommand,
     addCodeToNewChatCommand,
   );
 }
 
-// This method is called when the extension is deactivated
-// export function deactivate() {}
+// This method is automatically called by VS Code called when the extension is deactivated
+export function deactivate() {}

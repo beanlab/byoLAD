@@ -1,22 +1,17 @@
 import { DiscussServiceClient } from "@google-ai/generativelanguage";
 import { GoogleAuth } from "google-auth-library";
 import {
-  ChatMessage,
-  ChatMessageFinishReason,
+  Chat,
   ChatRole,
-  ChatModel,
-  ChatModelRequest,
-  ChatModelResponse,
+  ChatMessageFinishReason,
+  ChatMessage,
   MessageBlock,
   CodeBlock,
   TextBlock,
-} from "../ChatModel";
+} from "../../../shared/types";
+import { ChatModel, ChatModelRequest, ChatModelResponse } from "../ChatModel";
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
-import {
-  messageBlocksToString,
-  stringToMessageBlocks,
-} from "../../Chat/messageBlockHelpers";
-import { Chat } from "../ChatModel";
+import { messageBlocksToString } from "../../../shared/utils/messageBlockHelpers";
 import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 interface PaLMPrompt {
@@ -71,23 +66,23 @@ export class PaLMChatModel implements ChatModel {
         if (candidates && candidates.length > 0) {
           return {
             success: true,
-            message: {
-              role: ChatRole.Assistant,
-              content: stringToMessageBlocks(candidates[0].content),
-            },
-          };
+            content: candidates[0].content,
+            chat: request.chat,
+          } as ChatModelResponse;
         } else {
           if (filters && filters.length > 0) {
             return {
               success: false,
               errorMessage: this.getFilterErrorMessage(filters),
               finish_reason: ChatMessageFinishReason.ContentFilter,
-            };
+              chat: request.chat,
+            } as ChatModelResponse;
           } else {
             return {
               success: false,
               errorMessage: NO_RESPONSE_ERROR_MESSAGE,
-            };
+              chat: request.chat,
+            } as ChatModelResponse;
           }
         }
       })
@@ -95,7 +90,8 @@ export class PaLMChatModel implements ChatModel {
         return {
           success: false,
           errorMessage: error.message,
-        };
+          chat: request.chat,
+        } as ChatModelResponse;
       });
   }
 

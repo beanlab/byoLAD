@@ -8,6 +8,10 @@ export class UnsetChatModel implements ChatModel {
   }
 
   async chat(): Promise<ChatModelResponse> {
-    return { success: false, errorMessage: this.message };
+    return {
+      success: false,
+      errorMessage: this.message,
+      chat: {},
+    } as ChatModelResponse;
   }
 }

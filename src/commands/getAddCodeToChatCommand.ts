@@ -1,18 +1,17 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { addSelectedCodeToChat } from "../helpers/addSelectedCodeToChat";
-
-/**
- * Command to add the selected code (or whole file if no selection) to the active chat.
- * Opens webview and/or starts chat if necessary.
- */
+import { ChatEditor } from "../Chat/ChatEditor";
+import { ChatDataManager } from "../Chat/ChatDataManager";
+import { addCodeToChat } from "../helpers/addCodeToChat";
 
 export const getAddCodeToChatCommand = (
-  chatWebviewProvider: ChatWebviewProvider,
-  chatManager: ChatManager,
+  chatEditor: ChatEditor,
+  chatDataManager: ChatDataManager,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.addCodeToChat", async () => {
-    addSelectedCodeToChat(chatManager, chatWebviewProvider);
-    chatWebviewProvider.updateChat(chatManager.chats, chatManager.activeChatId);
+    const chat = chatDataManager.getActiveChat();
+    if (!chat) {
+      vscode.window.showErrorMessage("No active chat");
+      return;
+    }
+    await addCodeToChat(chat, chatEditor);
   });

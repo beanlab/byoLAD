@@ -1,9 +1,11 @@
 import * as vscode from "vscode";
-import { ChatManager } from "../Chat/ChatManager";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { insertMessage } from "../helpers/insertMessage";
-import { TextBlock } from "../ChatModel/ChatModel";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { LLMApiService } from "../ChatModel/LLMApiService";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
+import { sendChatMessage } from "../helpers/sendChatMessage";
+import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
 
 /**
  * Command to explain the selected code (or whole file if no selection) in a chat.
@@ -12,26 +14,23 @@ import { TextBlock } from "../ChatModel/ChatModel";
  */
 export const getExplainCodeCommand = (
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
+  chatEditor: ChatEditor,
+  llmApiService: LLMApiService,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   chatWebviewProvider: ChatWebviewProvider,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.explainCode", async () => {
-    const activeEditor = vscode.window.activeTextEditor;
-    if (!activeEditor) {
-      vscode.window.showErrorMessage("No active editor");
-      return;
-    }
-
-    const textBlock = {
-      type: "text",
-      content: settingsProvider.getExplainCodePrompt(),
-    } as TextBlock;
-
-    insertMessage(
-      textBlock,
-      activeEditor,
-      settingsProvider,
-      chatManager,
+    const prompt = settingsProvider.getExplainCodePrompt();
+    const includeCodeFromEditor = true;
+    await sendChatMessage(
+      chatDataManager.getActiveChat(),
+      prompt,
+      includeCodeFromEditor,
+      extensionToWebviewMessageSender,
+      chatEditor,
+      chatDataManager,
+      llmApiService,
       chatWebviewProvider,
     );
   });

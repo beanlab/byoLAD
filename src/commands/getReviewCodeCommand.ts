@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
-
 import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ChatManager } from "../Chat/ChatManager";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
-import { insertMessage } from "../helpers/insertMessage";
-import { TextBlock } from "../ChatModel/ChatModel";
+import { ChatDataManager } from "../Chat/ChatDataManager";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { LLMApiService } from "../ChatModel/LLMApiService";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
+import { sendChatMessage } from "../helpers/sendChatMessage";
+import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
 
 /**
  * Command to review the selected code (or whole file if no selection) in a chat.
@@ -13,30 +14,23 @@ import { TextBlock } from "../ChatModel/ChatModel";
  */
 export const getReviewCodeCommand = (
   settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chatDataManager: ChatDataManager,
+  chatEditor: ChatEditor,
+  llmApiService: LLMApiService,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   chatWebviewProvider: ChatWebviewProvider,
-): vscode.Disposable => {
-  return vscode.commands.registerCommand(
-    "vscode-byolad.reviewCode",
-    async () => {
-      const activeEditor = vscode.window.activeTextEditor;
-      if (!activeEditor) {
-        vscode.window.showErrorMessage("No active editor"); // TODO: How to handle?
-        return;
-      }
-
-      const textBlock = {
-        type: "text",
-        content: settingsProvider.getReviewCodePrompt(),
-      } as TextBlock;
-
-      insertMessage(
-        textBlock,
-        activeEditor,
-        settingsProvider,
-        chatManager,
-        chatWebviewProvider,
-      );
-    },
-  );
-};
+): vscode.Disposable =>
+  vscode.commands.registerCommand("vscode-byolad.reviewCode", async () => {
+    const prompt = settingsProvider.getReviewCodePrompt();
+    const includeCodeFromEditor = true;
+    await sendChatMessage(
+      chatDataManager.getActiveChat(),
+      prompt,
+      includeCodeFromEditor,
+      extensionToWebviewMessageSender,
+      chatEditor,
+      chatDataManager,
+      llmApiService,
+      chatWebviewProvider,
+    );
+  });

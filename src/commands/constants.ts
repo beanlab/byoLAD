@@ -9,7 +9,7 @@ export const LLM_MESSAGE_FORMATTING_INSTRUCTION = `The user will provide you wit
   You MUST respond in valid Markdown format with any code samples using code fences and a language identifier.
   This is necessary so the user can easily see which parts of your response are code and which parts are just descriptive/explanatory Markdown text.`;
 
-// ChatManager Keys
+// ChatDataManager Keys
 // Note: Changes to workspace state keys will cause compatibility issues with existing workspaces that have byoLAD data unless the data is migrated.
 export const CHATS_KEY = "chats"; // Do not change without handling migration
 export const CHAT_IDS_KEY = "chatIds"; // Do not change without handling migration

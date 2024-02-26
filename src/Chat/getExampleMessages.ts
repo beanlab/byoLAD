@@ -3,7 +3,7 @@ import {
   ChatRole,
   CodeBlock,
   TextBlock,
-} from "../ChatModel/ChatModel";
+} from "../../shared/types";
 
 /**
  * Gets an array of brief introductory messages to use as an example chat.

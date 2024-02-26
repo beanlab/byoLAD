@@ -1,14 +1,13 @@
-import { Chat } from "../ChatModel/ChatModel";
 import { ExtensionContext } from "vscode";
-import { ChatMessage } from "../ChatModel/ChatModel";
 import * as constants from "../commands/constants";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { setHasActiveChatWhenClauseState } from "../helpers";
+import { Chat, ChatMessage } from "../../shared/types";
 
 /**
  * Manages the chat history and the active chat in the VS Code workspace state.
  */
-export class ChatManager {
+export class ChatDataManager {
   private readonly context: ExtensionContext;
   private readonly settingsProvider: SettingsProvider;
 
@@ -74,39 +73,22 @@ export class ChatManager {
     return this.chats.find((chat) => chat.id === id);
   }
 
-  getActiveChat(): Chat | undefined {
+  getActiveChat(): Chat | null {
     if (!this.activeChatId) {
-      return undefined;
+      return null;
     }
-    return this.getChat(this.activeChatId);
-  }
-
-  /**
-   *
-   * @returns An array of chat previews, each containing the chat id and name.
-   */
-  getChatPreviews(): {
-    id: number;
-    name: string;
-  }[] {
-    return this.chats.map((chat) => {
-      return {
-        id: chat.id,
-        name: chat.name,
-      };
-    });
+    return this.getChat(this.activeChatId) || null;
   }
 
   /**
    * Adds a chat to the chat history and sets it as the active chat.
    * Throws an error if a chat with the same id already exists.
    *
-   * @param name Chat name
    * @param messages Chat messages
    * @returns The created chat
    */
-  startChat(name: string, messages?: ChatMessage[]): Chat {
-    const chat = this.createChat(name, messages);
+  startChat(messages?: ChatMessage[]): Chat {
+    const chat = this.createChat(messages);
     // this.chats = [...this.chats, chat];
     this.chats.push(chat);
     try {
@@ -131,12 +113,11 @@ export class ChatManager {
    * @param messages Chat messages
    * @returns A new Chat object
    */
-  private createChat(name: string, messages?: ChatMessage[]): Chat {
+  private createChat(messages?: ChatMessage[]): Chat {
     const newId = this.nextId;
     this.nextId = newId + 1;
     const chat: Chat = {
       id: newId,
-      name,
       messages: messages ?? [],
       contextInstruction:
         this.settingsProvider.getBasePromptInstruction() +

@@ -1,99 +1,66 @@
 import * as vscode from "vscode";
+import { Chat, ChatRole } from "../../shared/types";
 import {
-  ChatMessage,
-  ChatModelResponse,
-  ChatRole,
-} from "../ChatModel/ChatModel";
-import { Chat } from "../ChatModel/ChatModel";
-import { SettingsProvider } from "./SettingsProvider";
-import { ChatManager } from "../Chat/ChatManager";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
+  getFileContentAsCodeBlock,
+  getSelectedTextAsCodeBlock,
+} from "./getCodeBlock";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { ChatDataManager } from "../Chat/ChatDataManager";
+import { LLMApiService } from "../ChatModel/LLMApiService";
+import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
+import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
 
 /**
- * Sends the given chat message to the chat model and updates the chat and side panel accordingly.
+ * Primary function to send a chat message. Starts a new chat if needed,
+ * includes the markdown and code from the editor (if desired), and sends the message to
+ * the LLM API. Updating the webview and chat data storage accordingly. If the webview
+ * is not open, it's opened and a new chat is started.
+ * @param chat Chat to send the message to, or null to start a new chat.
+ * @param markdown Markdown to include at the top of the message.
+ * @param includeCodeFromEditor Whether to include the selected code (or whole code file if nothing selected) from the editor.
  */
 export async function sendChatMessage(
-  chatMessage: ChatMessage,
-  settingsProvider: SettingsProvider,
-  chatManager: ChatManager,
+  chat: Chat | null,
+  markdown: string,
+  includeCodeFromEditor: boolean,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
+  chatEditor: ChatEditor,
+  chatDataManager: ChatDataManager,
+  llmApiService: LLMApiService,
   chatWebviewProvider: ChatWebviewProvider,
 ) {
-  const chat = chatManager.getActiveChat();
+  // Open the webview if needed and start a new chat
+  if (!chatWebviewProvider.isWebviewVisible()) {
+    await chatWebviewProvider.show();
+    chat = chatDataManager.startChat();
+  }
+
+  // Start a new chat if needed
   if (!chat) {
-    vscode.window.showErrorMessage("No active chat");
-    return;
+    chat = chatDataManager.startChat();
   }
 
-  if (
-    chat.messages.length === 0 ||
-    chat.messages[chat.messages.length - 1].role !== ChatRole.User
-  ) {
-    chat.messages.push(chatMessage);
-  } else {
-    chat.messages[chat.messages.length - 1] = chatMessage;
-  }
+  // Include the markdown at the top of the message, first parsing it into message blocks
+  const messageBlocks = stringToMessageBlocks(markdown);
 
-  try {
-    const response: ChatModelResponse = await settingsProvider
-      .getChatModel()
-      .chat({
-        chat,
-      });
-    if (response.success && response.message) {
-      handleSuccessfulResponse(
-        response.message,
-        chat,
-        chatManager,
-        chatWebviewProvider,
-      );
-    } else {
-      handleErrorResponse(response, chatWebviewProvider);
+  // Include the selected code (or whole code file) from the editor if desired
+  if (includeCodeFromEditor) {
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+      vscode.window.showErrorMessage("No active editor");
+      return;
     }
-  } catch (error) {
-    chatWebviewProvider.showErrorMessage(`Unexpected error: ${error}`);
-  }
-}
 
-/**
- * Handle a successful response from the chat model. Update the chat and the side panel.
- *
- * @param responseMessage Response message from the chat model
- * @param chat Chat to update
- * @param chatManager Chat manager
- * @param chatWebviewProvider Current side panel
- */
-function handleSuccessfulResponse(
-  responseMessage: ChatMessage,
-  chat: Chat,
-  chatManager: ChatManager,
-  chatWebviewProvider: ChatWebviewProvider,
-): void {
-  chat.messages.push(responseMessage);
-  chatManager.updateChat(chat);
-  chatWebviewProvider.updateChat(chatManager.chats, chat.id);
-}
-
-/**
- * Handle a failed response from the chat model. Show an error message on the side panel with no change to the chat.
- *
- * @param response Response from the chat model
- * @param chatWebviewProvider Current side panel
- */
-function handleErrorResponse(
-  response: ChatModelResponse,
-  chatWebviewProvider: ChatWebviewProvider,
-): void {
-  if (!response.success) {
-    if (response.errorMessage) {
-      chatWebviewProvider.showErrorMessage(`Error: ${response.errorMessage}`);
-    } else {
-      chatWebviewProvider.showErrorMessage("Unknown error");
+    let codeBlock = getSelectedTextAsCodeBlock(activeEditor);
+    if (!codeBlock) {
+      codeBlock = getFileContentAsCodeBlock(activeEditor);
     }
-  } else if (!response.message) {
-    chatWebviewProvider.showErrorMessage(
-      "Response marked successful, but no message was returned",
-    );
-  } else {
-    chatWebviewProvider.showErrorMessage("Unknown error");
+    messageBlocks.push(codeBlock);
   }
+
+  // Update the webview, chat itself, and send the message to the LLM API
+  await extensionToWebviewMessageSender.updateIsMessageLoading(true);
+  await chatEditor.appendMessageBlocks(chat, ChatRole.User, messageBlocks);
+  await llmApiService.requestLlmApiChatResponse(chat);
 }

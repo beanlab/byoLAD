@@ -1,19 +1,14 @@
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import {
-  ChatModel,
-  ChatModelRequest,
-  ChatModelResponse,
+  Chat,
   ChatRole,
   ChatMessageFinishReason,
   ChatMessage,
-} from "../ChatModel";
+} from "../../../shared/types";
+import { ChatModel, ChatModelRequest, ChatModelResponse } from "../ChatModel";
 import OpenAI from "openai";
-import {
-  messageBlocksToString,
-  stringToMessageBlocks,
-} from "../../Chat/messageBlockHelpers";
-import { Chat } from "../ChatModel";
 import { getExampleMessages } from "../../Chat/getExampleMessages";
+import { messageBlocksToString } from "../../../shared/utils/messageBlockHelpers";
 
 export class GPTChatModel implements ChatModel {
   private openai: OpenAI;
@@ -36,27 +31,25 @@ export class GPTChatModel implements ChatModel {
         if (completion.choices.length > 0) {
           return {
             success: true,
-            message: {
-              role: completion.choices[0].message.role as ChatRole,
-              content: stringToMessageBlocks(
-                completion.choices[0].message.content as string,
-              ),
-              finish_reason: completion.choices[0]
-                .finish_reason as ChatMessageFinishReason,
-            },
-          };
+            content: completion.choices[0].message.content as string,
+            finishReason: completion.choices[0]
+              .finish_reason as ChatMessageFinishReason,
+            chat: request.chat,
+          } as ChatModelResponse;
         } else {
           return {
             success: false,
             errorMessage: NO_RESPONSE_ERROR_MESSAGE,
-          };
+            chat: request.chat,
+          } as ChatModelResponse;
         }
       })
       .catch((error) => {
         return {
           success: false,
           errorMessage: error.message,
-        };
+          chat: request.chat,
+        } as ChatModelResponse;
       });
   }
 

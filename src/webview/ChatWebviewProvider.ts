@@ -1,10 +1,8 @@
 import * as vscode from "vscode";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
-import { ChatViewMessageHandler } from "./ChatViewMessageHandler";
-import { Chat } from "../ChatModel/ChatModel";
-import { SettingsProvider } from "../helpers/SettingsProvider";
-import { ChatManager } from "../Chat/ChatManager";
+import { WebviewToExtensionMessageHandler } from "./WebviewToExtensionMessageHandler";
+import { ExtensionToWebviewMessage } from "../../shared/types";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -13,20 +11,19 @@ import { ChatManager } from "../Chat/ChatManager";
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/frameworks/hello-world-react-vite/src/panels/HelloWorldPanel.ts
 
 export class ChatWebviewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = "vscode-byolad.chat";
+  public readonly viewId = "vscode-byolad.chat";
   private _webviewView?: vscode.WebviewView;
   private readonly _extensionUri: vscode.Uri;
-  private readonly _settingsProvider: SettingsProvider;
-  private chatManager: ChatManager;
+  private webviewToExtensionMessageHandler?: WebviewToExtensionMessageHandler;
 
-  constructor(
-    extensionUri: vscode.Uri,
-    settingsProvider: SettingsProvider,
-    chatManager: ChatManager,
-  ) {
+  constructor(extensionUri: vscode.Uri) {
     this._extensionUri = extensionUri;
-    this._settingsProvider = settingsProvider;
-    this.chatManager = chatManager;
+  }
+
+  public setChatWebviewMessageHandler(
+    webviewToExtensionMessageHandler: WebviewToExtensionMessageHandler,
+  ) {
+    this.webviewToExtensionMessageHandler = webviewToExtensionMessageHandler;
   }
 
   public resolveWebviewView(
@@ -61,75 +58,41 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     // and executes code based on the message that is recieved
     this._setWebviewMessageListener(this._webviewView);
 
-    // TODO: Figure out what these are for and if they are needed
     console.log(context);
     console.log(token);
   }
 
-  public setLoading(loading: boolean) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
+  /**
+   * Shows and focuses on the webview view in the sidebar.
+   * @param preserveFocus A boolean indicating whether the current focus should be preserved (defaults to false and focuses on the webview).
+   */
+  async show(preserveFocus: boolean = false) {
+    const options = { preserveFocus: preserveFocus };
+    try {
+      await vscode.commands.executeCommand(`${this.viewId}.focus`, options);
+    } catch (error) {
+      await vscode.window.showErrorMessage(
+        error instanceof Error ? error.message : "Unknown error",
+      );
     }
-    this._webviewView.webview.postMessage({
-      messageType: "setLoading",
-      params: {
-        loading: loading,
-      },
-    });
   }
 
-  public updateChat(chats: Chat[], activeChatId: number | null) {
+  /**
+   * Sends a message to the webview view.
+   * @param message The message to send to the webview view.
+   * @returns A boolean indicating whether the message was posted successfully (not if it was received successfully).
+   */
+  public async postMessage(
+    message: ExtensionToWebviewMessage,
+  ): Promise<boolean> {
     if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
+      await vscode.window.showErrorMessage(
+        "No active webview to communicate with. Please try reloading the window or restarting the extension.",
+      );
+      return false;
     }
-    this._webviewView.webview.postMessage({
-      messageType: "updateChat",
-      params: {
-        chats: chats,
-        activeChatId: activeChatId,
-      },
-    });
-  }
 
-  public updateChatList(chats: Chat[]) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view"); // How to handle?
-      return;
-    }
-    this._webviewView.webview.postMessage({
-      messageType: "updateChatList",
-      params: {
-        chats: chats,
-      },
-    });
-  }
-
-  public showErrorMessage(errorMessage: string) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage(errorMessage);
-      return;
-    }
-    this._webviewView.webview.postMessage({
-      messageType: "errorResponse",
-      params: {
-        errorMessage: errorMessage,
-      },
-    });
-  }
-
-  public updateHasSelection(hasSelection: boolean) {
-    if (!this._webviewView) {
-      vscode.window.showErrorMessage("No active webview view");
-      return;
-    }
-    this._webviewView.webview.postMessage({
-      messageType: "updateHasSelection",
-      params: {
-        hasSelection: hasSelection,
-      },
-    });
+    return await this._webviewView.webview.postMessage(message);
   }
 
   public isWebviewVisible(): boolean {
@@ -217,12 +180,13 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
    */
   private _setWebviewMessageListener(webviewView: vscode.WebviewView) {
     webviewView.webview.onDidReceiveMessage(async (message) => {
-      const chatViewMessageHandler = new ChatViewMessageHandler(
-        this._settingsProvider,
-        this.chatManager,
-        this,
-      );
-      await chatViewMessageHandler.handleMessage(message);
+      if (!this.webviewToExtensionMessageHandler) {
+        vscode.window.showErrorMessage(
+          "Extension unable to receive communication from the webview. Please try reloading the window or restarting the extension.",
+        );
+        return;
+      }
+      await this.webviewToExtensionMessageHandler.handleMessage(message);
     });
   }
 }

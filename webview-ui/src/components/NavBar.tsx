@@ -11,7 +11,6 @@ interface NavBarProps {
 }
 
 export const NavBar: React.FC<NavBarProps> = ({ changeChatPersonaId }) => {
-  console.log("NavBar - about to useAppContext");
   const {
     activeView,
     activeChat,
@@ -20,7 +19,6 @@ export const NavBar: React.FC<NavBarProps> = ({ changeChatPersonaId }) => {
     setActiveViewAsChatList,
     setActiveViewAsPersonaSettings,
   } = useAppContext();
-  console.log("NavBar - used useAppContext");
   const { createNewChat } = useExtensionMessageContext();
 
   const hasBackButton = () => {

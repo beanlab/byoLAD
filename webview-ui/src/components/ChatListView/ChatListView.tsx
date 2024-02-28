@@ -4,9 +4,7 @@ import { useExtensionMessageContext } from "../../utilities/ExtensionMessageCont
 import { useAppContext } from "../../utilities/AppContext";
 
 export const ChatListView = () => {
-  console.log("ChatListView - about to useAppContext");
   const { setActiveViewAsChat, chatList } = useAppContext();
-  console.log("ChatListView - used useAppContext");
   const { createNewChat } = useExtensionMessageContext();
 
   if (chatList.length === 0) {

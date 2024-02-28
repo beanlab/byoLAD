@@ -39,17 +39,14 @@ export class ExtensionToWebviewMessageHandler {
   }
 
   public async handleMessage(message: ExtensionToWebviewMessage) {
-    console.log("Handling message: ", message);
     switch (message.messageType) {
       case "isMessageLoading": {
-        console.log("handling `isMessageLoading` message: ", message.params);
         const params =
           message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
         this.setLoadingMessage(params.isLoading);
         break;
       }
       case "refresh": {
-        console.log("handling `refresh` message: ", message.params);
         const params =
           message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
         this.setChatList(params.chats);
@@ -57,21 +54,15 @@ export class ExtensionToWebviewMessageHandler {
         this.setDefaultPersonaId(params.defaultPersonaId);
         const newActiveChat: Chat | null =
           params.chats.find((chat) => chat.id === params.activeChatId) || null;
-        console.log("Foud active chat...?", newActiveChat);
         this.setActiveChat(newActiveChat);
-        console.log(
-          "In 'refresh' handler: about to call setActiveViewAsChat/List()!",
-        );
         if (newActiveChat) {
           this.setActiveViewAsChat(newActiveChat);
         } else {
           this.setActiveViewAsChatList();
         }
-        console.log("In 'refresh' handler: called setActiveViewAsChat/List!");
         break;
       }
       case "errorMessage": {
-        console.log("handling `errorMessage` message: ", message.params);
         const params =
           message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
         this.setLoadingMessage(false);
@@ -79,7 +70,6 @@ export class ExtensionToWebviewMessageHandler {
         break;
       }
       case "hasSelection": {
-        console.log("handling `hasSelection` message: ", message.params);
         const params =
           message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
         this.setHasSelection(params.hasSelection);

@@ -31,7 +31,6 @@ export class ExtensionToWebviewMessageSender {
    * Requests the webview to be shown.
    */
   public async refresh() {
-    console.log("ExtensionToWebviewMessageSender.refresh");
     await this.chatWebviewProvider.show();
     const chats: Chat[] = this.chatDataManager.chats;
     let activeChatId: number | null = this.chatDataManager.activeChatId;
@@ -45,7 +44,6 @@ export class ExtensionToWebviewMessageSender {
     const defaultPersonaId: number = this.personaDataManager.defaultPersonaId;
 
     const messageType: ExtensionToWebviewMessageType = "refresh";
-    console.log("Sending refresh message to webview");
     await this.postMessage({
       messageType: messageType,
       params: {
@@ -55,7 +53,6 @@ export class ExtensionToWebviewMessageSender {
         defaultPersonaId: defaultPersonaId,
       } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
     } as ExtensionToWebviewMessage);
-    console.log("Sent refresh message to webview");
   }
 
   /**

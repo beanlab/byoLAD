@@ -28,12 +28,8 @@ export const ChatView = ({
   hasSelection,
   loadingMessageState,
 }: ChatViewProps) => {
-  console.log("ChatView - about to useAppContext");
   const { activeChat } = useAppContext();
-  console.log("ChatView - used useAppContext");
-  console.log("ChatView - about to useExtensionMessageContext");
   const { updateChat } = useExtensionMessageContext();
-  console.log("ChatView - used useExtensionMessageContext");
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -97,19 +93,12 @@ export const ChatView = ({
    * This is done by comparing the current length of messages/blocks to the previous length of messages/blocks.
    */
   useEffect(() => {
-    console.log("ChatView - useEffect - activeChat.messages.length > 0");
     if (activeChat && activeChat.messages && activeChat.messages.length > 0) {
       const lastMessage = activeChat.messages[activeChat.messages.length - 1];
       if (activeChat.messages.length > prevMessagesLengthRef.current) {
-        console.log(
-          "ChatView - useEffect - Branch 1 activeChat.messages.length > prevMessagesLengthRef.current",
-        );
         // When new messages are added
         scrollToBottom();
       } else if (activeChat.messages.length === prevMessagesLengthRef.current) {
-        console.log(
-          "ChatView - useEffect - Branch 2activeChat.messages.length === prevMessagesLengthRef.current",
-        );
         if (
           lastMessage &&
           lastMessage.content.length > prevBlocksInLastMessageRef.current
@@ -118,10 +107,8 @@ export const ChatView = ({
           scrollToBottom();
         }
       }
-      console.log("ChatView - useEffect - After IF");
       prevMessagesLengthRef.current = activeChat.messages.length; // Update count for next render
       prevBlocksInLastMessageRef.current = lastMessage.content.length; // Update count for next render
-      console.log("ChatView - useEffect - End");
     }
   }, [activeChat?.messages]);
 

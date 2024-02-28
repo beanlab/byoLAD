@@ -1,26 +1,21 @@
 import { useRef, useEffect } from "react";
-import { ChatRole, Chat, Persona } from "../../../shared/types";
+import { Chat, ChatRole } from "../../../shared/types";
 import { Message } from "./Message";
 import { ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";
-import NavBar from "./NavBar";
 import scrollIntoView from "scroll-into-view-if-needed";
 import { ChatInput } from "./ChatInput";
 import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
-import { PersonaDropdown } from "./PersonaDropdown";
+import { useAppContext } from "../utilities/AppContext";
 
 interface ChatViewProps {
   imagePaths: ImagePaths;
-  activeChat: Chat;
-  personaList: Persona[];
   errorMessage: string | null;
   hasSelection: boolean;
   loadingMessageState: {
     loadingMessage: boolean;
     setLoadingMessage: React.Dispatch<React.SetStateAction<boolean>>;
   };
-  changeActiveChat: (chat: Chat | null) => void;
-  changeChatPersonaId: (chat: Chat, personaId: number) => void;
 }
 
 /**
@@ -29,15 +24,16 @@ interface ChatViewProps {
  */
 export const ChatView = ({
   imagePaths,
-  activeChat,
-  personaList,
   errorMessage,
   hasSelection,
   loadingMessageState,
-  changeActiveChat,
-  changeChatPersonaId,
 }: ChatViewProps) => {
+  console.log("ChatView - about to useAppContext");
+  const { activeChat } = useAppContext();
+  console.log("ChatView - used useAppContext");
+  console.log("ChatView - about to useExtensionMessageContext");
   const { updateChat } = useExtensionMessageContext();
+  console.log("ChatView - used useExtensionMessageContext");
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -55,8 +51,9 @@ export const ChatView = ({
   const deleteMessageBlock = (
     messagePosition: number,
     messageBlockPosition: number,
+    chat: Chat,
   ) => {
-    const newChat = { ...activeChat };
+    const newChat = { ...chat };
     newChat.messages[messagePosition].content.splice(messageBlockPosition, 1);
     if (newChat.messages[messagePosition].content.length == 0) {
       if (
@@ -75,19 +72,21 @@ export const ChatView = ({
     updateChat(newChat);
   };
 
-  const messages = activeChat.messages.map((message, position) => {
-    if (message.role != ChatRole.System) {
-      return (
-        <Message
-          role={message.role}
-          messageBlocks={message.content}
-          deleteMessageBlock={(messageBlockPosition: number) =>
-            deleteMessageBlock(position, messageBlockPosition)
-          }
-        />
-      );
-    }
-  });
+  const messages = activeChat
+    ? activeChat.messages.map((message, position) => {
+        if (message.role != ChatRole.System) {
+          return (
+            <Message
+              role={message.role}
+              messageBlocks={message.content}
+              deleteMessageBlock={(messageBlockPosition: number) =>
+                deleteMessageBlock(position, messageBlockPosition, activeChat)
+              }
+            />
+          );
+        }
+      })
+    : [];
 
   // Refs to persist across renders
   const prevMessagesLengthRef = useRef(messages.length);
@@ -98,12 +97,19 @@ export const ChatView = ({
    * This is done by comparing the current length of messages/blocks to the previous length of messages/blocks.
    */
   useEffect(() => {
+    console.log("ChatView - useEffect - activeChat.messages.length > 0");
     if (activeChat && activeChat.messages && activeChat.messages.length > 0) {
       const lastMessage = activeChat.messages[activeChat.messages.length - 1];
       if (activeChat.messages.length > prevMessagesLengthRef.current) {
+        console.log(
+          "ChatView - useEffect - Branch 1 activeChat.messages.length > prevMessagesLengthRef.current",
+        );
         // When new messages are added
         scrollToBottom();
       } else if (activeChat.messages.length === prevMessagesLengthRef.current) {
+        console.log(
+          "ChatView - useEffect - Branch 2activeChat.messages.length === prevMessagesLengthRef.current",
+        );
         if (
           lastMessage &&
           lastMessage.content.length > prevBlocksInLastMessageRef.current
@@ -112,13 +118,15 @@ export const ChatView = ({
           scrollToBottom();
         }
       }
+      console.log("ChatView - useEffect - After IF");
       prevMessagesLengthRef.current = activeChat.messages.length; // Update count for next render
       prevBlocksInLastMessageRef.current = lastMessage.content.length; // Update count for next render
+      console.log("ChatView - useEffect - End");
     }
-  }, [activeChat.messages]);
+  }, [activeChat?.messages]);
 
   let welcomeMessage = null;
-  if (activeChat.messages.length === 0) {
+  if (activeChat && activeChat.messages.length === 0) {
     welcomeMessage = (
       <div className="welcome-message">
         <div className="top-logo">
@@ -135,30 +143,29 @@ export const ChatView = ({
   }
 
   return (
-    <div className="view-container">
-      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
-      <div className="page-header">
-        <h2>{activeChat.title}</h2>
-        <PersonaDropdown
-          label="Persona"
-          personas={personaList}
-          selectedPersonaId={activeChat.personaId}
-          changeSelectedPersonaId={(id) => changeChatPersonaId(activeChat, id)}
-        />
-      </div>
-      <div className="message-list">
-        <div>{welcomeMessage}</div>
-        <div>{messages}</div>
-        <div ref={endOfMessagesRef}></div>
-      </div>
+    <>
+      {activeChat ? (
+        <div className="view-container">
+          <div className="page-header">
+            <h2>{activeChat.title}</h2>
+          </div>
+          <div className="message-list">
+            <div>{welcomeMessage}</div>
+            <div>{messages}</div>
+            <div ref={endOfMessagesRef}></div>
+          </div>
 
-      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+          {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
 
-      <ChatInput
-        activeChat={activeChat}
-        hasSelection={hasSelection}
-        loadingMessageState={loadingMessageState}
-      />
-    </div>
+          <ChatInput
+            activeChat={activeChat}
+            hasSelection={hasSelection}
+            loadingMessageState={loadingMessageState}
+          />
+        </div>
+      ) : (
+        <div>No active chat found. Try reloading this window.</div>
+      )}
+    </>
   );
 };

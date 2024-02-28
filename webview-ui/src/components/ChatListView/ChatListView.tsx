@@ -1,29 +1,13 @@
-import { Chat, Persona } from "../../../../shared/types";
+import { Chat } from "../../../../shared/types";
 import { ChatList } from "./ChatList";
-import { NavBar } from "../NavBar";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
-import { PersonaDropdown } from "../PersonaDropdown";
+import { useAppContext } from "../../utilities/AppContext";
 
-interface ChatListProps {
-  chatList: Chat[];
-  changeActiveChat: (chat: Chat | null) => void;
-  personasList: Persona[];
-  defaultPersonaId: number;
-  changeDefaultPersonaId: (id: number) => void;
-}
-
-export const ChatListView = ({
-  chatList,
-  changeActiveChat,
-  personasList,
-  defaultPersonaId,
-  changeDefaultPersonaId,
-}: ChatListProps) => {
+export const ChatListView = () => {
+  console.log("ChatListView - about to useAppContext");
+  const { setActiveViewAsChat, chatList } = useAppContext();
+  console.log("ChatListView - used useAppContext");
   const { createNewChat } = useExtensionMessageContext();
-
-  const handleOnChatClick = (chat: Chat) => {
-    changeActiveChat(chat);
-  };
 
   if (chatList.length === 0) {
     createNewChat();
@@ -32,19 +16,12 @@ export const ChatListView = ({
 
   return (
     <div>
-      <NavBar showBackButton={false} changeActiveChat={changeActiveChat} />
       <div className="page-header">
         <h2>Chat History</h2>
-        <PersonaDropdown
-          label="Default Persona"
-          personas={personasList}
-          selectedPersonaId={defaultPersonaId}
-          changeSelectedPersonaId={changeDefaultPersonaId}
-        />
       </div>
       <ChatList
         chatList={chatList}
-        handleChatClick={handleOnChatClick}
+        handleChatClick={(chat: Chat) => setActiveViewAsChat(chat)}
       ></ChatList>
     </div>
   );

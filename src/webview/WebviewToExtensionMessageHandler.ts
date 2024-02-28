@@ -109,6 +109,7 @@ export class WebviewToExtensionMessageHandler {
         const params =
           message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         this.chatDataManager.activeChatId = params.activeChatId;
+        await this.extensionToWebviewMessageSender.refresh();
         break;
       }
       case "updateChat": {

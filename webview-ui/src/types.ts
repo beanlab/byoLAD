@@ -8,3 +8,9 @@ export enum VsCodeTheme {
   HighContrastLight = "hc-light",
   HighContrastDark = "hc-dark",
 }
+
+export enum ActiveView {
+  ChatList,
+  Chat,
+  PersonaSettings,
+}

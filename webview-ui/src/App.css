@@ -1,3 +1,7 @@
+/* body {
+  padding: 0;
+} */
+
 /* Styling for the back and add button at top of page */
 .navbar {
   width: 100%;
@@ -5,7 +9,12 @@
   padding-bottom: 4px;
   z-index: 1; /* Stay in front of other elements */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Push the buttons to the edges */
+}
+
+.navbar-section {
+  display: flex;
+  align-items: center;
 }
 
 .back-button {
@@ -164,37 +173,18 @@
   padding-right: 5px;
 }
 
-/* Dropdown styles from Microsoft's Webview UI Toolkit: https://github.com/microsoft/vscode-webview-ui-toolkit/blob/main/src/dropdown/README.md#with-label */
-.dropdown-container {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
-.dropdown-container label {
-  display: block;
-  color: var(--vscode-foreground);
-  cursor: pointer;
-  font-size: var(--vscode-font-size);
-  line-height: normal;
-  margin-bottom: 2px;
-}
-
-.dropdown-container > div {
-  display: flex;
-  align-items: center;
-}
-
 /* Page Header */
 .page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   margin-bottom: 1rem;
 }
 
 .page-header > h2 {
   margin: 0;
+}
+
+.chat-options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  align-items: center;
 }

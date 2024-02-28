@@ -26,7 +26,9 @@ export class GPTChatModel implements ChatModel {
       .create({
         messages: this.convertToGPTMessages(
           request.chat,
-          request.persona.instructions,
+          request.persona.instructions +
+            "\n" +
+            request.responseFormattingInstruction,
         ),
         model: this.model,
       })

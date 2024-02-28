@@ -4,6 +4,7 @@ import { PersonaDataManager } from "../Persona/PersonaDataManager";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatModelResponse, ChatModelRequest } from "./ChatModel";
 import { ChatEditor } from "../Chat/ChatEditor";
+import { LLM_MESSAGE_FORMATTING_INSTRUCTION } from "../commands/constants";
 
 export class LLMApiRequestSender {
   private readonly settingsProvider: SettingsProvider;
@@ -36,6 +37,7 @@ export class LLMApiRequestSender {
     const request: ChatModelRequest = {
       chat,
       persona,
+      responseFormattingInstruction: LLM_MESSAGE_FORMATTING_INSTRUCTION,
     };
     return await this.settingsProvider.getChatModel().chat(request);
   }

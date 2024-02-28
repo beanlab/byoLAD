@@ -58,7 +58,9 @@ export class PaLMChatModel implements ChatModel {
         model: this.model,
         prompt: this.convertToPaLMPrompt(
           request.chat,
-          request.persona.instructions,
+          request.persona.instructions +
+            "\n" +
+            request.responseFormattingInstruction,
         ),
       })
       .then((response) => {

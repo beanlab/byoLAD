@@ -10,6 +10,7 @@ export interface ChatModel {
 export interface ChatModelRequest {
   chat: Chat;
   persona: Persona;
+  responseFormattingInstruction: string;
 }
 
 /**

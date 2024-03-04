@@ -137,8 +137,18 @@ export class WebviewToExtensionMessageHandler {
         await this.extensionToWebviewMessageSender.refresh();
         break;
       }
-      case "editPersonas": {
-        await vscode.commands.executeCommand("vscode-byolad.managePersonas");
+      case "updatePersona": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        this.personaDataManager.updatePersona(params.persona);
+        await this.extensionToWebviewMessageSender.refresh();
+        break;
+      }
+      case "deletePersona": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        this.personaDataManager.deletePersona(params.personaId);
+        await this.extensionToWebviewMessageSender.refresh();
         break;
       }
       default: {

@@ -126,11 +126,6 @@
         "command": "vscode-byolad.addCodeToNewChat",
         "title": "byoLAD — Add Code to New Chat",
         "category": "byoLAD"
-      },
-      {
-        "command": "vscode-byolad.managePersonas",
-        "title": "byoLAD — Manage Custom Personas",
-        "category": "byoLAD"
       }
     ],
     "menus": {

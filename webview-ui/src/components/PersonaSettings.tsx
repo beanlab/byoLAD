@@ -8,9 +8,11 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useAppContext } from "../utilities/AppContext";
 import { EditPersona } from "./EditPersona";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
+  const { deletePersona, updatePersona } = useExtensionMessageContext();
   const [selectedPersona, setSelectedPersona] = useState<
     Persona | PersonaDraft | null
   >(null);
@@ -30,19 +32,23 @@ export const PersonaSettings: React.FC = () => {
   };
 
   const handleDeletePersona = (persona: Persona) => {
-    console.log("TODO: Delete persona", persona);
-    // TODO: Implement delete
+    deletePersona(persona.id);
   };
 
   const handleSavePersona = (persona: Persona | PersonaDraft) => {
-    console.log("TODO: Save persona", persona);
-    // TODO: Implement save
+    updatePersona(persona);
     setSelectedPersona(null);
   };
 
   const handleDuplicatePersona = (persona: Persona) => {
-    console.log("TODO: Duplicate persona", persona);
-    // TODO: Implement duplicate
+    const duplicate: PersonaDraft = {
+      name: `${persona.name} (copy)`,
+      description: persona.description,
+      instructions: persona.instructions,
+      modelProvider: persona.modelProvider,
+      modelId: persona.modelId,
+    };
+    updatePersona(duplicate);
   };
 
   return (

@@ -31,9 +31,9 @@ function getProviderModelUrl(provider: ModelProvider): string {
 function getPlaceholderModelId(provider: ModelProvider): string {
   switch (provider) {
     case ModelProvider.OpenAI:
-      return "gpt-3.5-turbo";
+      return "gpt-3.5-turbo"; // Known valid value
     case ModelProvider.Google:
-      return "chat-bison";
+      return "chat-bison"; // Known valid value
     default: {
       const _exhaustiveCheck: never = provider;
       return _exhaustiveCheck;

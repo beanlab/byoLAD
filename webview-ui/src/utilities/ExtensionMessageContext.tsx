@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { WebviewToExtensionMessageSender } from "./WebviewToExtensionMessageSender";
-import { Chat } from "../../../shared/types";
+import { Chat, Persona, PersonaDraft } from "../../../shared/types";
 
 type ExtensionMessageContextType = {
   createNewChat: () => void;
@@ -11,7 +11,8 @@ type ExtensionMessageContextType = {
   copyToClipboard: (text: string) => void;
   insertCodeBlock: (code: string) => void;
   diffCodeBlock: (code: string) => void;
-  editPersonas: () => void;
+  updatePersona: (persona: Persona | PersonaDraft) => void;
+  deletePersona: (pesonaId: number) => void;
 };
 
 // Default context value should never be used, but is required to be defined
@@ -24,7 +25,8 @@ const ExtensionMessageContext = createContext<ExtensionMessageContextType>({
   copyToClipboard: () => {},
   insertCodeBlock: () => {},
   diffCodeBlock: () => {},
-  editPersonas: () => {},
+  updatePersona: () => {},
+  deletePersona: () => {},
 });
 
 export const ExtensionMessageContextProvider = ({
@@ -43,7 +45,8 @@ export const ExtensionMessageContextProvider = ({
     copyToClipboard: webviewToExtensionMessageSender.copyToClipboard,
     insertCodeBlock: webviewToExtensionMessageSender.insertCodeBlock,
     diffCodeBlock: webviewToExtensionMessageSender.diffCodeBlock,
-    editPersonas: webviewToExtensionMessageSender.editPersonas,
+    updatePersona: webviewToExtensionMessageSender.updatePersona,
+    deletePersona: webviewToExtensionMessageSender.deletePersona,
   };
   return (
     <ExtensionMessageContext.Provider value={context}>

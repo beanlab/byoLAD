@@ -4,6 +4,8 @@ import {
   WebviewToExtensionMessage,
   WebviewToExtensionMessageTypeParamsMap,
   WebviewToExtensionMessageType,
+  PersonaDraft,
+  Persona,
 } from "../../../shared/types";
 
 /**
@@ -194,12 +196,30 @@ export class WebviewToExtensionMessageSender {
   }
 
   /**
-   * Requests that the personas be edited.
+   * Requests that a persona be updated (add/edit).
+   * @param persona The persona to update.
    */
-  public editPersonas() {
-    const messageType: WebviewToExtensionMessageType = "editPersonas";
+  public updatePersona(persona: Persona | PersonaDraft) {
+    const messageType: WebviewToExtensionMessageType = "updatePersona";
     vscode.postMessage({
       messageType: messageType,
+      params: {
+        persona: persona,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
+
+  /**
+   * Requests that a persona be deleted.
+   * @param personaId The ID of the persona to delete.
+   */
+  public deletePersona(personaId: number) {
+    const messageType: WebviewToExtensionMessageType = "deletePersona";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        personaId: personaId,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
     } as WebviewToExtensionMessage);
   }
 }

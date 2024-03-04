@@ -1,5 +1,5 @@
 import { ExtensionContext } from "vscode";
-import { ModelProvider, Persona } from "../../shared/types";
+import { Persona, PersonaDraft } from "../../shared/types";
 import { STANDARD_PERSONAS } from "./StandardPersonas";
 
 /**
@@ -116,23 +116,16 @@ export class PersonaDataManager {
   }
 
   /**
-   * Adds a new Persona to the workspace state and returns that Persona.
+   * Adds a new PersonaDraft to the workspace state and returns that Persona.
    */
-  addNewPersona(
-    name: string,
-    description: string,
-    instructions: string,
-    modelProvider: ModelProvider,
-    modelId: string,
-  ): Persona {
-    this.vaidateNameProperties(name);
+  addNewPersona(draft: PersonaDraft): Persona {
     const newPersona: Persona = {
       id: this.nextId,
-      name,
-      description,
-      instructions,
-      modelProvider,
-      modelId,
+      name: draft.name,
+      description: draft.description,
+      instructions: draft.instructions,
+      modelProvider: draft.modelProvider,
+      modelId: draft.modelId,
     };
     this.nextId++;
     this.personas = [...this.personas, newPersona];
@@ -140,20 +133,19 @@ export class PersonaDataManager {
   }
 
   /**
-   * Updates a Persona with the given ID in the workspace state.
-   * Throws an error if the ID does not exist.
-   * @param id The ID of the Persona to update.
-   * @param instructions The new instructions for the Persona.
+   * Updates a persona (add/edit) to the workspace state and returns that Persona.
    */
-  updatePersonaInstructions(personaId: number, instructions: string): void {
-    const persona = this.getPersonaById(personaId);
-    if (!persona) {
-      throw new Error(`Persona with ID ${personaId} does not exist`);
+  updatePersona(persona: Persona | PersonaDraft): Persona {
+    // If it has an ID, it's an existing Persona, otherwise it's a new one (draft)
+    if ("id" in persona) {
+      const updatedPersonas = this.personas.map((p) =>
+        p.id === persona.id ? persona : p,
+      );
+      this.personas = updatedPersonas;
+      return persona;
+    } else {
+      return this.addNewPersona(persona);
     }
-    persona.instructions = instructions;
-    this.personas = this.personas.map((p) =>
-      p.id === personaId ? persona : p,
-    );
   }
 
   deletePersona(id: number): void {

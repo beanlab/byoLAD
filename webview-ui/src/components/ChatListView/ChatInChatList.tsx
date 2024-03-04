@@ -5,7 +5,6 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
-import React from "react";
 
 interface ChatInChatListProps {
   chat: Chat;

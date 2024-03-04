@@ -6,6 +6,7 @@ import {
   WebviewToExtensionMessageType,
   PersonaDraft,
   Persona,
+  ModelProvider,
 } from "../../../shared/types";
 
 /**
@@ -219,6 +220,20 @@ export class WebviewToExtensionMessageSender {
       messageType: messageType,
       params: {
         personaId: personaId,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
+
+  /**
+   * Requests that the API key management options be opened.
+   * @param modelProvider The model provider to manage the API keys for. If undefined, the user will be prompted to select a model provider.
+   */
+  public manageApiKeys(modelProvider: ModelProvider | undefined) {
+    const messageType: WebviewToExtensionMessageType = "manageApiKeys";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        modelProvider: modelProvider,
       } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
     } as WebviewToExtensionMessage);
   }

@@ -4,7 +4,7 @@ import {
   Persona,
   PersonaDraft,
   validatePersonaDraftProperties,
-} from "../../../shared/types";
+} from "../../../../shared/types";
 import {
   VSCodeButton,
   VSCodeTextField,

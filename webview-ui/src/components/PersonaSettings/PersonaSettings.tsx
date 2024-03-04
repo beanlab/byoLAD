@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { ModelProvider, Persona, PersonaDraft } from "../../../shared/types";
-import { STANDARD_PERSONAS } from "../../../shared/data/StandardPersonas";
+import { ModelProvider, Persona, PersonaDraft } from "../../../../shared/types";
+import { STANDARD_PERSONAS } from "../../../../shared/data/StandardPersonas";
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { useAppContext } from "../utilities/AppContext";
+import { useAppContext } from "../../utilities/AppContext";
 import { EditPersona } from "./EditPersona";
-import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
-import NavBar from "./NavBar";
+import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
+import NavBar from "../NavBar";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
-  const { deletePersona, updatePersona } = useExtensionMessageContext();
+  const { deletePersona, updatePersona, manageApiKeys } =
+    useExtensionMessageContext();
   const [selectedPersona, setSelectedPersona] = useState<
     Persona | PersonaDraft | null
   >(null);
@@ -68,26 +69,36 @@ export const PersonaSettings: React.FC = () => {
           <div className="page-header">
             <h2>Personas</h2>
           </div>
-          <VSCodeButton
-            onClick={handleAddPersona}
-            appearance="primary"
-            title="Add"
-            aria-label="Add"
-            style={{ marginBottom: "1rem" }}
-          >
-            Add
-            <span slot="start" className="codicon codicon-add"></span>
-          </VSCodeButton>
+          <div className="horizontal-section" style={{ marginBottom: "1rem" }}>
+            <VSCodeButton
+              onClick={handleAddPersona}
+              appearance="primary"
+              title="Add"
+              aria-label="Add"
+            >
+              Add Persona
+              <span slot="start" className="codicon codicon-add"></span>
+            </VSCodeButton>
+            <VSCodeButton
+              onClick={() => manageApiKeys(undefined)}
+              appearance="secondary"
+              title="Manage API Keys"
+              aria-label="Manage API Keys"
+            >
+              API Keys
+              <span slot="start" className="codicon codicon-key"></span>
+            </VSCodeButton>
+          </div>
 
           <div className="persona-cards">
-            {personaList.map((p) => (
-              <div key={p.modelId} className="persona-card">
+            {personaList.map((persona) => (
+              <div key={persona.modelId} className="persona-card">
                 <div className="persona-card-header">
-                  <h3>{p.name}</h3>
+                  <h3>{persona.name}</h3>
                   <div className="persona-card-button-group">
-                    {!uneditablePersonaIds.includes(p.id) && (
+                    {!uneditablePersonaIds.includes(persona.id) && (
                       <VSCodeButton
-                        onClick={() => handleEditPersona(p)}
+                        onClick={() => handleEditPersona(persona)}
                         title="Edit"
                         aria-label="Edit"
                         appearance="icon"
@@ -96,16 +107,16 @@ export const PersonaSettings: React.FC = () => {
                       </VSCodeButton>
                     )}
                     <VSCodeButton
-                      onClick={() => handleDuplicatePersona(p)}
+                      onClick={() => handleDuplicatePersona(persona)}
                       title="Duplicate"
                       aria-label="Duplicate"
                       appearance="icon"
                     >
                       <i className="codicon codicon-copy" />
                     </VSCodeButton>
-                    {!uneditablePersonaIds.includes(p.id) && (
+                    {!uneditablePersonaIds.includes(persona.id) && (
                       <VSCodeButton
-                        onClick={() => handleDeletePersona(p)}
+                        onClick={() => handleDeletePersona(persona)}
                         title="Delete"
                         aria-label="Delete"
                         appearance="icon"
@@ -115,10 +126,10 @@ export const PersonaSettings: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <p>{p.description}</p>
+                <p>{persona.description}</p>
                 <hr />
                 <p>
-                  {p.modelProvider}: {p.modelId}
+                  {persona.modelProvider}: {persona.modelId}
                 </p>
               </div>
             ))}

@@ -50,13 +50,13 @@ export const NavBar: React.FC = () => {
   return (
     <div className="navbar">
       {/* Left section of navbar */}
-      <div className="navbar-section">
+      <div className="horizontal-section">
         <VSCodeBadge>
           {hasBackButton() && (
             <VSCodeButton
               appearance="icon"
-              aria-label="Back to chat list"
-              title="Back to chat list"
+              aria-label="Back"
+              title="Back"
               onClick={handleBackButtonClick}
             >
               <i className="codicon codicon-chevron-left"></i>
@@ -76,7 +76,7 @@ export const NavBar: React.FC = () => {
       </div>
 
       {/* Right section of navbar */}
-      <div className="navbar-section">
+      <div className="horizontal-section">
         {hasPersonaDropdown() && activeChat && (
           <PersonaDropdown
             personas={personaList}

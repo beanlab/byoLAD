@@ -151,6 +151,15 @@ export class WebviewToExtensionMessageHandler {
         await this.extensionToWebviewMessageSender.refresh();
         break;
       }
+      case "manageApiKeys": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        await vscode.commands.executeCommand(
+          "vscode-byolad.manageApiKeys",
+          params.modelProvider,
+        );
+        break;
+      }
       default: {
         // Ensure exhaustive switch. Make sure all message types are handled in the switch statement.
         const _exhaustiveCheck: never = message.messageType;

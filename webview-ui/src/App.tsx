@@ -10,7 +10,7 @@ import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 import { ChatListView } from "./components/ChatListView/ChatListView";
 import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageContext";
-import { PersonaSettings } from "./components/PersonaSettings";
+import { PersonaSettings } from "./components/PersonaSettings/PersonaSettings";
 import { AppContext } from "./utilities/AppContext";
 
 function App() {

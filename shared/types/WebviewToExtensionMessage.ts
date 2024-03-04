@@ -1,4 +1,4 @@
-import { Chat, Persona, PersonaDraft } from ".";
+import { Chat, ModelProvider, Persona, PersonaDraft } from ".";
 
 // To add a new WebviewToExtensionMessageType, add it to the WebviewToExtensionMessageTypeParamsMap and export the params interface below.
 // These messages are sent from the WebviewToExtensionMessageSender (webview) and handled by the WebviewToExtensionMessageHandler (extension).
@@ -38,6 +38,7 @@ export interface WebviewToExtensionMessageTypeParamsMap {
   setDefaultPersonaId: SetDefaultPersonaIdParams;
   updatePersona: UpdatePersonaParams;
   deletePersona: DeletePersonaParams;
+  manageApiKeys: ManageApiKeysParams;
   // Add new message types here...
 }
 
@@ -110,4 +111,12 @@ export interface DeletePersonaParams {
    * The ID of the persona to delete.
    */
   personaId: number;
+}
+
+export interface ManageApiKeysParams {
+  /**
+   * The model provider to manage API keys for.
+   * If undefined, the user will be prompted to select a model provider.
+   */
+  modelProvider: ModelProvider | undefined;
 }

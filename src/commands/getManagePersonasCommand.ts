@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { PersonaDataManager } from "../Persona/PersonaDataManager";
-import { Persona } from "../../shared/types";
+import { ModelProvider, Persona } from "../../shared/types";
 import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 
 /**
@@ -45,7 +45,13 @@ export const getManagePersonasCommand = (
             `Updated Persona: ${personaName}`,
           );
         } else {
-          personaDataManager.addNewPersona(personaName, newInstructions);
+          personaDataManager.addNewPersona(
+            personaName,
+            "A custom persona created by the user.",
+            newInstructions,
+            ModelProvider.OpenAI, // TODO: Allow user to select model provider
+            "gpt-3.5-turbo", // TODO: Allow user to select model
+          );
           vscode.window.showInformationMessage(
             `Created Persona: ${personaName}`,
           );

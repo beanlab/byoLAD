@@ -1,5 +1,5 @@
 import { ExtensionContext } from "vscode";
-import { Persona } from "../../shared/types";
+import { ModelProvider, Persona } from "../../shared/types";
 import { STANDARD_PERSONAS } from "./StandardPersonas";
 
 /**
@@ -83,6 +83,11 @@ export class PersonaDataManager {
     this.context.workspaceState.update(this.PERSONAS_DEFAULT_ID_KEY, value);
   }
 
+  /** Default ModelProvider (enum) */
+  get defaultModelProvider(): string {
+    return this.getDefaultPersona().modelProvider;
+  }
+
   get nextId(): number {
     return (
       this.context.workspaceState.get<number>(this.PERSONAS_NEXT_ID_KEY) ||
@@ -113,12 +118,21 @@ export class PersonaDataManager {
   /**
    * Adds a new Persona to the workspace state and returns that Persona.
    */
-  addNewPersona(name: string, instructions: string): Persona {
+  addNewPersona(
+    name: string,
+    description: string,
+    instructions: string,
+    modelProvider: ModelProvider,
+    modelId: string,
+  ): Persona {
     this.vaidateNameProperties(name);
     const newPersona: Persona = {
       id: this.nextId,
       name,
+      description,
       instructions,
+      modelProvider,
+      modelId,
     };
     this.nextId++;
     this.personas = [...this.personas, newPersona];

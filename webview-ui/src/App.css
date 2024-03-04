@@ -188,3 +188,35 @@
   margin-bottom: 0.5rem;
   align-items: center;
 }
+
+/* Persona Settings*/
+.persona-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.persona-edit-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.persona-edit-field-container > label {
+  font-weight: bold;
+  font-size: calc(var(--vscode-editor-font-size) * 1.15);
+}
+
+.persona-edit-confirm-button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.persona-edit-confirm-button-container > vscode-button {
+  flex: 1;
+}
+
+.persona-edit-validation-error-message {
+  color: var(--vscode-errorForeground);
+}

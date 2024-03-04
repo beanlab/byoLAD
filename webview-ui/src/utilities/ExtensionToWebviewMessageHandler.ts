@@ -60,6 +60,7 @@ export class ExtensionToWebviewMessageHandler {
         } else {
           this.setActiveViewAsChatList();
         }
+        this.setErrorMessage(null);
         break;
       }
       case "errorMessage": {

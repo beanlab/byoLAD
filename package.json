@@ -126,6 +126,11 @@
         "command": "vscode-byolad.addCodeToNewChat",
         "title": "byoLAD — Add Code to New Chat",
         "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.manageApiKeys",
+        "title": "byoLAD — Manage LLM Provider API Keys",
+        "category": "byoLAD"
       }
     ],
     "menus": {

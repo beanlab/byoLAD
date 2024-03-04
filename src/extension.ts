@@ -21,6 +21,7 @@ import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMe
 import { ExtensionToWebviewMessageSender } from "./webview/ExtensionToWebviewMessageSender";
 import { PersonaDataManager } from "./Persona/PersonaDataManager";
 import { SecretsProvider } from "./helpers/SecretsProvider";
+import { getManageApiKeysCommand } from "./commands/getManageApiKeysCommand";
 
 // This method is automatically called by VS Code called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -101,6 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewProvider,
   );
   const openSettingsCommand = getOpenSettingsCommand();
+  const manageApiKeysCommand = getManageApiKeysCommand(secretsProvider);
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
@@ -122,6 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewDisposable,
     addCodeToChatCommand,
     addCodeToNewChatCommand,
+    manageApiKeysCommand,
   );
 }
 

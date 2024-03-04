@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   ModelProvider,
-  PERSONA_DESCRIPTION_MAX_LENGTH,
-  PERSONA_NAME_MAX_LENGTH,
   Persona,
   PersonaDraft,
   validatePersonaDraftProperties,
@@ -100,7 +98,6 @@ export const EditPersona: React.FC<{
           name="name"
           value={editedPersonaDraft.name}
           onInput={(e) => handleStringChange(e as InputEvent)}
-          size={PERSONA_NAME_MAX_LENGTH}
           autofocus
         />
       </LabelledField>
@@ -110,12 +107,11 @@ export const EditPersona: React.FC<{
         validationErrors={validationErrors}
         visitedFields={visitedFields}
       >
-        <VSCodeTextField
+        <VSCodeTextArea
           id="description"
           name="description"
           value={editedPersonaDraft.description}
           onInput={(e) => handleStringChange(e as InputEvent)}
-          size={PERSONA_DESCRIPTION_MAX_LENGTH}
         />
       </LabelledField>
       <LabelledField

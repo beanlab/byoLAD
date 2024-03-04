@@ -13,6 +13,7 @@ export const PersonaSettings: React.FC = () => {
   const [selectedPersona, setSelectedPersona] = useState<
     Persona | PersonaDraft | null
   >(null);
+  const uneditablePersonaIds = STANDARD_PERSONAS.map((p) => p.id);
 
   const handleAddPersona = () => {
     setSelectedPersona({
@@ -79,15 +80,14 @@ export const PersonaSettings: React.FC = () => {
           </VSCodeButton>
 
           <div className="persona-cards">
-            {personaList.map((persona) => (
-              <div key={persona.modelId} className="persona-card">
+            {personaList.map((p) => (
+              <div key={p.modelId} className="persona-card">
                 <div className="persona-card-header">
-                  <h3>{persona.name}</h3>
+                  <h3>{p.name}</h3>
                   <div className="persona-card-button-group">
-                    {/* {(persona.id === 0 || persona.id === 1) && ( */}
-                    {!STANDARD_PERSONAS.some((p) => p.id === persona.id) ?? (
+                    {!uneditablePersonaIds.includes(p.id) && (
                       <VSCodeButton
-                        onClick={() => handleEditPersona(persona)}
+                        onClick={() => handleEditPersona(p)}
                         title="Edit"
                         aria-label="Edit"
                         appearance="icon"
@@ -96,16 +96,16 @@ export const PersonaSettings: React.FC = () => {
                       </VSCodeButton>
                     )}
                     <VSCodeButton
-                      onClick={() => handleDuplicatePersona(persona)}
+                      onClick={() => handleDuplicatePersona(p)}
                       title="Duplicate"
                       aria-label="Duplicate"
                       appearance="icon"
                     >
                       <i className="codicon codicon-copy" />
                     </VSCodeButton>
-                    {!STANDARD_PERSONAS.some((p) => p.id === persona.id) ?? (
+                    {!uneditablePersonaIds.includes(p.id) && (
                       <VSCodeButton
-                        onClick={() => handleDeletePersona(persona)}
+                        onClick={() => handleDeletePersona(p)}
                         title="Delete"
                         aria-label="Delete"
                         appearance="icon"
@@ -115,10 +115,10 @@ export const PersonaSettings: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <p>{persona.description}</p>
+                <p>{p.description}</p>
                 <hr />
                 <p>
-                  {persona.modelProvider} ({persona.modelId})
+                  {p.modelProvider}: {p.modelId}
                 </p>
               </div>
             ))}

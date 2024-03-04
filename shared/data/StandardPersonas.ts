@@ -1,4 +1,4 @@
-import { ModelProvider, Persona } from "../../shared/types";
+import { ModelProvider, Persona } from "../types";
 
 export const STANDARD_PERSONAS: Persona[] = [
   {

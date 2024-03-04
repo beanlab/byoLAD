@@ -15,6 +15,7 @@
 .navbar-section {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .back-button {
@@ -219,4 +220,32 @@
 
 .persona-edit-validation-error-message {
   color: var(--vscode-errorForeground);
+}
+
+.persona-cards {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.persona-card {
+  border: 1px solid var(--vscode-menu-border);
+  border-radius: var(--button-icon-corner-radius);
+  padding: 1rem;
+}
+
+.persona-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.persona-card-button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.persona-card h3,
+.persona-card p {
+  margin: 0;
 }

@@ -1,16 +1,11 @@
 import React from "react";
 import { VSCodeBadge, VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { Chat } from "../../../shared/types";
 import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 import { PersonaDropdown } from "./PersonaDropdown";
 import { ActiveView } from "../types";
 import { useAppContext } from "../utilities/AppContext";
 
-interface NavBarProps {
-  changeChatPersonaId: (chat: Chat, personaId: number) => void;
-}
-
-export const NavBar: React.FC<NavBarProps> = ({ changeChatPersonaId }) => {
+export const NavBar: React.FC = () => {
   const {
     activeView,
     activeChat,
@@ -19,7 +14,7 @@ export const NavBar: React.FC<NavBarProps> = ({ changeChatPersonaId }) => {
     setActiveViewAsChatList,
     setActiveViewAsPersonaSettings,
   } = useAppContext();
-  const { createNewChat } = useExtensionMessageContext();
+  const { createNewChat, updateChat } = useExtensionMessageContext();
 
   const hasBackButton = () => {
     return (
@@ -29,7 +24,7 @@ export const NavBar: React.FC<NavBarProps> = ({ changeChatPersonaId }) => {
   };
 
   const hasNewChatButton = () => {
-    return activeView === ActiveView.ChatList;
+    return activeView === ActiveView.ChatList || activeView === ActiveView.Chat;
   };
 
   const hasPersonaDropdown = () => {
@@ -63,7 +58,6 @@ export const NavBar: React.FC<NavBarProps> = ({ changeChatPersonaId }) => {
               aria-label="Back to chat list"
               title="Back to chat list"
               onClick={handleBackButtonClick}
-              className="back-button"
             >
               <i className="codicon codicon-chevron-left"></i>
             </VSCodeButton>
@@ -87,9 +81,10 @@ export const NavBar: React.FC<NavBarProps> = ({ changeChatPersonaId }) => {
           <PersonaDropdown
             personas={personaList}
             selectedPersonaId={activeChat.personaId}
-            changeSelectedPersonaId={(id) =>
-              changeChatPersonaId(activeChat, id)
-            }
+            changeSelectedPersonaId={(id) => {
+              activeChat.id = id;
+              updateChat(activeChat);
+            }}
           />
         )}
         {hasSettingsButton() && (

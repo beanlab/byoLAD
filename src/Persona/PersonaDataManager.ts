@@ -1,6 +1,6 @@
 import { ExtensionContext } from "vscode";
 import { Persona, PersonaDraft } from "../../shared/types";
-import { STANDARD_PERSONAS } from "./StandardPersonas";
+import { STANDARD_PERSONAS } from "../../shared/data/StandardPersonas";
 
 /**
  * Manages a user's custom Personas in the VS Code workspace state.

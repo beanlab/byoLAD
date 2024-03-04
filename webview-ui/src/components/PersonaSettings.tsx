@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { ModelProvider, Persona, PersonaDraft } from "../../../shared/types";
-import {
-  VSCodeButton,
-  VSCodeDataGrid,
-  VSCodeDataGridCell,
-  VSCodeDataGridRow,
-} from "@vscode/webview-ui-toolkit/react";
+import { STANDARD_PERSONAS } from "../../../shared/data/StandardPersonas";
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
 import { useAppContext } from "../utilities/AppContext";
 import { EditPersona } from "./EditPersona";
 import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
+import NavBar from "./NavBar";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
@@ -53,58 +50,51 @@ export const PersonaSettings: React.FC = () => {
 
   return (
     <div>
-      <h1>Personas</h1>
       {selectedPersona ? (
-        <EditPersona
-          persona={selectedPersona}
-          onSave={handleSavePersona}
-          onCancel={() => setSelectedPersona(null)}
-        />
+        <>
+          <div className="page-header">
+            <h2>Custom Persona</h2>
+          </div>
+          <EditPersona
+            persona={selectedPersona}
+            onSave={handleSavePersona}
+            onCancel={() => setSelectedPersona(null)}
+          />
+        </>
       ) : (
         <>
+          <NavBar />
+          <div className="page-header">
+            <h2>Personas</h2>
+          </div>
           <VSCodeButton
             onClick={handleAddPersona}
             appearance="primary"
             title="Add"
             aria-label="Add"
+            style={{ marginBottom: "1rem" }}
           >
             Add
             <span slot="start" className="codicon codicon-add"></span>
           </VSCodeButton>
-          <VSCodeDataGrid generate-header="none" aria-label="Custom Personas">
-            <VSCodeDataGridRow row-type="sticky-header">
-              <VSCodeDataGridCell cell-type="columnheader" grid-column="1">
-                Name
-              </VSCodeDataGridCell>
-              <VSCodeDataGridCell cell-type="columnheader" grid-column="2">
-                Provider
-              </VSCodeDataGridCell>
-              <VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-                Model
-              </VSCodeDataGridCell>
-              <VSCodeDataGridCell cell-type="columnheader" grid-column="4" />
-            </VSCodeDataGridRow>
+
+          <div className="persona-cards">
             {personaList.map((persona) => (
-              <VSCodeDataGridRow key={persona.modelId}>
-                <VSCodeDataGridCell gridColumn="1">
-                  {persona.name}
-                </VSCodeDataGridCell>
-                <VSCodeDataGridCell gridColumn="2">
-                  {persona.modelProvider}
-                </VSCodeDataGridCell>
-                <VSCodeDataGridCell gridColumn="3">
-                  {persona.modelId}
-                </VSCodeDataGridCell>
-                <VSCodeDataGridCell gridColumn="4">
-                  <div style={{ display: "flex" }}>
-                    <VSCodeButton
-                      onClick={() => handleEditPersona(persona)}
-                      title="Edit"
-                      aria-label="Edit"
-                      appearance="icon"
-                    >
-                      <i className="codicon codicon-edit" />
-                    </VSCodeButton>
+              <div key={persona.modelId} className="persona-card">
+                <div className="persona-card-header">
+                  <h3>{persona.name}</h3>
+                  <div className="persona-card-button-group">
+                    {/* {(persona.id === 0 || persona.id === 1) && ( */}
+                    {!STANDARD_PERSONAS.some((p) => p.id === persona.id) ?? (
+                      <VSCodeButton
+                        onClick={() => handleEditPersona(persona)}
+                        title="Edit"
+                        aria-label="Edit"
+                        appearance="icon"
+                      >
+                        <i className="codicon codicon-edit" />
+                      </VSCodeButton>
+                    )}
                     <VSCodeButton
                       onClick={() => handleDuplicatePersona(persona)}
                       title="Duplicate"
@@ -113,19 +103,26 @@ export const PersonaSettings: React.FC = () => {
                     >
                       <i className="codicon codicon-copy" />
                     </VSCodeButton>
-                    <VSCodeButton
-                      onClick={() => handleDeletePersona(persona)}
-                      title="Delete"
-                      aria-label="Delete"
-                      appearance="icon"
-                    >
-                      <i className="codicon codicon-trash" />
-                    </VSCodeButton>
+                    {!STANDARD_PERSONAS.some((p) => p.id === persona.id) ?? (
+                      <VSCodeButton
+                        onClick={() => handleDeletePersona(persona)}
+                        title="Delete"
+                        aria-label="Delete"
+                        appearance="icon"
+                      >
+                        <i className="codicon codicon-trash" />
+                      </VSCodeButton>
+                    )}
                   </div>
-                </VSCodeDataGridCell>
-              </VSCodeDataGridRow>
+                </div>
+                <p>{persona.description}</p>
+                <hr />
+                <p>
+                  {persona.modelProvider} ({persona.modelId})
+                </p>
+              </div>
             ))}
-          </VSCodeDataGrid>
+          </div>
         </>
       )}
     </div>

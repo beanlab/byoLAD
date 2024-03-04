@@ -7,6 +7,7 @@ import scrollIntoView from "scroll-into-view-if-needed";
 import { ChatInput } from "./ChatInput";
 import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 import { useAppContext } from "../utilities/AppContext";
+import NavBar from "./NavBar";
 
 interface ChatViewProps {
   imagePaths: ImagePaths;
@@ -133,6 +134,7 @@ export const ChatView = ({
     <>
       {activeChat ? (
         <div className="view-container">
+          <NavBar />
           <div className="page-header">
             <h2>{activeChat.title}</h2>
           </div>

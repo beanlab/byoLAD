@@ -2,6 +2,7 @@ import { Chat } from "../../../../shared/types";
 import { ChatList } from "./ChatList";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 import { useAppContext } from "../../utilities/AppContext";
+import NavBar from "../NavBar";
 
 export const ChatListView = () => {
   const { setActiveViewAsChat, chatList } = useAppContext();
@@ -14,6 +15,7 @@ export const ChatListView = () => {
 
   return (
     <div>
+      <NavBar />
       <div className="page-header">
         <h2>Chat History</h2>
       </div>

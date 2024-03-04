@@ -10,7 +10,6 @@ import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 import { ChatListView } from "./components/ChatListView/ChatListView";
 import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageContext";
-import NavBar from "./components/NavBar";
 import { PersonaSettings } from "./components/PersonaSettings";
 import { AppContext } from "./utilities/AppContext";
 
@@ -87,11 +86,6 @@ function App() {
   );
   mutationObserver.observe(document.body, { attributes: true });
 
-  const changeChatPersonaId = (chat: Chat, id: number) => {
-    chat.personaId = id;
-    webviewToExtensionMessageSender.updateChat(chat);
-  };
-
   return (
     <VsCodeThemeContext.Provider value={vsCodeTheme}>
       {/* Loading indicator unless the necessary data has already loaded */}
@@ -124,8 +118,7 @@ function App() {
           <ExtensionMessageContextProvider
             webviewToExtensionMessageSender={webviewToExtensionMessageSender}
           >
-            <>
-              <NavBar changeChatPersonaId={changeChatPersonaId} />
+            <div className="app-container">
               {activeView === ActiveView.ChatList ? (
                 <ChatListView />
               ) : activeView === ActiveView.Chat ? (
@@ -140,7 +133,7 @@ function App() {
               ) : (
                 <div>Invalid active view. Please reload the extension.</div>
               )}
-            </>
+            </div>
           </ExtensionMessageContextProvider>
         </AppContext.Provider>
       ) : (

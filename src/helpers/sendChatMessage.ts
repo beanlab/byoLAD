@@ -10,6 +10,7 @@ import { ChatDataManager } from "../Chat/ChatDataManager";
 import { LLMApiService } from "../ChatModel/LLMApiService";
 import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
 import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
+import { getCurrentOpenFileName } from "./getCurrentOpenFileName";
 
 /**
  * Primary function to send a chat message. Starts a new chat if needed,
@@ -59,6 +60,17 @@ export async function sendChatMessage(
     messageBlocks.push(codeBlock);
   }
 
+  // if this is the first time a message is sent, then update the chat title
+  if (chat.title == "Empty Chat"){
+    chat.title = markdown 
+  }
+
+  // if the file is a new file, add it to the tags
+  const openedFileName = getCurrentOpenFileName() 
+    if ((openedFileName !== undefined) && !chat.tags.includes(openedFileName)){
+      chat.tags.push(openedFileName)
+    }
+  
   // Update the webview, chat itself, and send the message to the LLM API
   await extensionToWebviewMessageSender.updateIsMessageLoading(true);
   await chatEditor.appendMessageBlocks(chat, ChatRole.User, messageBlocks);

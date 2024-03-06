@@ -18,4 +18,5 @@ export interface Chat {
    * User-facing title/name
    */
   title: string;
+  tags: string[];
 }

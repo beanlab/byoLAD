@@ -61,16 +61,18 @@ export async function sendChatMessage(
   }
 
   // if this is the first time a message is sent, then update the chat title
-  if (chat.title == "Empty Chat"){
-    chat.title = markdown 
+  if (chat.title == "Empty Chat") {
+    chat.title = markdown;
+    chat.tags = ["text.py", "test.txt"];
+    console.log("set the title", chat.title);
   }
 
   // if the file is a new file, add it to the tags
-  const openedFileName = getCurrentOpenFileName() 
-    if ((openedFileName !== undefined) && !chat.tags.includes(openedFileName)){
-      chat.tags.push(openedFileName)
-    }
-  
+  const openedFileName = getCurrentOpenFileName();
+  if (openedFileName !== undefined && !chat.tags.includes(openedFileName)) {
+    chat.tags.push(openedFileName);
+  }
+
   // Update the webview, chat itself, and send the message to the LLM API
   await extensionToWebviewMessageSender.updateIsMessageLoading(true);
   await chatEditor.appendMessageBlocks(chat, ChatRole.User, messageBlocks);

@@ -1,4 +1,4 @@
-import { Chat, ChatMessage, ChatRole, MessageBlock } from "../../shared/types";
+import { Chat, ChatMessage, ChatRole, CodeBlock, MessageBlock } from "../../shared/types";
 import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
 import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { ChatDataManager } from "./ChatDataManager";
@@ -41,6 +41,7 @@ export class ChatEditor {
     } else {
       chat.messages.push({ role: role, content: messageBlocks } as ChatMessage);
     }
+    this.addLanguageTag(messageBlocks, chat)
     this.chatDataManager.updateChat(chat);
 
     if (updateWebview) {
@@ -48,6 +49,22 @@ export class ChatEditor {
     }
   }
 
+    /**
+   * Adds a language tag if appropriate 
+   * @param messageBlocks most recent MessageBlocks appended to the chat.
+   * @param chat Chat to update.
+   */
+  public addLanguageTag(messageBlocks: MessageBlock[], chat: Chat){
+    messageBlocks.forEach((block)=> {
+      if (block.type == 'code') {
+        const langID = (block as CodeBlock).languageId
+        if (langID && !chat.tags.includes(langID)) {
+          chat.tags.push(langID);
+        }
+      }
+    })
+  }
+  
   /**
    * Appends MessageBlocks (parsed from the given Markdown) to the given chat with the given role.
    * Adds to the last message if it has the same role or creates a new message.

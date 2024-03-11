@@ -12,7 +12,6 @@ import {
 import { ChatModel, ChatModelRequest, ChatModelResponse } from "../ChatModel";
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
 import { messageBlocksToString } from "../../../shared/utils/messageBlockHelpers";
-import { getExampleMessages } from "../../Chat/getExampleMessages";
 
 interface PaLMPrompt {
   context?: string;
@@ -135,14 +134,9 @@ export class PaLMChatModel implements ChatModel {
    * @returns Array of PaLM messages
    */
   convertToPaLMMessages(chatMessages: ChatMessage[]): PalMMessage[] {
-    // Add messages to the beginning of the chat history to provide examples/set the stage
-    const introMessages: ChatMessage[] = getExampleMessages();
-
-    const messages: ChatMessage[] = [...introMessages, ...chatMessages];
-
     // Convert system messages to user messages so that PaLM can handle it (only supports two authors)
     const messagesWithAcceptedAuthorship: ChatMessage[] = [];
-    for (const message of messages) {
+    for (const message of chatMessages) {
       if (message.role === ChatRole.System) {
         messagesWithAcceptedAuthorship.push({
           ...message,

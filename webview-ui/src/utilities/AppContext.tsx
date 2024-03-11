@@ -6,7 +6,7 @@ interface AppContext {
   activeView: ActiveView;
   setActiveViewAsChatList: () => void;
   setActiveViewAsChat: (chat: Chat) => void;
-  setActiveViewAsPersonaSettings: () => void;
+  setActiveViewAsSettings: () => void;
   chatList: Chat[];
   setChatList: (chats: Chat[]) => void;
   activeChat: Chat | null;

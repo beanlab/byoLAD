@@ -12,5 +12,5 @@ export enum VsCodeTheme {
 export enum ActiveView {
   ChatList,
   Chat,
-  PersonaSettings,
+  Settings,
 }

@@ -10,7 +10,7 @@ import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 import { ChatListView } from "./components/ChatListView/ChatListView";
 import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageContext";
-import { PersonaSettings } from "./components/PersonaSettings/PersonaSettings";
+import { PersonaSettings } from "./components/Settings/PersonaSettings";
 import { AppContext } from "./utilities/AppContext";
 
 function App() {
@@ -101,8 +101,7 @@ function App() {
               setActiveView(ActiveView.Chat);
               webviewToExtensionMessageSender.setActiveChat(chat);
             },
-            setActiveViewAsPersonaSettings: () =>
-              setActiveView(ActiveView.PersonaSettings),
+            setActiveViewAsSettings: () => setActiveView(ActiveView.Settings),
             chatList,
             setChatList,
             activeChat,
@@ -128,7 +127,7 @@ function App() {
                   hasSelection={hasSelection}
                   loadingMessageState={{ loadingMessage, setLoadingMessage }}
                 />
-              ) : activeView === ActiveView.PersonaSettings ? (
+              ) : activeView === ActiveView.Settings ? (
                 <PersonaSettings />
               ) : (
                 <div>Invalid active view. Please reload the extension.</div>

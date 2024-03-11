@@ -12,33 +12,28 @@ export const NavBar: React.FC = () => {
     personaList,
     setActiveViewAsChat,
     setActiveViewAsChatList,
-    setActiveViewAsPersonaSettings,
+    setActiveViewAsSettings,
   } = useAppContext();
-  const { createNewChat, updateChat } = useExtensionMessageContext();
+  const { createNewChat, updateChat, manageApiKeys } =
+    useExtensionMessageContext();
 
-  const hasBackButton = () => {
-    return (
-      activeView === ActiveView.Chat ||
-      activeView === ActiveView.PersonaSettings
-    );
-  };
+  const hasBackButton = () =>
+    activeView === ActiveView.Chat || activeView === ActiveView.Settings;
 
-  const hasNewChatButton = () => {
-    return activeView === ActiveView.ChatList || activeView === ActiveView.Chat;
-  };
+  const hasNewChatButton = () =>
+    activeView === ActiveView.ChatList || activeView === ActiveView.Chat;
 
-  const hasPersonaDropdown = () => {
-    return activeView === ActiveView.Chat;
-  };
+  const hasPersonaDropdown = () => activeView === ActiveView.Chat;
 
-  const hasSettingsButton = () => {
-    return activeView == ActiveView.Chat || activeView === ActiveView.ChatList;
-  };
+  const hasSettingsButton = () =>
+    activeView == ActiveView.Chat || activeView === ActiveView.ChatList;
+
+  const hasApiKeysButton = () => activeView == ActiveView.Settings;
 
   const handleBackButtonClick = () => {
     if (activeView === ActiveView.Chat) {
       setActiveViewAsChatList();
-    } else if (activeView === ActiveView.PersonaSettings) {
+    } else if (activeView === ActiveView.Settings) {
       if (activeChat) {
         setActiveViewAsChat(activeChat);
       } else {
@@ -91,10 +86,20 @@ export const NavBar: React.FC = () => {
           <VSCodeButton
             appearance="icon"
             aria-label="Settings"
-            title="Persona Settings"
-            onClick={setActiveViewAsPersonaSettings}
+            title="Settings"
+            onClick={setActiveViewAsSettings}
           >
             <i className="codicon codicon-settings"></i>
+          </VSCodeButton>
+        )}
+        {hasApiKeysButton() && (
+          <VSCodeButton
+            onClick={() => manageApiKeys(undefined)}
+            appearance="icon"
+            title="Manage API Keys"
+            aria-label="Manage API Keys"
+          >
+            <i className="codicon codicon-key"></i>
           </VSCodeButton>
         )}
       </div>

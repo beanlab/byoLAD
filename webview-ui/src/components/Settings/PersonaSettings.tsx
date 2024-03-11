@@ -9,8 +9,7 @@ import NavBar from "../NavBar";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
-  const { deletePersona, updatePersona, manageApiKeys } =
-    useExtensionMessageContext();
+  const { deletePersona, updatePersona } = useExtensionMessageContext();
   const [selectedPersona, setSelectedPersona] = useState<
     Persona | PersonaDraft | null
   >(null);
@@ -69,7 +68,7 @@ export const PersonaSettings: React.FC = () => {
           <div className="page-header">
             <h2>Personas</h2>
           </div>
-          <div className="horizontal-section" style={{ marginBottom: "1rem" }}>
+          <div style={{ marginBottom: "1rem" }}>
             <VSCodeButton
               onClick={handleAddPersona}
               appearance="primary"
@@ -78,15 +77,6 @@ export const PersonaSettings: React.FC = () => {
             >
               Add Persona
               <span slot="start" className="codicon codicon-add"></span>
-            </VSCodeButton>
-            <VSCodeButton
-              onClick={() => manageApiKeys(undefined)}
-              appearance="secondary"
-              title="Manage API Keys"
-              aria-label="Manage API Keys"
-            >
-              API Keys
-              <span slot="start" className="codicon codicon-key"></span>
             </VSCodeButton>
           </div>
 

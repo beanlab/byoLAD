@@ -82,7 +82,7 @@ export const NavBar: React.FC = () => {
             personas={personaList}
             selectedPersonaId={activeChat.personaId}
             changeSelectedPersonaId={(id) => {
-              activeChat.id = id;
+              activeChat.personaId = id;
               updateChat(activeChat);
             }}
           />

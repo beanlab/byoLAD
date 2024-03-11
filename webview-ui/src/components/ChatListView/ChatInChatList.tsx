@@ -5,21 +5,17 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
+import { useAppContext } from "../../utilities/AppContext";
 
 interface ChatInChatListProps {
   chat: Chat;
-  handleClick: (chat: Chat) => void;
-  id: number;
 }
 
-export const ChatInChatList = ({
-  chat,
-  handleClick,
-  id,
-}: ChatInChatListProps) => {
+export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
   const { deleteChat, updateChat } = useExtensionMessageContext();
   const [editing, setEditing] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(chat.title);
+  const { setActiveViewAsChat } = useAppContext();
 
   const handleEditClick = () => {
     setEditing(!editing);
@@ -34,14 +30,14 @@ export const ChatInChatList = ({
   };
 
   return (
-    <div className="convo" key={id}>
+    <div className="convo">
       {editing ? (
         <VSCodeTextField
           value={title}
           onInput={(e) => handleInputChange(e as InputEvent)}
         />
       ) : (
-        <div onClick={() => handleClick(chat)} className="convo-id">
+        <div onClick={() => setActiveViewAsChat(chat)} className="convo-id">
           {chat.title}
         </div>
       )}

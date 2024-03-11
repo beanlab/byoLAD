@@ -1,17 +1,9 @@
-import { Chat } from "../../../../shared/types";
 import { ChatList } from "./ChatList";
-import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 import { useAppContext } from "../../utilities/AppContext";
 import NavBar from "../NavBar";
 
 export const ChatListView = () => {
-  const { setActiveViewAsChat, chatList } = useAppContext();
-  const { createNewChat } = useExtensionMessageContext();
-
-  if (chatList.length === 0) {
-    createNewChat();
-    return <div>Loading...</div>;
-  }
+  const { chatList } = useAppContext();
 
   return (
     <div>
@@ -19,10 +11,7 @@ export const ChatListView = () => {
       <div className="page-header">
         <h2>Chat History</h2>
       </div>
-      <ChatList
-        chatList={chatList}
-        handleChatClick={(chat: Chat) => setActiveViewAsChat(chat)}
-      ></ChatList>
+      <ChatList chatList={chatList}></ChatList>
     </div>
   );
 };

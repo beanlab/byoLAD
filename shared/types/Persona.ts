@@ -73,7 +73,6 @@ export function validatePersonaDraftProperties(
     [isEmptyOrWhitespace],
     errors,
   );
-  console.log("errors", errors);
 
   return errors;
 }
@@ -93,11 +92,8 @@ function validateField(
   validationRules: ValidationRule[],
   errorsMap: Map<keyof PersonaDraft, string>,
 ) {
-  console.log("key", key, "value", value, "displayName", displayName);
   for (const rule of validationRules) {
-    console.log("rule", rule);
     const errorMessage = rule(value);
-    console.log("errorMessage", errorMessage);
     if (errorMessage) {
       errorsMap.set(key, `${displayName} ${errorMessage}`);
       break;
@@ -106,7 +102,6 @@ function validateField(
 }
 
 const isEmptyOrWhitespace: ValidationRule = (value) => {
-  console.log("value", value);
   return !value.trim() ? "cannot be empty or whitespace" : null;
 };
 

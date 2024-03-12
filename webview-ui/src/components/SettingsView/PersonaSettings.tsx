@@ -75,7 +75,7 @@ export const PersonaSettings: React.FC = () => {
               title="Add"
               aria-label="Add"
             >
-              Add Persona
+              Create Persona
               <span slot="start" className="codicon codicon-add"></span>
             </VSCodeButton>
           </div>

@@ -62,10 +62,11 @@ export class PersonaDataManager {
    * ID of the Persona to be used in newly created Chats.
    */
   get defaultPersonaId(): number {
-    const defaultId = this.context.workspaceState.get<number>(
+    let defaultId = this.context.workspaceState.get<number>(
       this.PERSONAS_DEFAULT_ID_KEY,
     );
     if (defaultId) {
+      defaultId = this.resetDefaultPersonaIdIfInvalid(defaultId);
       return defaultId;
     } else {
       throw new Error("Default Persona ID not set");
@@ -150,10 +151,14 @@ export class PersonaDataManager {
 
   deletePersona(id: number): void {
     this.personas = this.personas.filter((persona) => persona.id !== id);
+    if (id === this.defaultPersonaId) {
+      this.resetDefaultPersonaIdIfInvalid(id);
+    }
   }
 
   clearAllCustomPersonas(): void {
     this.personas = [];
+    this.resetDefaultPersonaIdIfInvalid();
   }
 
   validateNewPersonaName(name: string): void {
@@ -173,6 +178,21 @@ export class PersonaDataManager {
     }
     if (name.length > 25) {
       throw new Error("Persona name cannot be more than 25 characters");
+    }
+  }
+
+  /**
+   * Resets the default Persona ID if it is invalid.
+   * @param id The ID to check.
+   * @returns The new default Persona ID if it was reset, otherwise the original ID.
+   */
+  private resetDefaultPersonaIdIfInvalid(id?: number): number {
+    if (id && this.personas.some((persona) => persona.id === id)) {
+      return id;
+    } else {
+      const fallback = STANDARD_PERSONAS[0].id;
+      this.defaultPersonaId = fallback;
+      return fallback;
     }
   }
 }

@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { Chat, ChatRole } from "../../../shared/types";
 import { Message } from "./Message";
-import { ImagePaths } from "../types";
+import { ActiveView, ImagePaths } from "../types";
 import ErrorMessage from "./ErrorMessage";
 import scrollIntoView from "scroll-into-view-if-needed";
 import { ChatInput } from "./ChatInput";
@@ -29,9 +29,13 @@ export const ChatView = ({
   hasSelection,
   loadingMessageState,
 }: ChatViewProps) => {
-  const { activeChat } = useAppContext();
+  const { activeChat, navigate } = useAppContext();
   const { updateChat } = useExtensionMessageContext();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
+
+  if (!activeChat) {
+    navigate(ActiveView.ChatList);
+  }
 
   /**
    * Scroll to the bottom of the chat (if messages are long enough to scroll).

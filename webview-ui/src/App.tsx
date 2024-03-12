@@ -10,11 +10,11 @@ import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
 import { ChatListView } from "./components/ChatListView/ChatListView";
 import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageContext";
-import { PersonaSettings } from "./components/Settings/PersonaSettings";
+import { PersonaSettings } from "./components/SettingsView/PersonaSettings";
 import { AppContext } from "./utilities/AppContext";
 
 function App() {
-  const [activeView, setActiveView] = useState(ActiveView.ChatList);
+  const [activeView, setActiveView] = useState(ActiveView.Chat);
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
   const [personaList, setPersonaList] = useState<Persona[] | undefined>(
     undefined,
@@ -40,14 +40,7 @@ function App() {
     setLoadingMessage,
     setErrorMessage,
     setHasSelection,
-    (chat: Chat) => {
-      setActiveView(ActiveView.Chat);
-      setActiveChat(chat);
-    },
-    () => {
-      setActiveView(ActiveView.ChatList);
-      setActiveChat(null);
-    },
+    () => setActiveView(ActiveView.Chat),
   );
 
   // Run 1x on mount
@@ -86,6 +79,17 @@ function App() {
   );
   mutationObserver.observe(document.body, { attributes: true });
 
+  const navigateViews = (view: ActiveView, chat?: Chat) => {
+    if (view === ActiveView.Chat && chat) {
+      setActiveChat(chat);
+      webviewToExtensionMessageSender.setActiveChat(activeChat);
+    } else if (view === ActiveView.ChatList) {
+      setActiveChat(null);
+      webviewToExtensionMessageSender.setActiveChat(null);
+    }
+    setActiveView(view);
+  };
+
   return (
     <VsCodeThemeContext.Provider value={vsCodeTheme}>
       {/* Loading indicator unless the necessary data has already loaded */}
@@ -93,15 +97,7 @@ function App() {
         <AppContext.Provider
           value={{
             activeView,
-            setActiveViewAsChatList: () => {
-              setActiveView(ActiveView.ChatList);
-              webviewToExtensionMessageSender.setActiveChat(null);
-            },
-            setActiveViewAsChat: (chat: Chat) => {
-              setActiveView(ActiveView.Chat);
-              webviewToExtensionMessageSender.setActiveChat(chat);
-            },
-            setActiveViewAsSettings: () => setActiveView(ActiveView.Settings),
+            navigate: navigateViews,
             chatList,
             setChatList,
             activeChat,
@@ -130,7 +126,9 @@ function App() {
               ) : activeView === ActiveView.Settings ? (
                 <PersonaSettings />
               ) : (
-                <div>Invalid active view. Please reload the extension.</div>
+                <div>
+                  Unexpected error. Please close and reopen the extension.
+                </div>
               )}
             </div>
           </ExtensionMessageContextProvider>

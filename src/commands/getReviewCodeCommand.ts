@@ -33,4 +33,5 @@ export const getReviewCodeCommand = (
       llmApiService,
       chatWebviewProvider,
     );
+    await extensionToWebviewMessageSender.showChatView();
   });

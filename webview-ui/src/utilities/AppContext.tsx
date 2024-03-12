@@ -4,9 +4,13 @@ import { Chat, Persona } from "../../../shared/types";
 
 interface AppContext {
   activeView: ActiveView;
-  setActiveViewAsChatList: () => void;
-  setActiveViewAsChat: (chat: Chat) => void;
-  setActiveViewAsSettings: () => void;
+  /**
+   * Navigate to a new view. If chat is provided, it will be set as the active chat,
+   * only if the active view is Chat.
+   * @param activeView Active view to navigate to.
+   * @param chat Chat to set as active chat. Ignored if activeView is not Chat.
+   */
+  navigate: (activeView: ActiveView, chat?: Chat) => void;
   chatList: Chat[];
   setChatList: (chats: Chat[]) => void;
   activeChat: Chat | null;
@@ -22,13 +26,13 @@ export const AppContext = React.createContext<AppContext | undefined>(
 );
 
 /**
- * Hook to use the active view context.
+ * Hook to use the app context.
  */
 export function useAppContext() {
   const context = React.useContext(AppContext);
   if (!context) {
     throw new Error(
-      "useActiveViewContext must be used within an ActiveViewContext.Provider",
+      "useAppContext must be used within an useAppContext.Provider",
     );
   }
   return context;

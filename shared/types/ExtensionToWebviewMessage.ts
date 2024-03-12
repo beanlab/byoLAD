@@ -26,6 +26,7 @@ export interface ExtensionToWebviewMessageTypeParamsMap {
   errorMessage: ErrorMessageParams;
   isMessageLoading: IsMessageLoadingParams;
   hasSelection: HasSelectionParams;
+  showChatView: null;
   // Add new message types here...
 }
 

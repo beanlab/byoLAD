@@ -12,5 +12,6 @@ export const getNewChatCommand = (
   return vscode.commands.registerCommand("vscode-byolad.newChat", async () => {
     chatDataManager.startChat();
     await extensionToWebviewMessageSender.refresh();
+    await extensionToWebviewMessageSender.showChatView();
   });
 };

@@ -6,6 +6,7 @@ import {
 import { useState } from "react";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 import { useAppContext } from "../../utilities/AppContext";
+import { ActiveView } from "../../types";
 
 interface ChatInChatListProps {
   chat: Chat;
@@ -15,7 +16,7 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
   const { deleteChat, updateChat } = useExtensionMessageContext();
   const [editing, setEditing] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(chat.title);
-  const { setActiveViewAsChat } = useAppContext();
+  const { navigate } = useAppContext();
 
   const handleEditClick = () => {
     setEditing(!editing);
@@ -37,7 +38,10 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
           onInput={(e) => handleInputChange(e as InputEvent)}
         />
       ) : (
-        <div onClick={() => setActiveViewAsChat(chat)} className="convo-id">
+        <div
+          onClick={() => navigate(ActiveView.Chat, chat)}
+          className="convo-id"
+        >
           {chat.title}
         </div>
       )}

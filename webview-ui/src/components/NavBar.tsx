@@ -6,14 +6,7 @@ import { ActiveView } from "../types";
 import { useAppContext } from "../utilities/AppContext";
 
 export const NavBar: React.FC = () => {
-  const {
-    activeView,
-    activeChat,
-    personaList,
-    setActiveViewAsChat,
-    setActiveViewAsChatList,
-    setActiveViewAsSettings,
-  } = useAppContext();
+  const { navigate, activeView, activeChat, personaList } = useAppContext();
   const { createNewChat, updateChat, manageApiKeys } =
     useExtensionMessageContext();
 
@@ -21,23 +14,22 @@ export const NavBar: React.FC = () => {
     activeView === ActiveView.Chat || activeView === ActiveView.Settings;
 
   const hasNewChatButton = () =>
-    activeView === ActiveView.ChatList || activeView === ActiveView.Chat;
+    activeView === ActiveView.Chat || activeView === ActiveView.ChatList;
 
   const hasPersonaDropdown = () => activeView === ActiveView.Chat;
 
-  const hasSettingsButton = () =>
-    activeView == ActiveView.Chat || activeView === ActiveView.ChatList;
+  const hasSettingsButton = () => activeView !== ActiveView.Settings;
 
   const hasApiKeysButton = () => activeView == ActiveView.Settings;
 
   const handleBackButtonClick = () => {
     if (activeView === ActiveView.Chat) {
-      setActiveViewAsChatList();
+      navigate(ActiveView.ChatList);
     } else if (activeView === ActiveView.Settings) {
       if (activeChat) {
-        setActiveViewAsChat(activeChat);
+        navigate(ActiveView.Chat, activeChat);
       } else {
-        setActiveViewAsChatList();
+        navigate(ActiveView.ChatList);
       }
     }
   };
@@ -87,7 +79,7 @@ export const NavBar: React.FC = () => {
             appearance="icon"
             aria-label="Settings"
             title="Settings"
-            onClick={setActiveViewAsSettings}
+            onClick={() => navigate(ActiveView.Settings)}
           >
             <i className="codicon codicon-settings"></i>
           </VSCodeButton>

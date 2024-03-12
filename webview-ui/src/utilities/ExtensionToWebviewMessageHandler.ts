@@ -13,8 +13,7 @@ export class ExtensionToWebviewMessageHandler {
   private setLoadingMessage: (isLoading: boolean) => void;
   private setErrorMessage: (errorMessage: string | null) => void;
   private setHasSelection: (hasSelection: boolean) => void;
-  private setActiveViewAsChat: (chat: Chat) => void;
-  private setActiveViewAsChatList: () => void;
+  private showChatView: () => void;
 
   constructor(
     setChatList: (chatList: Chat[] | undefined) => void,
@@ -24,8 +23,7 @@ export class ExtensionToWebviewMessageHandler {
     setLoadingMessage: (isLoading: boolean) => void,
     setErrorMessage: (errorMessage: string | null) => void,
     setHasSelection: (hasSelection: boolean) => void,
-    setActiveViewAsChat: (chat: Chat) => void,
-    setActiveViewAsChatList: () => void,
+    showChatView: () => void,
   ) {
     this.setChatList = setChatList;
     this.setPersonas = setPersonaList;
@@ -34,8 +32,7 @@ export class ExtensionToWebviewMessageHandler {
     this.setLoadingMessage = setLoadingMessage;
     this.setErrorMessage = setErrorMessage;
     this.setHasSelection = setHasSelection;
-    this.setActiveViewAsChat = setActiveViewAsChat;
-    this.setActiveViewAsChatList = setActiveViewAsChatList;
+    this.showChatView = showChatView;
   }
 
   public async handleMessage(message: ExtensionToWebviewMessage) {
@@ -55,11 +52,6 @@ export class ExtensionToWebviewMessageHandler {
         const newActiveChat: Chat | null =
           params.chats.find((chat) => chat.id === params.activeChatId) || null;
         this.setActiveChat(newActiveChat);
-        if (newActiveChat) {
-          this.setActiveViewAsChat(newActiveChat);
-        } else {
-          this.setActiveViewAsChatList();
-        }
         this.setErrorMessage(null);
         break;
       }
@@ -74,6 +66,10 @@ export class ExtensionToWebviewMessageHandler {
         const params =
           message.params as ExtensionToWebviewMessageTypeParamsMap[typeof message.messageType];
         this.setHasSelection(params.hasSelection);
+        break;
+      }
+      case "showChatView": {
+        this.showChatView();
         break;
       }
       default: {

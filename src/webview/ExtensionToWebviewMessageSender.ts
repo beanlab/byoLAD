@@ -38,7 +38,6 @@ export class ExtensionToWebviewMessageSender {
       // activeChatId is invalid, so clear it
       this.chatDataManager.activeChatId = null;
       activeChatId = null;
-      return;
     }
     const personas: Persona[] = this.personaDataManager.personas;
     const defaultPersonaId: number = this.personaDataManager.defaultPersonaId;
@@ -52,6 +51,17 @@ export class ExtensionToWebviewMessageSender {
         personas: personas,
         defaultPersonaId: defaultPersonaId,
       } as ExtensionToWebviewMessageTypeParamsMap[typeof messageType],
+    } as ExtensionToWebviewMessage);
+  }
+
+  /**
+   * Updates the webview to display the chat/chatlist view.
+   */
+  public async showChatView() {
+    await this.chatWebviewProvider.show();
+    const messageType: ExtensionToWebviewMessageType = "showChatView";
+    await this.postMessage({
+      messageType: messageType,
     } as ExtensionToWebviewMessage);
   }
 

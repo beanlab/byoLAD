@@ -33,4 +33,5 @@ export const getExplainCodeCommand = (
       llmApiService,
       chatWebviewProvider,
     );
+    await extensionToWebviewMessageSender.showChatView();
   });

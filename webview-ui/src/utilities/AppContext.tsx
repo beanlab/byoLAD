@@ -18,7 +18,6 @@ interface AppContext {
   personaList: Persona[];
   setPersonaList: (personas: Persona[]) => void;
   defaultPersonaId: number;
-  setDefaultPersonaId: (id: number) => void;
 }
 
 export const AppContext = React.createContext<AppContext | undefined>(

@@ -105,9 +105,6 @@ function App() {
             personaList,
             setPersonaList,
             defaultPersonaId,
-            setDefaultPersonaId: (id: number) => {
-              webviewToExtensionMessageSender.setDefaultPersonaId(id);
-            },
           }}
         >
           <ExtensionMessageContextProvider

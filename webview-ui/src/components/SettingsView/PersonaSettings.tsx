@@ -9,7 +9,9 @@ import NavBar from "../NavBar";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
-  const { deletePersona, updatePersona } = useExtensionMessageContext();
+  const { deletePersona, updatePersona, setDefaultPersonaId } =
+    useExtensionMessageContext();
+  const { defaultPersonaId } = useAppContext();
   const [selectedPersona, setSelectedPersona] = useState<
     Persona | PersonaDraft | null
   >(null);
@@ -84,7 +86,25 @@ export const PersonaSettings: React.FC = () => {
             {personaList.map((persona) => (
               <div key={persona.modelId} className="persona-card">
                 <div className="persona-card-header">
-                  <h3>{persona.name}</h3>
+                  <div className="persona-card-button-group">
+                    <h3>{persona.name}</h3>
+                    {persona.id === defaultPersonaId ? (
+                      <i
+                        title="Default persona for new chats"
+                        className="codicon codicon-star-full"
+                        style={{ padding: "var(--button-icon-padding)" }}
+                      ></i>
+                    ) : (
+                      <VSCodeButton
+                        title="Set as default persona for new chats"
+                        aria-label="Set as default persona for new chats"
+                        appearance="icon"
+                        onClick={() => setDefaultPersonaId(persona.id)}
+                      >
+                        <i className="codicon codicon-star-empty"></i>
+                      </VSCodeButton>
+                    )}
+                  </div>
                   <div className="persona-card-button-group">
                     {!uneditablePersonaIds.includes(persona.id) && (
                       <VSCodeButton

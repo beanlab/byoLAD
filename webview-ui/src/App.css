@@ -242,7 +242,8 @@
 
 .persona-card-button-group {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
+  align-items: center;
 }
 
 .persona-card h3,

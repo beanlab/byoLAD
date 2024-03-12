@@ -7,20 +7,21 @@ import { useAppContext } from "../utilities/AppContext";
 
 export const NavBar: React.FC = () => {
   const { navigate, activeView, activeChat, personaList } = useAppContext();
-  const { createNewChat, updateChat, manageApiKeys } =
-    useExtensionMessageContext();
+  const {
+    createNewChat,
+    updateChat,
+    manageApiKeys,
+    openExtensionVsCodeSettings,
+  } = useExtensionMessageContext();
 
   const hasBackButton = () =>
     activeView === ActiveView.Chat || activeView === ActiveView.Settings;
-
   const hasNewChatButton = () =>
     activeView === ActiveView.Chat || activeView === ActiveView.ChatList;
-
   const hasPersonaDropdown = () => activeView === ActiveView.Chat;
-
   const hasSettingsButton = () => activeView !== ActiveView.Settings;
-
   const hasApiKeysButton = () => activeView == ActiveView.Settings;
+  const hasAdditionalSettingsButton = () => activeView === ActiveView.Settings;
 
   const handleBackButtonClick = () => {
     if (activeView === ActiveView.Chat) {
@@ -92,6 +93,16 @@ export const NavBar: React.FC = () => {
             aria-label="Manage API Keys"
           >
             <i className="codicon codicon-key"></i>
+          </VSCodeButton>
+        )}
+        {hasAdditionalSettingsButton() && (
+          <VSCodeButton
+            appearance="icon"
+            aria-label="Additional settings"
+            title="Additional settings"
+            onClick={openExtensionVsCodeSettings}
+          >
+            <i className="codicon codicon-settings-gear"></i>
           </VSCodeButton>
         )}
       </div>

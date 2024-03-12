@@ -159,6 +159,12 @@ export class WebviewToExtensionMessageHandler {
         );
         break;
       }
+      case "openExtensionVsCodeSettings": {
+        await vscode.commands.executeCommand(
+          "vscode-byolad.openSettingsCommand",
+        );
+        break;
+      }
       default: {
         // Ensure exhaustive switch. Make sure all message types are handled in the switch statement.
         const _exhaustiveCheck: never = message.messageType;

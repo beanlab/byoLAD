@@ -39,6 +39,7 @@ export interface WebviewToExtensionMessageTypeParamsMap {
   updatePersona: UpdatePersonaParams;
   deletePersona: DeletePersonaParams;
   manageApiKeys: ManageApiKeysParams;
+  openExtensionVsCodeSettings: null;
   // Add new message types here...
 }
 

@@ -237,4 +237,15 @@ export class WebviewToExtensionMessageSender {
       } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
     } as WebviewToExtensionMessage);
   }
+
+  /**
+   * Requests that the extension settings be opened.
+   */
+  public openExtensionVsCodeSettings() {
+    const messageType: WebviewToExtensionMessageType =
+      "openExtensionVsCodeSettings";
+    vscode.postMessage({
+      messageType: messageType,
+    } as WebviewToExtensionMessage);
+  }
 }

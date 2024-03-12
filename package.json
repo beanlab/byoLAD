@@ -34,46 +34,22 @@
     "configuration": {
       "title": "byoLAD",
       "properties": {
-        "vscode-byolad.provider": {
-          "type": "string",
-          "enum": [
-            "OpenAI",
-            "Google"
-          ],
-          "default": "OpenAI",
-          "markdownDescription": "**Required**\n\nYou are billed by the provider according to their API usage policies.",
-          "order": 0
-        },
-        "vscode-byolad.model": {
-          "type": "string",
-          "default": "",
-          "markdownDescription": "**Required**\n\nFor OpenAI, format your input like 'gpt-4-32k' or 'gpt-3.5-turbo'. See all available models [here](https://platform.openai.com/docs/models/).\n\nFor Google, format your input like 'text-bison-001' or 'chat-bison-001'. See all available models [here](https://developers.generativeai.google/models/language).",
-          "order": 1
-        },
-        "vscode-byolad.APIKey": {
-          "type": "string",
-          "default": "",
-          "markdownDescription": "**Required**\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
-          "order": 2
-        },
         "vscode-byolad.reviewCodePrompt": {
           "type": "string",
           "default": "Review the provided code. Return code that reflects the following improvements:\n- fix bugs\n- improve code quality, best practices, readability\n- improve performance\n- provide code comments as necessary\n- add missing documentation",
           "description": "The prompt to use to review code.",
-          "editPresentation": "multilineText",
-          "order": 3
+          "editPresentation": "multilineText"
         },
         "vscode-byolad.explainCodePrompt": {
           "type": "string",
           "default": "Explain the provided code in a way that is helpful given its context. You may use code samples as necessary to illustrate your explanation if needed. Make the explanation simple and easy to understand.",
           "description": "The prompt to use to explain code.",
-          "editPresentation": "multilineText",
-          "order": 4
+          "editPresentation": "multilineText"
         },
         "vscode-byolad.applySuggestions.diffViewPosition": {
           "type": "string",
           "default": "Below",
-          "description": "Controls where the diff view should be opened when comparing AI suggestions.",
+          "description": "Where the diff view should be opened when comparing AI suggestions.",
           "enum": [
             "Current",
             "Beside",
@@ -84,9 +60,8 @@
             "Open the diff view in the current editor group",
             "Open the diff view next to the current editor group",
             "Open the diff view below the current editor group",
-            "Use the value of the merge-conflict.diffViewPosition setting to determine where the diff view for AI suggestions should be opened"
-          ],
-          "order": 5
+            "Use the current value of the merge-conflict.diffViewPosition setting to determine where the diff view for AI suggestions should be opened"
+          ]
         }
       }
     },

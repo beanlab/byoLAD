@@ -20,6 +20,7 @@ type ExtensionMessageContextType = {
   deletePersona: (pesonaId: number) => void;
   manageApiKeys: (modelProvider: ModelProvider | undefined) => void;
   setDefaultPersonaId: (personaId: number) => void;
+  openExtensionVsCodeSettings: () => void;
 };
 
 // Default context value should never be used, but is required to be defined
@@ -36,6 +37,7 @@ const ExtensionMessageContext = createContext<ExtensionMessageContextType>({
   deletePersona: () => {},
   manageApiKeys: () => {},
   setDefaultPersonaId: () => {},
+  openExtensionVsCodeSettings: () => {},
 });
 
 export const ExtensionMessageContextProvider = ({
@@ -58,6 +60,8 @@ export const ExtensionMessageContextProvider = ({
     deletePersona: webviewToExtensionMessageSender.deletePersona,
     manageApiKeys: webviewToExtensionMessageSender.manageApiKeys,
     setDefaultPersonaId: webviewToExtensionMessageSender.setDefaultPersonaId,
+    openExtensionVsCodeSettings:
+      webviewToExtensionMessageSender.openExtensionVsCodeSettings,
   };
   return (
     <ExtensionMessageContext.Provider value={context}>

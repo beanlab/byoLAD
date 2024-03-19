@@ -61,10 +61,9 @@ export async function sendChatMessage(
   }
 
   // if this is the first time a message is sent, then update the chat title
-  if (chat.title == "Empty Chat") {
+  if (chat.messages.length == 0) { 
     chat.title = markdown;
-    chat.tags = ["text.py", "test.txt"];
-    console.log("set the title", chat.title);
+    chat.tags = [];
   }
 
   // if the file is a new file, add it to the tags

@@ -47,7 +47,7 @@ export class ChatEditor {
     } else {
       chat.messages.push({ role: role, content: messageBlocks } as ChatMessage);
     }
-    this.addLanguageTag(messageBlocks, chat);
+    this.addLanguageTags(messageBlocks, chat);
     this.chatDataManager.updateChat(chat);
 
     if (updateWebview) {
@@ -56,11 +56,11 @@ export class ChatEditor {
   }
 
   /**
-   * Adds a language tag if appropriate
+   * Adds a language tags if appropriate
    * @param messageBlocks most recent MessageBlocks appended to the chat.
    * @param chat Chat to update.
    */
-  public addLanguageTag(messageBlocks: MessageBlock[], chat: Chat) {
+  public addLanguageTags(messageBlocks: MessageBlock[], chat: Chat) {
     messageBlocks.forEach((block) => {
       if (block.type == "code") {
         const langID = (block as CodeBlock).languageId;

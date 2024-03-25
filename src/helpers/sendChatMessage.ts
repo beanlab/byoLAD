@@ -61,7 +61,7 @@ export async function sendChatMessage(
   }
 
   // if this is the first time a message is sent, then update the chat title
-  if (chat.messages.length == 0) { 
+  if (chat.messages.length == 0) {
     chat.title = markdown;
     chat.tags = [];
   }

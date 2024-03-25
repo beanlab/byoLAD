@@ -1,12 +1,13 @@
-import { useRef, useEffect } from "react";
-import { Chat, ChatRole } from "../../../shared/types";
-import { Message } from "./Message";
-import { ActiveView, ImagePaths } from "../types";
-import ErrorMessage from "./ErrorMessage";
+import { useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
-import { ChatInput } from "./ChatInput";
-import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
+
+import { Chat, ChatRole, ImagePaths } from "../../../shared/types";
+import { AppView } from "../types";
 import { useAppContext } from "../utilities/AppContext";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
+import { ChatInput } from "./ChatInput";
+import ErrorMessage from "./ErrorMessage";
+import { Message } from "./Message";
 import NavBar from "./NavBar";
 
 interface ChatViewProps {
@@ -34,7 +35,7 @@ export const ChatView = ({
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   if (!activeChat) {
-    navigate(ActiveView.ChatList);
+    navigate(AppView.ChatList);
   }
 
   /**

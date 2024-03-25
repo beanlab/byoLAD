@@ -1,19 +1,20 @@
 import React from "react";
-import { ActiveView } from "../types";
+
 import { Chat, Persona } from "../../../shared/types";
+import { AppView } from "../types";
 
 interface AppContext {
-  activeView: ActiveView;
+  appView: AppView;
   /**
    * Navigate to a new view. If chat is provided, it will be set as the active chat,
-   * only if the active view is Chat.
-   * @param activeView Active view to navigate to.
-   * @param chat Chat to set as active chat. Ignored if activeView is not Chat.
+   * only if the new view is Chat.
+   * @param appView View to navigate to.
+   * @param chat Chat to set as active chat. Ignored if appView is not Chat.
    */
-  navigate: (activeView: ActiveView, chat?: Chat) => void;
+  navigate: (appView: AppView, chat?: Chat) => void;
   chatList: Chat[];
   setChatList: (chats: Chat[]) => void;
-  activeChat: Chat | null;
+  activeChat: Chat | null | undefined;
   setActiveChat: (chat: Chat | null) => void;
   personaList: Persona[];
   setPersonaList: (personas: Persona[]) => void;

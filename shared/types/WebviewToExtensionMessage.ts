@@ -1,4 +1,4 @@
-import { Chat, ModelProvider, Persona, PersonaDraft } from ".";
+import { Chat, ModelProvider, Persona, PersonaDraft } from "./";
 
 // To add a new WebviewToExtensionMessageType, add it to the WebviewToExtensionMessageTypeParamsMap and export the params interface below.
 // These messages are sent from the WebviewToExtensionMessageSender (webview) and handled by the WebviewToExtensionMessageHandler (extension).
@@ -30,7 +30,7 @@ export interface WebviewToExtensionMessageTypeParamsMap {
   deleteAllChats: null;
   deleteChat: DeleteChatParams;
   newChat: null;
-  getChats: null;
+  requestRefresh: null;
   setActiveChat: SetActiveChatParams;
   updateChat: UpdateChatParams;
   addCodeToChat: null;

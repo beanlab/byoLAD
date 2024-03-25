@@ -1,19 +1,20 @@
 import * as vscode from "vscode";
-import { SettingsProvider } from "../helpers/SettingsProvider";
-import { diffCode } from "../helpers/diffCode";
-import { insertCode } from "../helpers/insertCode";
-import { copyToClipboard } from "../helpers/copyToClipboard";
-import { ChatDataManager } from "../Chat/ChatDataManager";
+
 import {
   WebviewToExtensionMessage,
   WebviewToExtensionMessageTypeParamsMap,
 } from "../../shared/types";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ExtensionToWebviewMessageSender } from "./ExtensionToWebviewMessageSender";
+import { copyToClipboard } from "../helpers/copyToClipboard";
+import { diffCode } from "../helpers/diffCode";
+import { insertCode } from "../helpers/insertCode";
 import { sendChatMessage } from "../helpers/sendChatMessage";
-import { ChatWebviewProvider } from "./ChatWebviewProvider";
+import { SettingsProvider } from "../helpers/SettingsProvider";
 import { PersonaDataManager } from "../Persona/PersonaDataManager";
+import { ChatWebviewProvider } from "./ChatWebviewProvider";
+import { ExtensionToWebviewMessageSender } from "./ExtensionToWebviewMessageSender";
 
 export class WebviewToExtensionMessageHandler {
   private readonly settingsProvider: SettingsProvider;
@@ -52,7 +53,7 @@ export class WebviewToExtensionMessageHandler {
       case "newChat":
         await vscode.commands.executeCommand("vscode-byolad.newChat");
         break;
-      case "getChats":
+      case "requestRefresh":
         await this.extensionToWebviewMessageSender.refresh();
         break;
       case "deleteAllChats":

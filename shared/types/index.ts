@@ -6,3 +6,4 @@ export * from "./MessageBlock";
 export * from "./ExtensionToWebviewMessage";
 export * from "./WebviewToExtensionMessage";
 export * from "./ModelProvider";
+export * from "./WebviewInitialState";

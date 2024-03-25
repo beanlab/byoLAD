@@ -1,25 +1,38 @@
 import "./App.css";
+
 import { useEffect, useState } from "react";
-import { Chat, ExtensionToWebviewMessage, Persona } from "../../shared/types";
-import { VsCodeThemeContext } from "./utilities/VsCodeThemeContext";
-import { ChatView } from "./components/ChatView";
-import { WebviewToExtensionMessageSender } from "./utilities/WebviewToExtensionMessageSender";
-import { ExtensionToWebviewMessageHandler } from "./utilities/ExtensionToWebviewMessageHandler";
-import { ActiveView, ImagePaths, VsCodeTheme } from "./types";
-import { getVsCodeThemeFromCssClasses } from "./utilities/VsCodeThemeContext";
+
 import { VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react";
+
+import {
+  Chat,
+  ExtensionToWebviewMessage,
+  ImagePaths,
+  Persona,
+} from "../../shared/types";
 import { ChatListView } from "./components/ChatListView/ChatListView";
-import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageContext";
+import { ChatView } from "./components/ChatView";
 import { PersonaSettings } from "./components/SettingsView/PersonaSettings";
+import { AppView, VsCodeTheme } from "./types";
 import { AppContext } from "./utilities/AppContext";
+import { ExtensionMessageContextProvider } from "./utilities/ExtensionMessageContext";
+import { ExtensionToWebviewMessageHandler } from "./utilities/ExtensionToWebviewMessageHandler";
+import {
+  getVsCodeThemeFromCssClasses,
+  VsCodeThemeContext,
+} from "./utilities/VsCodeThemeContext";
+import { WebviewToExtensionMessageSender } from "./utilities/WebviewToExtensionMessageSender";
 
 function App() {
-  const [activeView, setActiveView] = useState(ActiveView.Chat);
+  const [appView, setAppView] = useState(AppView.Chat);
   const [chatList, setChatList] = useState<Chat[] | undefined>(undefined);
   const [personaList, setPersonaList] = useState<Persona[] | undefined>(
     undefined,
   );
-  const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  // ActiveChat: Null is for when there is no active chat, undefined is for when the active chat is not yet known (whether null or not)
+  const [activeChat, setActiveChat] = useState<Chat | null | undefined>(
+    undefined,
+  );
   const [defaultPersonaId, setDefaultPersonaId] = useState<number | undefined>(
     undefined,
   );
@@ -40,20 +53,21 @@ function App() {
     setLoadingMessage,
     setErrorMessage,
     setHasSelection,
-    () => setActiveView(ActiveView.Chat),
+    () => setAppView(AppView.Chat),
   );
 
   // Run 1x on mount
   // Adding the event listener here prevents receiving the same message multiple times
   useEffect(() => {
     // Get initial state from the extension
-    webviewToExtensionMessageSender.getChats();
+    webviewToExtensionMessageSender.requestRefresh();
     webviewToExtensionMessageSender.getHasSelection();
 
     /**
      * Handle messages sent from the extension to the webview
      */
     const eventListener = (event: MessageEvent<ExtensionToWebviewMessage>) => {
+      console.log(event.data);
       const message = event.data as ExtensionToWebviewMessage;
       extenionToWebviewMessageHandler.handleMessage(message);
     };
@@ -79,24 +93,27 @@ function App() {
   );
   mutationObserver.observe(document.body, { attributes: true });
 
-  const navigateViews = (view: ActiveView, chat?: Chat) => {
-    if (view === ActiveView.Chat && chat) {
+  const navigateViews = (view: AppView, chat?: Chat) => {
+    if (view === AppView.Chat && chat) {
       setActiveChat(chat);
-      webviewToExtensionMessageSender.setActiveChat(activeChat);
-    } else if (view === ActiveView.ChatList) {
+      webviewToExtensionMessageSender.setActiveChat(chat);
+    } else if (view === AppView.ChatList) {
       setActiveChat(null);
       webviewToExtensionMessageSender.setActiveChat(null);
     }
-    setActiveView(view);
+    setAppView(view);
   };
 
   return (
     <VsCodeThemeContext.Provider value={vsCodeTheme}>
       {/* Loading indicator unless the necessary data has already loaded */}
-      {chatList && personaList && defaultPersonaId ? (
+      {chatList &&
+      personaList &&
+      defaultPersonaId &&
+      activeChat !== undefined ? (
         <AppContext.Provider
           value={{
-            activeView,
+            appView,
             navigate: navigateViews,
             chatList,
             setChatList,
@@ -111,16 +128,16 @@ function App() {
             webviewToExtensionMessageSender={webviewToExtensionMessageSender}
           >
             <div className="app-container">
-              {activeView === ActiveView.ChatList ? (
+              {appView === AppView.ChatList ? (
                 <ChatListView />
-              ) : activeView === ActiveView.Chat ? (
+              ) : appView === AppView.Chat ? (
                 <ChatView
                   imagePaths={imagePaths}
                   errorMessage={errorMessage}
                   hasSelection={hasSelection}
                   loadingMessageState={{ loadingMessage, setLoadingMessage }}
                 />
-              ) : activeView === ActiveView.Settings ? (
+              ) : appView === AppView.Settings ? (
                 <PersonaSettings />
               ) : (
                 <div>
@@ -132,7 +149,7 @@ function App() {
         </AppContext.Provider>
       ) : (
         <div className="loading-indicator">
-          <VSCodeProgressRing></VSCodeProgressRing>
+          <VSCodeProgressRing />
         </div>
       )}
     </VsCodeThemeContext.Provider>

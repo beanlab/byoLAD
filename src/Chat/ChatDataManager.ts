@@ -1,8 +1,9 @@
 import { ExtensionContext } from "vscode";
-import * as constants from "../commands/constants";
-import { SettingsProvider } from "../helpers/SettingsProvider";
-import { setHasActiveChatWhenClauseState } from "../helpers";
+
 import { Chat, ChatMessage } from "../../shared/types";
+import * as constants from "../commands/constants";
+import { setHasActiveChatWhenClauseState } from "../helpers";
+import { SettingsProvider } from "../helpers/SettingsProvider";
 import { PersonaDataManager } from "../Persona/PersonaDataManager";
 
 /**

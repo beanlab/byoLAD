@@ -1,15 +1,16 @@
 import * as vscode from "vscode";
+
 import { Chat, ChatRole } from "../../shared/types";
+import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
+import { ChatDataManager } from "../Chat/ChatDataManager";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { LLMApiService } from "../ChatModel/LLMApiService";
+import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import {
   getFileContentAsCodeBlock,
   getSelectedTextAsCodeBlock,
 } from "./getCodeReference";
-import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
-import { ChatEditor } from "../Chat/ChatEditor";
-import { ChatDataManager } from "../Chat/ChatDataManager";
-import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
-import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
 
 /**
  * Primary function to send a chat message. Starts a new chat if needed,
@@ -30,14 +31,9 @@ export async function sendChatMessage(
   llmApiService: LLMApiService,
   chatWebviewProvider: ChatWebviewProvider,
 ) {
-  // Open the webview if needed and start a new chat
-  if (!chatWebviewProvider.isWebviewVisible()) {
-    await chatWebviewProvider.show();
-    chat = chatDataManager.startChat();
-  }
-
-  // Start a new chat if needed
-  if (!chat) {
+  const ifAlreadyVisible = chatWebviewProvider.isWebviewVisible();
+  // Start a new chat if the webview is not visible or no active chat is provided
+  if (!ifAlreadyVisible || !chat) {
     chat = chatDataManager.startChat();
   }
 
@@ -59,8 +55,20 @@ export async function sendChatMessage(
     messageBlocks.push(codeBlock);
   }
 
-  // Update the webview, chat itself, and send the message to the LLM API
-  await extensionToWebviewMessageSender.updateIsMessageLoading(true);
-  await chatEditor.appendMessageBlocks(chat, ChatRole.User, messageBlocks);
+  // Update UI immediately only if the webview is already visible
+  const ifUpdateWebviewImmediately = ifAlreadyVisible;
+
+  // Update the chat itself and (conditionally) the webview, and send the message to the LLM API
+  await chatEditor.appendMessageBlocks(
+    chat,
+    ChatRole.User,
+    messageBlocks,
+    ifUpdateWebviewImmediately,
+  );
+  if (!ifAlreadyVisible) {
+    await chatWebviewProvider.show();
+  } else {
+    await extensionToWebviewMessageSender.showChatView();
+  }
   await llmApiService.requestLlmApiChatResponse(chat);
 }

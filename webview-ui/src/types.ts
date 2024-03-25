@@ -1,7 +1,3 @@
-export interface ImagePaths {
-  byoLadCircleImageUri: string;
-}
-
 export enum VsCodeTheme {
   Light = "light",
   Dark = "dark",
@@ -9,7 +5,7 @@ export enum VsCodeTheme {
   HighContrastDark = "hc-dark",
 }
 
-export enum ActiveView {
+export enum AppView {
   ChatList,
   Chat,
   Settings,

@@ -1,12 +1,14 @@
 import React from "react";
+
 import { VSCodeBadge, VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+
+import { AppView } from "../types";
+import { useAppContext } from "../utilities/AppContext";
 import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 import { PersonaDropdown } from "./PersonaDropdown";
-import { ActiveView } from "../types";
-import { useAppContext } from "../utilities/AppContext";
 
 export const NavBar: React.FC = () => {
-  const { navigate, activeView, activeChat, personaList } = useAppContext();
+  const { navigate, appView, activeChat, personaList } = useAppContext();
   const {
     createNewChat,
     updateChat,
@@ -15,22 +17,22 @@ export const NavBar: React.FC = () => {
   } = useExtensionMessageContext();
 
   const hasBackButton = () =>
-    activeView === ActiveView.Chat || activeView === ActiveView.Settings;
+    appView === AppView.Chat || appView === AppView.Settings;
   const hasNewChatButton = () =>
-    activeView === ActiveView.Chat || activeView === ActiveView.ChatList;
-  const hasPersonaDropdown = () => activeView === ActiveView.Chat;
-  const hasSettingsButton = () => activeView !== ActiveView.Settings;
-  const hasApiKeysButton = () => activeView == ActiveView.Settings;
-  const hasAdditionalSettingsButton = () => activeView === ActiveView.Settings;
+    appView === AppView.Chat || appView === AppView.ChatList;
+  const hasPersonaDropdown = () => appView === AppView.Chat;
+  const hasSettingsButton = () => appView !== AppView.Settings;
+  const hasApiKeysButton = () => appView == AppView.Settings;
+  const hasAdditionalSettingsButton = () => appView === AppView.Settings;
 
   const handleBackButtonClick = () => {
-    if (activeView === ActiveView.Chat) {
-      navigate(ActiveView.ChatList);
-    } else if (activeView === ActiveView.Settings) {
+    if (appView === AppView.Chat) {
+      navigate(AppView.ChatList);
+    } else if (appView === AppView.Settings) {
       if (activeChat) {
-        navigate(ActiveView.Chat, activeChat);
+        navigate(AppView.Chat, activeChat);
       } else {
-        navigate(ActiveView.ChatList);
+        navigate(AppView.ChatList);
       }
     }
   };
@@ -80,7 +82,7 @@ export const NavBar: React.FC = () => {
             appearance="icon"
             aria-label="Settings"
             title="Settings"
-            onClick={() => navigate(ActiveView.Settings)}
+            onClick={() => navigate(AppView.Settings)}
           >
             <i className="codicon codicon-settings"></i>
           </VSCodeButton>

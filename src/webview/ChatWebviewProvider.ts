@@ -1,8 +1,12 @@
 import * as vscode from "vscode";
+
+import {
+  ExtensionToWebviewMessage,
+  WebviewInitialState,
+} from "../../shared/types";
 import { getNonce } from "../utilities/getNonce";
 import { getUri } from "../utilities/getUri";
 import { WebviewToExtensionMessageHandler } from "./WebviewToExtensionMessageHandler";
-import { ExtensionToWebviewMessage } from "../../shared/types";
 
 // Inspired heavily by the vscode-webiew-ui-toolkit-samples > default > weather-webview
 // https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -91,7 +95,6 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
       );
       return false;
     }
-
     return await this._webviewView.webview.postMessage(message);
   }
 
@@ -140,11 +143,13 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
 
     const nonce = getNonce();
 
-    const imagePaths = {
-      byoLadCircleImageUri: getUri(webview, extensionUri, [
-        "media",
-        "circle_byolad.png",
-      ]).toString(),
+    const initialState: WebviewInitialState = {
+      imagePaths: {
+        byoLadCircleImageUri: getUri(webview, extensionUri, [
+          "media",
+          "circle_byolad.png",
+        ]).toString(),
+      },
     };
 
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
@@ -165,7 +170,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
           <body>
             <div id="root"></div>
             <script nonce="${nonce}"> <!-- Provides the React app access to the properly formatted resource URIs -->
-              window.initialState = ${JSON.stringify({ imagePaths })};
+              window.initialState = ${JSON.stringify({ ...initialState })};
             </script>
             <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
           </body> 

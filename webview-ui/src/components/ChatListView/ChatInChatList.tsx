@@ -1,12 +1,14 @@
-import { Chat } from "../../../../shared/types";
+import { useState } from "react";
+
 import {
   VSCodeButton,
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
-import { useState } from "react";
-import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
+
+import { Chat } from "../../../../shared/types";
+import { AppView } from "../../types";
 import { useAppContext } from "../../utilities/AppContext";
-import { ActiveView } from "../../types";
+import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 
 interface ChatInChatListProps {
   chat: Chat;
@@ -38,10 +40,7 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
           onInput={(e) => handleInputChange(e as InputEvent)}
         />
       ) : (
-        <div
-          onClick={() => navigate(ActiveView.Chat, chat)}
-          className="convo-id"
-        >
+        <div onClick={() => navigate(AppView.Chat, chat)} className="convo-id">
           {chat.title}
         </div>
       )}

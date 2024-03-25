@@ -1,26 +1,31 @@
 import * as vscode from "vscode";
+
 import { Chat, ModelProvider, Persona } from "../../shared/types";
-import { PersonaDataManager } from "../Persona/PersonaDataManager";
-import { ChatModelResponse, ChatModelRequest, ChatModel } from "./ChatModel";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLM_MESSAGE_FORMATTING_INSTRUCTION } from "../commands/constants";
+import { SecretsProvider } from "../helpers/SecretsProvider";
+import { PersonaDataManager } from "../Persona/PersonaDataManager";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
+import { ChatModel, ChatModelRequest, ChatModelResponse } from "./ChatModel";
 import { GPTChatModel } from "./Implementations/GPTChatModel";
 import { PaLMChatModel } from "./Implementations/PaLMChatModel";
-import { SecretsProvider } from "../helpers/SecretsProvider";
 
 export class LLMApiRequestSender {
   private readonly personaDataManager: PersonaDataManager;
   private readonly chatEditor: ChatEditor;
   private readonly secretsProvider: SecretsProvider;
+  private readonly extensionToWebviewMessageSender: ExtensionToWebviewMessageSender;
 
   constructor(
     personaManager: PersonaDataManager,
     chatEditor: ChatEditor,
     secretsProvider: SecretsProvider,
+    extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
   ) {
     this.personaDataManager = personaManager;
     this.chatEditor = chatEditor;
     this.secretsProvider = secretsProvider;
+    this.extensionToWebviewMessageSender = extensionToWebviewMessageSender;
   }
 
   /**
@@ -28,6 +33,8 @@ export class LLMApiRequestSender {
    * @param chat Chat to send an API request for.
    */
   public async sendChatRequest(chat: Chat): Promise<ChatModelResponse> {
+    this.extensionToWebviewMessageSender.updateIsMessageLoading(true);
+
     const persona = await this.getChatPersona(chat);
 
     const apiKey = await this.secretsProvider.getApiKey(persona.modelProvider);

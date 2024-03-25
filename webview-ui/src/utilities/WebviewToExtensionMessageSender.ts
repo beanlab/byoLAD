@@ -1,13 +1,13 @@
-import { vscode } from "./vscode";
 import {
   Chat,
-  WebviewToExtensionMessage,
-  WebviewToExtensionMessageTypeParamsMap,
-  WebviewToExtensionMessageType,
-  PersonaDraft,
-  Persona,
   ModelProvider,
+  Persona,
+  PersonaDraft,
+  WebviewToExtensionMessage,
+  WebviewToExtensionMessageType,
+  WebviewToExtensionMessageTypeParamsMap,
 } from "../../../shared/types";
+import { vscode } from "./vscode";
 
 /**
  * Sends messages to the extension context.
@@ -125,10 +125,10 @@ export class WebviewToExtensionMessageSender {
   }
 
   /**
-   * Requests that all chats be sent back to the webview.
+   * Requests a refresh of the extension data.
    */
-  public getChats() {
-    const messageType: WebviewToExtensionMessageType = "getChats";
+  public requestRefresh() {
+    const messageType: WebviewToExtensionMessageType = "requestRefresh";
     vscode.postMessage({
       messageType: messageType,
     } as WebviewToExtensionMessage);

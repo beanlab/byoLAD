@@ -1,14 +1,15 @@
 import * as vscode from "vscode";
-import { ChatWebviewProvider } from "./ChatWebviewProvider";
+
 import {
+  Chat,
+  ExtensionToWebviewMessage,
   ExtensionToWebviewMessageType,
   ExtensionToWebviewMessageTypeParamsMap,
-  ExtensionToWebviewMessage,
-  Chat,
   Persona,
 } from "../../shared/types";
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { PersonaDataManager } from "../Persona/PersonaDataManager";
+import { ChatWebviewProvider } from "./ChatWebviewProvider";
 
 export class ExtensionToWebviewMessageSender {
   private readonly chatWebviewProvider: ChatWebviewProvider;
@@ -32,7 +33,9 @@ export class ExtensionToWebviewMessageSender {
    */
   public async refresh() {
     await this.chatWebviewProvider.show();
+
     const chats: Chat[] = this.chatDataManager.chats;
+
     let activeChatId: number | null = this.chatDataManager.activeChatId;
     if (activeChatId && !chats.find((chat) => chat.id === activeChatId)) {
       // activeChatId is invalid, so clear it
@@ -55,10 +58,12 @@ export class ExtensionToWebviewMessageSender {
   }
 
   /**
-   * Updates the webview to display the chat/chatlist view.
+   * Updates the webview to display the chat/chatlist view, displaying the webview if necessary.
    */
   public async showChatView() {
-    await this.chatWebviewProvider.show();
+    if (!this.chatWebviewProvider.isWebviewVisible) {
+      await this.chatWebviewProvider.show();
+    }
     const messageType: ExtensionToWebviewMessageType = "showChatView";
     await this.postMessage({
       messageType: messageType,

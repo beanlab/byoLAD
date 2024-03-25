@@ -123,6 +123,7 @@ export class ChatDataManager {
         this.settingsProvider.getBasePromptInstruction() +
         constants.LLM_MESSAGE_FORMATTING_INSTRUCTION,
       title: "Empty Chat",
+      tags: [],
     };
     return chat;
   }

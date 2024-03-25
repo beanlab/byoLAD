@@ -1,9 +1,7 @@
-import { ImagePaths } from "./types";
+import { WebviewInitialState } from "../../shared/types";
 
 declare global {
   interface Window {
-    initialState: {
-      imagePaths: ImagePaths;
-    };
+    initialState: WebviewInitialState;
   }
 }

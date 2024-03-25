@@ -1,11 +1,12 @@
 import * as vscode from "vscode";
+
 import { ChatDataManager } from "../Chat/ChatDataManager";
-import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { sendChatMessage } from "../helpers/sendChatMessage";
+import { SettingsProvider } from "../helpers/SettingsProvider";
 import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 
 /**
  * Command to explain the selected code (or whole file if no selection) in a chat.
@@ -33,4 +34,5 @@ export const getExplainCodeCommand = (
       llmApiService,
       chatWebviewProvider,
     );
+    await extensionToWebviewMessageSender.showChatView();
   });

@@ -8,3 +8,5 @@ Types of content that can be contained here:
 - JavaScript files
 - CSS files
 - Assets / resources (i.e. images, illustrations, etc.)
+
+**Note**: Use of a React app in the webview is based on the [hello-world-react-vite](https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/frameworks/hello-world-react-vite) sample from Microsoft.

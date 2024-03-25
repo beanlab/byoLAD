@@ -1,6 +1,11 @@
 import { createContext, useContext } from "react";
 import { WebviewToExtensionMessageSender } from "./WebviewToExtensionMessageSender";
-import { Chat } from "../../../shared/types";
+import {
+  Chat,
+  ModelProvider,
+  Persona,
+  PersonaDraft,
+} from "../../../shared/types";
 
 type ExtensionMessageContextType = {
   createNewChat: () => void;
@@ -11,6 +16,11 @@ type ExtensionMessageContextType = {
   copyToClipboard: (text: string) => void;
   insertCodeBlock: (code: string) => void;
   diffCodeBlock: (code: string) => void;
+  updatePersona: (persona: Persona | PersonaDraft) => void;
+  deletePersona: (pesonaId: number) => void;
+  manageApiKeys: (modelProvider: ModelProvider | undefined) => void;
+  setDefaultPersonaId: (personaId: number) => void;
+  openExtensionVsCodeSettings: () => void;
 };
 
 // Default context value should never be used, but is required to be defined
@@ -23,6 +33,11 @@ const ExtensionMessageContext = createContext<ExtensionMessageContextType>({
   copyToClipboard: () => {},
   insertCodeBlock: () => {},
   diffCodeBlock: () => {},
+  updatePersona: () => {},
+  deletePersona: () => {},
+  manageApiKeys: () => {},
+  setDefaultPersonaId: () => {},
+  openExtensionVsCodeSettings: () => {},
 });
 
 export const ExtensionMessageContextProvider = ({
@@ -41,6 +56,12 @@ export const ExtensionMessageContextProvider = ({
     copyToClipboard: webviewToExtensionMessageSender.copyToClipboard,
     insertCodeBlock: webviewToExtensionMessageSender.insertCodeBlock,
     diffCodeBlock: webviewToExtensionMessageSender.diffCodeBlock,
+    updatePersona: webviewToExtensionMessageSender.updatePersona,
+    deletePersona: webviewToExtensionMessageSender.deletePersona,
+    manageApiKeys: webviewToExtensionMessageSender.manageApiKeys,
+    setDefaultPersonaId: webviewToExtensionMessageSender.setDefaultPersonaId,
+    openExtensionVsCodeSettings:
+      webviewToExtensionMessageSender.openExtensionVsCodeSettings,
   };
   return (
     <ExtensionMessageContext.Provider value={context}>

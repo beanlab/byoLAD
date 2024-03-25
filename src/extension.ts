@@ -9,6 +9,7 @@ import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
 import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
+import { getImportPersonaCommand } from "./commands/getImportPersonaCommand";
 import { getManageApiKeysCommand } from "./commands/getManageApiKeysCommand";
 import { getNewChatCommand } from "./commands/getNewChatCommand";
 import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
@@ -110,6 +111,11 @@ export function activate(context: vscode.ExtensionContext) {
   );
   const openSettingsCommand = getOpenSettingsCommand();
   const manageApiKeysCommand = getManageApiKeysCommand(secretsProvider);
+  const importPersonaCommand = getImportPersonaCommand(
+    personaDataManager,
+    extensionToWebviewMessageSender,
+    chatWebviewProvider,
+  );
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
@@ -132,6 +138,7 @@ export function activate(context: vscode.ExtensionContext) {
     addCodeToChatCommand,
     addCodeToNewChatCommand,
     manageApiKeysCommand,
+    importPersonaCommand,
   );
 }
 

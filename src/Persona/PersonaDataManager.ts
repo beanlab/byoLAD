@@ -1,6 +1,7 @@
 import { ExtensionContext } from "vscode";
-import { Persona, PersonaDraft } from "../../shared/types";
+
 import { STANDARD_PERSONAS } from "../../shared/data/StandardPersonas";
+import { Persona, PersonaDraft } from "../../shared/types";
 
 /**
  * Manages a user's custom Personas in the VS Code workspace state.
@@ -120,6 +121,7 @@ export class PersonaDataManager {
    * Adds a new PersonaDraft to the workspace state and returns that Persona.
    */
   addNewPersona(draft: PersonaDraft): Persona {
+    this.validateNewPersonaName(draft.name);
     const newPersona: Persona = {
       id: this.nextId,
       name: draft.name,
@@ -162,7 +164,7 @@ export class PersonaDataManager {
   }
 
   validateNewPersonaName(name: string): void {
-    this.vaidateNameProperties(name);
+    this.validateNameProperties(name);
     this.validateNameUniqueness(name);
   }
 
@@ -172,7 +174,7 @@ export class PersonaDataManager {
     }
   }
 
-  vaidateNameProperties(name: string) {
+  validateNameProperties(name: string) {
     if (!name.trim()) {
       throw new Error("Persona name cannot be empty or whitespace");
     }

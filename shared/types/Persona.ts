@@ -1,4 +1,4 @@
-import { ModelProvider } from ".";
+import { ModelProvider } from "./";
 
 /**
  * The character/purpose/identity of the LLM in a conversation.
@@ -29,7 +29,16 @@ export interface Persona {
   modelId: string;
 }
 
+/**
+ * A persona without an ID, used for importing/exporting personas.
+ */
+export type PersonaImportExport = Omit<Persona, "id">;
+
+/**
+ * A persona without an ID, used for creating new personas.
+ */
 export type PersonaDraft = Omit<Persona, "id">;
+
 export const PERSONA_NAME_MAX_LENGTH = 30;
 export const PERSONA_DESCRIPTION_MAX_LENGTH = 100;
 type ValidationRule = (value: string) => string | null;

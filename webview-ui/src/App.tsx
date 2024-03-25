@@ -67,7 +67,6 @@ function App() {
      * Handle messages sent from the extension to the webview
      */
     const eventListener = (event: MessageEvent<ExtensionToWebviewMessage>) => {
-      console.log(event.data);
       const message = event.data as ExtensionToWebviewMessage;
       extenionToWebviewMessageHandler.handleMessage(message);
     };

@@ -129,6 +129,7 @@ export class ChatDataManager {
       messages: messages ?? [],
       personaId: this.personaDataManager.defaultPersonaId,
       title: "Empty Chat",
+      tags: [],
     };
     return chat;
   }

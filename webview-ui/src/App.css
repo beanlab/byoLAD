@@ -147,6 +147,7 @@
 }
 
 .convo-id {
+  font-size: 1.2em;
   padding-right: 20px;
   cursor: pointer;
 }
@@ -249,4 +250,25 @@
 .persona-card h3,
 .persona-card p {
   margin: 0;
+}
+
+.file-tags {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 70%;
+}
+
+.file-tag {
+  display: flex;
+  margin: 3px;
+}
+
+.persona-tag {
+  display: flex;
+  margin: 3px;
+}
+
+.tags {
+  display: flex;
+  justify-content: space-between; /* Add this */
 }

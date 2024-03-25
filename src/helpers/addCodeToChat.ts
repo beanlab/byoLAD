@@ -5,7 +5,7 @@ import { ChatEditor } from "../Chat/ChatEditor";
 import {
   getFileContentAsCodeBlock,
   getSelectedTextAsCodeBlock,
-} from "./getCodeReference";
+} from "./getCodeBlock";
 
 /**
  * Adds the currently selected code (or the entire file content if nothing is selected)

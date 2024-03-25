@@ -10,7 +10,8 @@ import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMe
 import {
   getFileContentAsCodeBlock,
   getSelectedTextAsCodeBlock,
-} from "./getCodeReference";
+} from "./getCodeBlock";
+import { getCurrentOpenFileName } from "./getCurrentOpenFileName";
 
 /**
  * Primary function to send a chat message. Starts a new chat if needed,
@@ -53,6 +54,18 @@ export async function sendChatMessage(
       codeBlock = getFileContentAsCodeBlock(activeEditor);
     }
     messageBlocks.push(codeBlock);
+  }
+
+  // if this is the first time a message is sent, then update the chat title
+  if (chat.messages.length == 0) {
+    chat.title = markdown;
+    chat.tags = [];
+  }
+
+  // if the file is a new file, add it to the tags
+  const openedFileName = getCurrentOpenFileName();
+  if (openedFileName !== undefined && !chat.tags.includes(openedFileName)) {
+    chat.tags.push(openedFileName);
   }
 
   // Update UI immediately only if the webview is already visible

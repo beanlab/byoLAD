@@ -1,4 +1,10 @@
-import { Chat, ChatMessage, ChatRole, MessageBlock } from "../../shared/types";
+import {
+  Chat,
+  ChatMessage,
+  ChatRole,
+  CodeBlock,
+  MessageBlock,
+} from "../../shared/types";
 import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
 import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { ChatDataManager } from "./ChatDataManager";
@@ -41,11 +47,28 @@ export class ChatEditor {
     } else {
       chat.messages.push({ role: role, content: messageBlocks } as ChatMessage);
     }
+    this.addLanguageTags(messageBlocks, chat);
     this.chatDataManager.updateChat(chat);
 
     if (updateWebview) {
       await this.extensionToWebviewMessageSender.refresh();
     }
+  }
+
+  /**
+   * Adds a language tags if appropriate
+   * @param messageBlocks most recent MessageBlocks appended to the chat.
+   * @param chat Chat to update.
+   */
+  public addLanguageTags(messageBlocks: MessageBlock[], chat: Chat) {
+    messageBlocks.forEach((block) => {
+      if (block.type == "code") {
+        const langID = (block as CodeBlock).languageId;
+        if (langID && !chat.tags.includes(langID)) {
+          chat.tags.push(langID);
+        }
+      }
+    });
   }
 
   /**

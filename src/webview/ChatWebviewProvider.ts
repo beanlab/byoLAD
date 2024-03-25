@@ -90,7 +90,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     message: ExtensionToWebviewMessage,
   ): Promise<boolean> {
     if (!this._webviewView) {
-      await vscode.window.showErrorMessage(
+      console.error(
         "No active webview to communicate with. Please try reloading the window or restarting the extension.",
       );
       return false;

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { ModelProvider, Persona, PersonaDraft } from "../../../../shared/types";
+
+import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
+
 import { STANDARD_PERSONAS } from "../../../../shared/data/StandardPersonas";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
+import { ModelProvider, Persona, PersonaDraft } from "../../../../shared/types";
 import { useAppContext } from "../../utilities/AppContext";
-import { EditPersona } from "./EditPersona";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 import NavBar from "../NavBar";
+import { EditPersona } from "./EditPersona";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
@@ -137,7 +139,7 @@ export const PersonaSettings: React.FC = () => {
                   </div>
                 </div>
                 <p>{persona.description}</p>
-                <hr />
+                <VSCodeDivider role="separator" />
                 <p>
                   {persona.modelProvider}: {persona.modelId}
                 </p>

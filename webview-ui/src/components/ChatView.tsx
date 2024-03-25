@@ -9,6 +9,7 @@ import { ChatInput } from "./ChatInput";
 import ErrorMessage from "./ErrorMessage";
 import { Message } from "./Message";
 import NavBar from "./NavBar";
+import Stack from "./Stack";
 
 interface ChatViewProps {
   imagePaths: ImagePaths;
@@ -141,11 +142,13 @@ export const ChatView = ({
         <div className="view-container">
           <NavBar />
           <div className="page-header">
-            <h2>{activeChat.title}</h2>
+            <h2 className="chat-title" title={activeChat.title}>
+              {activeChat.title}
+            </h2>
           </div>
           <div className="message-list">
             <div>{welcomeMessage}</div>
-            <div>{messages}</div>
+            <Stack>{messages}</Stack>
             <div ref={endOfMessagesRef}></div>
           </div>
 

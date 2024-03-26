@@ -166,6 +166,10 @@ export class WebviewToExtensionMessageHandler {
         );
         break;
       }
+      case "importPersona": {
+        await vscode.commands.executeCommand("vscode-byolad.importPersona");
+        break;
+      }
       default: {
         // Ensure exhaustive switch. Make sure all message types are handled in the switch statement.
         const _exhaustiveCheck: never = message.messageType;

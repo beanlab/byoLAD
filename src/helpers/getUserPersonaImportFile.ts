@@ -21,10 +21,12 @@ export async function getUserPersonaImportFile(): Promise<
     try {
       const personaImportExport: PersonaImportExport = JSON.parse(fileContent);
       return personaImportExport;
-    } catch (error) {
-      vscode.window.showErrorMessage(
-        "Invalid JSON file. Export a Persona to see the correct format.",
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        vscode.window.showErrorMessage(
+          `Failed to import Persona: ${error.message}`,
+        );
+      }
     }
   }
   return undefined;

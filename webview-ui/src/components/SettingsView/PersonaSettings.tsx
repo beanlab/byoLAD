@@ -11,7 +11,7 @@ import { EditPersona } from "./EditPersona";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
-  const { deletePersona, updatePersona, setDefaultPersonaId } =
+  const { deletePersona, updatePersona, setDefaultPersonaId, importPersona } =
     useExtensionMessageContext();
   const { defaultPersonaId } = useAppContext();
   const [selectedPersona, setSelectedPersona] = useState<
@@ -19,7 +19,7 @@ export const PersonaSettings: React.FC = () => {
   >(null);
   const uneditablePersonaIds = STANDARD_PERSONAS.map((p) => p.id);
 
-  const handleAddPersona = () => {
+  const handleCreatePersona = () => {
     setSelectedPersona({
       name: "",
       description: "",
@@ -27,6 +27,10 @@ export const PersonaSettings: React.FC = () => {
       modelId: "",
       instructions: "",
     } as PersonaDraft);
+  };
+
+  const handleImportPersona = () => {
+    importPersona();
   };
 
   const handleEditPersona = (persona: Persona) => {
@@ -72,15 +76,34 @@ export const PersonaSettings: React.FC = () => {
           <div className="page-header">
             <h2>Personas</h2>
           </div>
-          <div style={{ marginBottom: "1rem" }}>
+          <div
+            // TODO: move styling to CSS class/Tailwind
+            style={{
+              marginBottom: "1rem",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "0.5rem",
+              flexWrap: "wrap",
+            }}
+          >
             <VSCodeButton
-              onClick={handleAddPersona}
+              onClick={handleCreatePersona}
               appearance="primary"
-              title="Add"
-              aria-label="Add"
+              title="Create Persona"
+              aria-label="Create Persona"
             >
-              Create Persona
+              Create
               <span slot="start" className="codicon codicon-add"></span>
+            </VSCodeButton>
+            <VSCodeButton
+              onClick={handleImportPersona}
+              appearance="secondary"
+              title="Import Persona"
+              aria-label="Import Persona"
+            >
+              Import
+              <span slot="start" className="codicon codicon-json"></span>
             </VSCodeButton>
           </div>
 

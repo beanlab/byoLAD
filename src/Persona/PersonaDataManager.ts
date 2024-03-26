@@ -1,7 +1,12 @@
 import { ExtensionContext } from "vscode";
 
 import { STANDARD_PERSONAS } from "../../shared/data/StandardPersonas";
-import { Persona, PersonaDraft } from "../../shared/types";
+import {
+  errorMapToString,
+  Persona,
+  PersonaDraft,
+  validatePersonaDraftProperties,
+} from "../../shared/types";
 
 /**
  * Manages a user's custom Personas in the VS Code workspace state.
@@ -122,6 +127,11 @@ export class PersonaDataManager {
    */
   addNewPersona(draft: PersonaDraft): Persona {
     this.validateNewPersonaName(draft.name);
+    const errorMessages: Map<keyof PersonaDraft, string> =
+      validatePersonaDraftProperties(draft);
+    if (errorMessages.size) {
+      throw new Error(`Invalid Persona: ${errorMapToString(errorMessages)}`);
+    }
     const newPersona: Persona = {
       id: this.nextId,
       name: draft.name,

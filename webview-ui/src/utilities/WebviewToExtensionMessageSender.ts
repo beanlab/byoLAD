@@ -248,4 +248,14 @@ export class WebviewToExtensionMessageSender {
       messageType: messageType,
     } as WebviewToExtensionMessage);
   }
+
+  /**
+   * Requests that the perosona import flow be initiated.
+   */
+  public importPersona() {
+    const messageType: WebviewToExtensionMessageType = "importPersona";
+    vscode.postMessage({
+      messageType: messageType,
+    } as WebviewToExtensionMessage);
+  }
 }

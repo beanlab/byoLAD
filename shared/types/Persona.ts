@@ -52,7 +52,11 @@ export function validatePersonaDraftProperties(
     "name",
     "Name",
     persona.name,
-    [isEmptyOrWhitespace, isGreaterThanMaxLength(PERSONA_NAME_MAX_LENGTH)],
+    [
+      fieldMissing,
+      isEmptyOrWhitespace,
+      isGreaterThanMaxLength(PERSONA_NAME_MAX_LENGTH),
+    ],
     errors,
   );
 
@@ -61,6 +65,7 @@ export function validatePersonaDraftProperties(
     "Description",
     persona.description,
     [
+      fieldMissing,
       isEmptyOrWhitespace,
       isGreaterThanMaxLength(PERSONA_DESCRIPTION_MAX_LENGTH),
     ],
@@ -71,7 +76,15 @@ export function validatePersonaDraftProperties(
     "instructions",
     "Prompt instructions",
     persona.instructions,
-    [isEmptyOrWhitespace],
+    [fieldMissing, isEmptyOrWhitespace],
+    errors,
+  );
+
+  validateField(
+    "modelProvider",
+    "Model provider",
+    persona.modelProvider,
+    [fieldMissing, isEmptyOrWhitespace, isInvalidModelProvider],
     errors,
   );
 
@@ -79,7 +92,7 @@ export function validatePersonaDraftProperties(
     "modelId",
     "Model",
     persona.modelId,
-    [isEmptyOrWhitespace],
+    [fieldMissing, isEmptyOrWhitespace],
     errors,
   );
 
@@ -110,9 +123,12 @@ function validateField(
   }
 }
 
-const isEmptyOrWhitespace: ValidationRule = (value) => {
-  return !value.trim() ? "cannot be empty or whitespace" : null;
-};
+export function errorMapToString(errorMap: Map<keyof PersonaDraft, string>) {
+  return Array.from(errorMap.values()).join("; ");
+}
+
+const isEmptyOrWhitespace: ValidationRule = (value) =>
+  !value.trim() ? "cannot be empty or whitespace" : null;
 
 const isGreaterThanMaxLength =
   (maxLength: number): ValidationRule =>
@@ -120,3 +136,10 @@ const isGreaterThanMaxLength =
     value.length > maxLength
       ? `cannot be longer than ${maxLength} characters`
       : null;
+
+const fieldMissing: ValidationRule = (value) => (!value ? "is required" : null);
+
+const isInvalidModelProvider: ValidationRule = (value: string) =>
+  !Object.values(ModelProvider).includes(value as ModelProvider)
+    ? "is not a supported model provider"
+    : null;

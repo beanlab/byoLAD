@@ -15,7 +15,9 @@ export function importPersona(
     personaDataManager.addNewPersona(persona);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      vscode.window.showErrorMessage(`Failed Persona import: ${error.message}`);
+      vscode.window.showErrorMessage(
+        `Invalid JSON file. Export a Persona to see the correct format. Specific error(s) - ${error.message}`,
+      );
     }
     return;
   }

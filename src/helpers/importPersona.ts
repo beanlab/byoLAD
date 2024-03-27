@@ -16,7 +16,7 @@ export function importPersona(
   } catch (error: unknown) {
     if (error instanceof Error) {
       vscode.window.showErrorMessage(
-        `Invalid JSON file. Export a Persona to see the correct format. Specific error(s) - ${error.message}`,
+        `Invalid JSON input (export a Persona to see the correct format). Specific error(s) - ${error.message}`,
       );
     }
     return;

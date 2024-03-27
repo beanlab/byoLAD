@@ -210,13 +210,13 @@
   font-size: calc(var(--vscode-editor-font-size) * 1.15);
 }
 
-.persona-edit-confirm-button-container {
+.split-button-container {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
 }
 
-.persona-edit-confirm-button-container > vscode-button {
+.split-button-container > vscode-button {
   flex: 1;
 }
 

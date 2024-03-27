@@ -11,8 +11,13 @@ import { EditPersona } from "./EditPersona";
 
 export const PersonaSettings: React.FC = () => {
   const { personaList } = useAppContext();
-  const { deletePersona, updatePersona, setDefaultPersonaId, importPersona } =
-    useExtensionMessageContext();
+  const {
+    deletePersona,
+    updatePersona,
+    setDefaultPersonaId,
+    importPersona,
+    exportPersona,
+  } = useExtensionMessageContext();
   const { defaultPersonaId } = useAppContext();
   const [selectedPersona, setSelectedPersona] = useState<
     Persona | PersonaDraft | null
@@ -57,6 +62,10 @@ export const PersonaSettings: React.FC = () => {
     updatePersona(duplicate);
   };
 
+  const handleExportPersona = (persona: Persona) => {
+    exportPersona(persona.id);
+  };
+
   return (
     <div>
       {selectedPersona ? (
@@ -77,14 +86,10 @@ export const PersonaSettings: React.FC = () => {
             <h2>Personas</h2>
           </div>
           <div
+            className="split-button-container"
             // TODO: move styling to CSS class/Tailwind
             style={{
               marginBottom: "1rem",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: "0.5rem",
-              flexWrap: "wrap",
             }}
           >
             <VSCodeButton
@@ -141,6 +146,14 @@ export const PersonaSettings: React.FC = () => {
                         <i className="codicon codicon-edit" />
                       </VSCodeButton>
                     )}
+                    <VSCodeButton
+                      onClick={() => handleExportPersona(persona)}
+                      title="Export to JSON"
+                      aria-label="Export to JSON"
+                      appearance="icon"
+                    >
+                      <i className="codicon codicon-export" />
+                    </VSCodeButton>
                     <VSCodeButton
                       onClick={() => handleDuplicatePersona(persona)}
                       title="Duplicate"

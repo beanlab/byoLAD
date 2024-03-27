@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
+
+import {
+  VSCodeButton,
+  VSCodeDropdown,
+  VSCodeOption,
+  VSCodeTextArea,
+  VSCodeTextField,
+} from "@vscode/webview-ui-toolkit/react";
+
 import {
   ModelProvider,
   Persona,
   PersonaDraft,
   validatePersonaDraftProperties,
 } from "../../../../shared/types";
-import {
-  VSCodeButton,
-  VSCodeTextField,
-  VSCodeTextArea,
-  VSCodeDropdown,
-  VSCodeOption,
-} from "@vscode/webview-ui-toolkit/react";
 
 function getProviderModelUrl(provider: ModelProvider): string {
   switch (provider) {
@@ -178,7 +180,7 @@ export const EditPersona: React.FC<{
           resize="vertical"
         />
       </LabelledField>
-      <div className="persona-edit-confirm-button-container">
+      <div className="split-button-container">
         <VSCodeButton appearance="secondary" onClick={onCancel}>
           Cancel
           <span slot="start" className="codicon codicon-close"></span>

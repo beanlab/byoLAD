@@ -41,6 +41,7 @@ export interface WebviewToExtensionMessageTypeParamsMap {
   manageApiKeys: ManageApiKeysParams;
   openExtensionVsCodeSettings: null;
   importPersona: null;
+  exportPersona: ExportPersonaParams;
   // Add new message types here...
 }
 
@@ -121,4 +122,11 @@ export interface ManageApiKeysParams {
    * If undefined, the user will be prompted to select a model provider.
    */
   modelProvider: ModelProvider | undefined;
+}
+
+export interface ExportPersonaParams {
+  /**
+   * The ID of the persona to export.
+   */
+  personaId: number;
 }

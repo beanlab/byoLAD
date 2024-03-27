@@ -258,4 +258,18 @@ export class WebviewToExtensionMessageSender {
       messageType: messageType,
     } as WebviewToExtensionMessage);
   }
+
+  /**
+   * Requests that a persona be exported.
+   * @param personaId The ID of the persona to export.
+   */
+  public exportPersona(personaId: number) {
+    const messageType: WebviewToExtensionMessageType = "exportPersona";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        personaId: personaId,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
 }

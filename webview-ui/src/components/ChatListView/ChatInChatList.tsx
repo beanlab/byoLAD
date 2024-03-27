@@ -19,7 +19,7 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
   const { deleteChat, updateChat } = useExtensionMessageContext();
   const [editing, setEditing] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(chat.title);
-  const { navigate } = useAppContext();
+  const { navigate, personaList } = useAppContext();
 
   const handleEditClick = () => {
     setEditing(!editing);
@@ -33,6 +33,9 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
     setTitle((event.target as HTMLInputElement).value);
   };
 
+  const getPersonaName = (personaId: number) =>
+    personaList.find((p) => p.id === personaId)?.name;
+
   return (
     <div>
       <div className="convo">
@@ -44,7 +47,8 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
         ) : (
           <div
             onClick={() => navigate(AppView.Chat, chat)}
-            className="convo-id"
+            className="convo-id chat-title"
+            title={chat.title}
           >
             {chat.title}
           </div>
@@ -89,7 +93,7 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
           ))}
         </div>
         <div className="persona-tag">
-          <VSCodeTag>Persona name</VSCodeTag>
+          <VSCodeTag>{getPersonaName(chat.personaId)}</VSCodeTag>
         </div>
       </div>
     </div>

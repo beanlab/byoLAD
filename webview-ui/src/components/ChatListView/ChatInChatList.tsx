@@ -1,22 +1,25 @@
-import { Chat } from "../../../../shared/types";
-import { VSCodeButton, VSCodeTag } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
+
+import {
+  VSCodeButton,
+  VSCodeTag,
+  VSCodeTextField,
+} from "@vscode/webview-ui-toolkit/react";
+
+import { Chat } from "../../../../shared/types";
+import { AppView } from "../../types";
+import { useAppContext } from "../../utilities/AppContext";
 import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
 
 interface ChatInChatListProps {
   chat: Chat;
-  handleClick: (chat: Chat) => void;
-  id: number;
 }
 
-export const ChatInChatList = ({
-  chat,
-  handleClick,
-  id,
-}: ChatInChatListProps) => {
+export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
   const { deleteChat, updateChat } = useExtensionMessageContext();
   const [editing, setEditing] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(chat.title);
+  const { navigate, personaList } = useAppContext();
 
   const handleEditClick = () => {
     setEditing(!editing);
@@ -26,21 +29,31 @@ export const ChatInChatList = ({
     }
   };
 
-  const handleInputChange = (event: React.FormEvent<HTMLElement>) => {
+  const handleInputChange = (event: InputEvent) => {
     setTitle((event.target as HTMLInputElement).value);
   };
 
+  const getPersonaName = (personaId: number) =>
+    personaList.find((p) => p.id === personaId)?.name;
+
   return (
     <div>
-      <div className="convo" key={id}>
+      <div className="convo">
         {editing ? (
-          <input value={title} onChange={handleInputChange} />
+          <VSCodeTextField
+            value={title}
+            onInput={(e) => handleInputChange(e as InputEvent)}
+          />
         ) : (
-          <div onClick={() => handleClick(chat)} className="convo-id">
+          <div
+            onClick={() => navigate(AppView.Chat, chat)}
+            className="convo-id chat-title"
+            title={chat.title}
+          >
             {chat.title}
           </div>
         )}
-        <div>
+        <div className="convo-action-buttons">
           {editing ? (
             <VSCodeButton
               appearance="icon"
@@ -70,17 +83,17 @@ export const ChatInChatList = ({
           </VSCodeButton>
         </div>
       </div>
-      
+
       <div className="tags">
-          <div className="file-tags">
-            {chat.tags.map((tagName,i)=>(
-              <div className="file-tag">
-                <VSCodeTag  key={i}>{tagName}</VSCodeTag>
-              </div>
-            ))}
+        <div className="file-tags">
+          {chat.tags.map((tagName, i) => (
+            <div className="file-tag">
+              <VSCodeTag key={i}>{tagName}</VSCodeTag>
+            </div>
+          ))}
         </div>
-        <div className='persona-tag'>
-          <VSCodeTag>Persona name</VSCodeTag>
+        <div className="persona-tag">
+          <VSCodeTag>{getPersonaName(chat.personaId)}</VSCodeTag>
         </div>
       </div>
     </div>

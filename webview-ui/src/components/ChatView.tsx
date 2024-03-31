@@ -1,23 +1,24 @@
-import { useRef, useEffect } from "react";
-import { ChatRole, Chat } from "../../../shared/types";
-import { Message } from "./Message";
-import { ImagePaths } from "../types";
-import ErrorMessage from "./ErrorMessage";
-import NavBar from "./NavBar";
+import { useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
-import { ChatInput } from "./ChatInput";
+
+import { Chat, ChatRole, ImagePaths } from "../../../shared/types";
+import { AppView } from "../types";
+import { useAppContext } from "../utilities/AppContext";
 import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
+import { ChatInput } from "./ChatInput";
+import ErrorMessage from "./ErrorMessage";
+import { Message } from "./Message";
+import NavBar from "./NavBar";
+import Stack from "./Stack";
 
 interface ChatViewProps {
   imagePaths: ImagePaths;
-  activeChat: Chat;
   errorMessage: string | null;
   hasSelection: boolean;
   loadingMessageState: {
     loadingMessage: boolean;
     setLoadingMessage: React.Dispatch<React.SetStateAction<boolean>>;
   };
-  changeActiveChat: (chat: Chat | null) => void;
 }
 
 /**
@@ -26,14 +27,17 @@ interface ChatViewProps {
  */
 export const ChatView = ({
   imagePaths,
-  activeChat,
   errorMessage,
   hasSelection,
   loadingMessageState,
-  changeActiveChat,
 }: ChatViewProps) => {
+  const { activeChat, navigate } = useAppContext();
   const { updateChat } = useExtensionMessageContext();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
+
+  if (!activeChat) {
+    navigate(AppView.ChatList);
+  }
 
   /**
    * Scroll to the bottom of the chat (if messages are long enough to scroll).
@@ -50,8 +54,9 @@ export const ChatView = ({
   const deleteMessageBlock = (
     messagePosition: number,
     messageBlockPosition: number,
+    chat: Chat,
   ) => {
-    const newChat = { ...activeChat };
+    const newChat = { ...chat };
     newChat.messages[messagePosition].content.splice(messageBlockPosition, 1);
     if (newChat.messages[messagePosition].content.length == 0) {
       if (
@@ -70,19 +75,21 @@ export const ChatView = ({
     updateChat(newChat);
   };
 
-  const messages = activeChat.messages.map((message, position) => {
-    if (message.role != ChatRole.System) {
-      return (
-        <Message
-          role={message.role}
-          messageBlocks={message.content}
-          deleteMessageBlock={(messageBlockPosition: number) =>
-            deleteMessageBlock(position, messageBlockPosition)
-          }
-        />
-      );
-    }
-  });
+  const messages = activeChat
+    ? activeChat.messages.map((message, position) => {
+        if (message.role != ChatRole.System) {
+          return (
+            <Message
+              role={message.role}
+              messageBlocks={message.content}
+              deleteMessageBlock={(messageBlockPosition: number) =>
+                deleteMessageBlock(position, messageBlockPosition, activeChat)
+              }
+            />
+          );
+        }
+      })
+    : [];
 
   // Refs to persist across renders
   const prevMessagesLengthRef = useRef(messages.length);
@@ -99,7 +106,6 @@ export const ChatView = ({
         // When new messages are added
         scrollToBottom();
       } else if (activeChat.messages.length === prevMessagesLengthRef.current) {
-        console.log("lastMessage", lastMessage);
         if (
           lastMessage &&
           lastMessage.content.length > prevBlocksInLastMessageRef.current
@@ -111,10 +117,10 @@ export const ChatView = ({
       prevMessagesLengthRef.current = activeChat.messages.length; // Update count for next render
       prevBlocksInLastMessageRef.current = lastMessage.content.length; // Update count for next render
     }
-  }, [activeChat.messages]);
+  }, [activeChat?.messages]);
 
   let welcomeMessage = null;
-  if (activeChat.messages.length === 0) {
+  if (activeChat && activeChat.messages.length === 0) {
     welcomeMessage = (
       <div className="welcome-message">
         <div className="top-logo">
@@ -131,22 +137,32 @@ export const ChatView = ({
   }
 
   return (
-    <div className="view-container">
-      <NavBar showBackButton={true} changeActiveChat={changeActiveChat} />
+    <>
+      {activeChat ? (
+        <div className="view-container">
+          <NavBar />
+          <div className="page-header">
+            <h2 className="chat-title" title={activeChat.title}>
+              {activeChat.title}
+            </h2>
+          </div>
+          <div className="message-list">
+            <div>{welcomeMessage}</div>
+            <Stack>{messages}</Stack>
+            <div ref={endOfMessagesRef}></div>
+          </div>
 
-      <div className="message-list">
-        <div>{welcomeMessage}</div>
-        <div>{messages}</div>
-        <div ref={endOfMessagesRef}></div>
-      </div>
+          {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
 
-      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
-
-      <ChatInput
-        activeChat={activeChat}
-        hasSelection={hasSelection}
-        loadingMessageState={loadingMessageState}
-      />
-    </div>
+          <ChatInput
+            activeChat={activeChat}
+            hasSelection={hasSelection}
+            loadingMessageState={loadingMessageState}
+          />
+        </div>
+      ) : (
+        <div>No active chat found. Try reloading this window.</div>
+      )}
+    </>
   );
 };

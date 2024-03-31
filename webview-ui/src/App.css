@@ -1,3 +1,7 @@
+/* body {
+  padding: 0;
+} */
+
 /* Styling for the back and add button at top of page */
 .navbar {
   width: 100%;
@@ -5,7 +9,13 @@
   padding-bottom: 4px;
   z-index: 1; /* Stay in front of other elements */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Push the buttons to the edges */
+}
+
+.horizontal-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .back-button {
@@ -140,7 +150,11 @@
   font-size: 1.2em;
   padding-right: 20px;
   cursor: pointer;
-  padding-top: 10px;
+}
+
+.convo-action-buttons {
+  display: flex;
+  align-items: center;
 }
 
 .delete-all {
@@ -161,6 +175,83 @@
   padding-right: 5px;
 }
 
+/* Page Header */
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.page-header > h2 {
+  margin: 0;
+}
+
+.chat-options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+/* Persona Settings*/
+.persona-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.persona-edit-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.persona-edit-field-container > label {
+  font-weight: bold;
+  font-size: calc(var(--vscode-editor-font-size) * 1.15);
+}
+
+.persona-edit-confirm-button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.persona-edit-confirm-button-container > vscode-button {
+  flex: 1;
+}
+
+.persona-edit-validation-error-message {
+  color: var(--vscode-errorForeground);
+}
+
+.persona-cards {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.persona-card {
+  border: 1px solid var(--vscode-menu-border);
+  border-radius: var(--button-icon-corner-radius);
+  padding: 1rem;
+}
+
+.persona-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.persona-card-button-group {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.persona-card h3,
+.persona-card p {
+  margin: 0;
+}
+
 .file-tags {
   display: flex;
   flex-wrap: wrap;
@@ -169,16 +260,22 @@
 
 .file-tag {
   display: flex;
-  margin: 3px
+  margin: 3px;
 }
 
 .persona-tag {
   display: flex;
-  margin: 3px
+  margin: 3px;
 }
 
 .tags {
   display: flex;
-  justify-content: space-between;    /* Add this */
+  justify-content: space-between; /* Add this */
 }
 
+.chat-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

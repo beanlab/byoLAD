@@ -1,21 +1,21 @@
 import { Chat } from "../../../../shared/types";
+import Stack from "../Stack";
 import { ChatInChatList } from "./ChatInChatList";
 
 interface ChatListProps {
   chatList: Chat[];
-  handleChatClick: (chat: Chat) => void;
 }
 
-export const ChatList = ({ chatList, handleChatClick }: ChatListProps) => {
+export const ChatList = ({ chatList }: ChatListProps) => {
   return (
-    <>
-      {chatList.map((chat, i) => (
-        <ChatInChatList
-          chat={chat}
-          handleClick={handleChatClick}
-          id={i}
-        ></ChatInChatList>
-      ))}
-    </>
+    <Stack>
+      {chatList.length > 0 ? (
+        chatList.map((chat: Chat, i: number) => (
+          <ChatInChatList chat={chat} key={i}></ChatInChatList>
+        ))
+      ) : (
+        <span>No chats found</span>
+      )}
+    </Stack>
   );
 };

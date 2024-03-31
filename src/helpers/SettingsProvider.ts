@@ -1,14 +1,10 @@
-import { ApplyChangesPosition, LLMProvider } from "./types";
-import { injectChatModel } from "./injectChatModel";
+import { ApplyChangesPosition } from "./types";
 import * as vscode from "vscode";
 import { MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE } from "../commands/constants";
-import { ChatModel } from "../ChatModel/ChatModel";
-
 /**
  * Provides access to the user's VS Code settings for the extension.
  */
 export class SettingsProvider {
-  private _chatModel: ChatModel;
   /**
    * The user's VS Code settings for the extension.
    * This is not automatically updated when the settings change in VS Code.
@@ -17,33 +13,10 @@ export class SettingsProvider {
 
   constructor(config: vscode.WorkspaceConfiguration) {
     this._config = config;
-    this._chatModel = injectChatModel(
-      this.getProvider(),
-      this.getModel(),
-      this.getAPIKey(),
-    );
-    this._chatModel = injectChatModel(
-      this.getProvider(),
-      this.getModel(),
-      this.getAPIKey(),
-    );
-  }
-
-  getChatModel(): ChatModel {
-    return this._chatModel;
   }
 
   setConfig(config: vscode.WorkspaceConfiguration) {
     this._config = config;
-    this._chatModel = injectChatModel(
-      this.getProvider(),
-      this.getModel(),
-      this.getAPIKey(),
-    );
-  }
-
-  getBasePromptInstruction(): string {
-    return this._config.get("basePromptInstruction") as string;
   }
 
   getReviewCodePrompt(): string {
@@ -52,18 +25,6 @@ export class SettingsProvider {
 
   getExplainCodePrompt(): string {
     return this._config.get("explainCodePrompt") as string;
-  }
-
-  getAPIKey(): string {
-    return this._config.get("APIKey") as string;
-  }
-
-  getModel(): string {
-    return this._config.get("model") as string;
-  }
-
-  getProvider(): LLMProvider {
-    return this._config.get("provider") as LLMProvider;
   }
 
   /**

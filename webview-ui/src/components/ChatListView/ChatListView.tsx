@@ -1,29 +1,17 @@
-import { Chat } from "../../../../shared/types";
 import { ChatList } from "./ChatList";
-import { NavBar } from "../NavBar";
-import { useExtensionMessageContext } from "../../utilities/ExtensionMessageContext";
+import { useAppContext } from "../../utilities/AppContext";
+import NavBar from "../NavBar";
 
-interface ChatListProps {
-  chatList: Chat[];
-  changeActiveChat: (chat: Chat | null) => void;
-}
-
-export const ChatListView = ({ chatList, changeActiveChat }: ChatListProps) => {
-  const { createNewChat } = useExtensionMessageContext();
-
-  const handleOnClick = (chat: Chat) => {
-    changeActiveChat(chat);
-  };
-
-  if (chatList.length === 0) {
-    createNewChat();
-    return <div>Loading...</div>;
-  }
+export const ChatListView = () => {
+  const { chatList } = useAppContext();
 
   return (
     <div>
-      <NavBar showBackButton={false} changeActiveChat={changeActiveChat} />
-      <ChatList chatList={chatList} handleChatClick={handleOnClick}></ChatList>
+      <NavBar />
+      <div className="page-header">
+        <h2>Chat History</h2>
+      </div>
+      <ChatList chatList={chatList}></ChatList>
     </div>
   );
 };

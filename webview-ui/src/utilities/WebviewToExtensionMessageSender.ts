@@ -1,10 +1,13 @@
-import { vscode } from "./vscode";
 import {
   Chat,
+  ModelProvider,
+  Persona,
+  PersonaDraft,
   WebviewToExtensionMessage,
-  WebviewToExtensionMessageTypeParamsMap,
   WebviewToExtensionMessageType,
+  WebviewToExtensionMessageTypeParamsMap,
 } from "../../../shared/types";
+import { vscode } from "./vscode";
 
 /**
  * Sends messages to the extension context.
@@ -122,10 +125,10 @@ export class WebviewToExtensionMessageSender {
   }
 
   /**
-   * Requests that all chats be sent back to the webview.
+   * Requests a refresh of the extension data.
    */
-  public getChats() {
-    const messageType: WebviewToExtensionMessageType = "getChats";
+  public requestRefresh() {
+    const messageType: WebviewToExtensionMessageType = "requestRefresh";
     vscode.postMessage({
       messageType: messageType,
     } as WebviewToExtensionMessage);
@@ -174,6 +177,73 @@ export class WebviewToExtensionMessageSender {
    */
   public getHasSelection() {
     const messageType: WebviewToExtensionMessageType = "getHasSelection";
+    vscode.postMessage({
+      messageType: messageType,
+    } as WebviewToExtensionMessage);
+  }
+
+  /**
+   * Requests that the default persona ID be set.
+   * @param personaId The ID of the persona to set as default.
+   */
+  public setDefaultPersonaId(personaId: number) {
+    const messageType: WebviewToExtensionMessageType = "setDefaultPersonaId";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        personaId: personaId,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
+
+  /**
+   * Requests that a persona be updated (add/edit).
+   * @param persona The persona to update.
+   */
+  public updatePersona(persona: Persona | PersonaDraft) {
+    const messageType: WebviewToExtensionMessageType = "updatePersona";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        persona: persona,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
+
+  /**
+   * Requests that a persona be deleted.
+   * @param personaId The ID of the persona to delete.
+   */
+  public deletePersona(personaId: number) {
+    const messageType: WebviewToExtensionMessageType = "deletePersona";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        personaId: personaId,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
+
+  /**
+   * Requests that the API key management options be opened.
+   * @param modelProvider The model provider to manage the API keys for. If undefined, the user will be prompted to select a model provider.
+   */
+  public manageApiKeys(modelProvider: ModelProvider | undefined) {
+    const messageType: WebviewToExtensionMessageType = "manageApiKeys";
+    vscode.postMessage({
+      messageType: messageType,
+      params: {
+        modelProvider: modelProvider,
+      } as WebviewToExtensionMessageTypeParamsMap[typeof messageType],
+    } as WebviewToExtensionMessage);
+  }
+
+  /**
+   * Requests that the extension settings be opened.
+   */
+  public openExtensionVsCodeSettings() {
+    const messageType: WebviewToExtensionMessageType =
+      "openExtensionVsCodeSettings";
     vscode.postMessage({
       messageType: messageType,
     } as WebviewToExtensionMessage);

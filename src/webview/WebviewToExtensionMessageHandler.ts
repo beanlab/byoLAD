@@ -1,22 +1,25 @@
 import * as vscode from "vscode";
-import { SettingsProvider } from "../helpers/SettingsProvider";
-import { diffCode } from "../helpers/diffCode";
-import { insertCode } from "../helpers/insertCode";
-import { copyToClipboard } from "../helpers/copyToClipboard";
-import { ChatDataManager } from "../Chat/ChatDataManager";
+
 import {
   WebviewToExtensionMessage,
   WebviewToExtensionMessageTypeParamsMap,
 } from "../../shared/types";
+import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
-import { ExtensionToWebviewMessageSender } from "./ExtensionToWebviewMessageSender";
+import { copyToClipboard } from "../helpers/copyToClipboard";
+import { diffCode } from "../helpers/diffCode";
+import { insertCode } from "../helpers/insertCode";
 import { sendChatMessage } from "../helpers/sendChatMessage";
+import { SettingsProvider } from "../helpers/SettingsProvider";
+import { PersonaDataManager } from "../Persona/PersonaDataManager";
 import { ChatWebviewProvider } from "./ChatWebviewProvider";
+import { ExtensionToWebviewMessageSender } from "./ExtensionToWebviewMessageSender";
 
 export class WebviewToExtensionMessageHandler {
   private readonly settingsProvider: SettingsProvider;
   private readonly chatDataManager: ChatDataManager;
+  private readonly personaDataManager: PersonaDataManager;
   private readonly chatEditor: ChatEditor;
   private readonly llmApiService: LLMApiService;
   private readonly extensionToWebviewMessageSender: ExtensionToWebviewMessageSender;
@@ -25,13 +28,15 @@ export class WebviewToExtensionMessageHandler {
   constructor(
     settingsProvider: SettingsProvider,
     chatDataManager: ChatDataManager,
+    personaDataManager: PersonaDataManager,
     chatEditor: ChatEditor,
     llmApiService: LLMApiService,
     extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
     chatWebviewProvider: ChatWebviewProvider,
   ) {
-    this.chatDataManager = chatDataManager;
     this.settingsProvider = settingsProvider;
+    this.chatDataManager = chatDataManager;
+    this.personaDataManager = personaDataManager;
     this.chatEditor = chatEditor;
     this.llmApiService = llmApiService;
     this.extensionToWebviewMessageSender = extensionToWebviewMessageSender;
@@ -48,7 +53,7 @@ export class WebviewToExtensionMessageHandler {
       case "newChat":
         await vscode.commands.executeCommand("vscode-byolad.newChat");
         break;
-      case "getChats":
+      case "requestRefresh":
         await this.extensionToWebviewMessageSender.refresh();
         break;
       case "deleteAllChats":
@@ -111,7 +116,7 @@ export class WebviewToExtensionMessageHandler {
         const params =
           message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
         const updateWebiew = true;
-        await this.chatEditor.overwriteChatContent(params.chat, updateWebiew);
+        await this.chatEditor.overwriteChatData(params.chat, updateWebiew);
         break;
       }
       case "addCodeToChat": {
@@ -122,6 +127,42 @@ export class WebviewToExtensionMessageHandler {
         const hasSelection = !vscode.window.activeTextEditor?.selection.isEmpty;
         await this.extensionToWebviewMessageSender.updateHasSelection(
           hasSelection,
+        );
+        break;
+      }
+      case "setDefaultPersonaId": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        this.personaDataManager.defaultPersonaId = params.personaId;
+        await this.extensionToWebviewMessageSender.refresh();
+        break;
+      }
+      case "updatePersona": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        this.personaDataManager.updatePersona(params.persona);
+        await this.extensionToWebviewMessageSender.refresh();
+        break;
+      }
+      case "deletePersona": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        this.personaDataManager.deletePersona(params.personaId);
+        await this.extensionToWebviewMessageSender.refresh();
+        break;
+      }
+      case "manageApiKeys": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        await vscode.commands.executeCommand(
+          "vscode-byolad.manageApiKeys",
+          params.modelProvider,
+        );
+        break;
+      }
+      case "openExtensionVsCodeSettings": {
+        await vscode.commands.executeCommand(
+          "vscode-byolad.openSettingsCommand",
         );
         break;
       }

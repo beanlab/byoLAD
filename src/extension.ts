@@ -1,46 +1,63 @@
 import * as vscode from "vscode";
-import { getReviewCodeCommand } from "./commands/getReviewCodeCommand";
-import { SettingsProvider } from "./helpers/SettingsProvider";
-import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
-import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
+
 import { ChatDataManager } from "./Chat/ChatDataManager";
-import { getNewChatCommand } from "./commands/getNewChatCommand";
-import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
-import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
-import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
-import { ChatWebviewProvider } from "./webview/ChatWebviewProvider";
-import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
-import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
-import { setHasActiveChatWhenClauseState } from "./helpers";
-import { getOnDidChangeTextEditorSelectionHandler } from "./helpers/getOnDidChangeTextEditorSelectionHandler";
 import { ChatEditor } from "./Chat/ChatEditor";
-import { LLMApiService } from "./ChatModel/LLMApiService";
 import { LLMApiRequestSender } from "./ChatModel/LLMApiRequestSender";
 import { LLMApiResponseHandler } from "./ChatModel/LLMApiResponseHandler";
-import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMessageHandler";
+import { LLMApiService } from "./ChatModel/LLMApiService";
+import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
+import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
+import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
+import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
+import { getManageApiKeysCommand } from "./commands/getManageApiKeysCommand";
+import { getNewChatCommand } from "./commands/getNewChatCommand";
+import { getOpenSettingsCommand } from "./commands/getOpenSettingsCommand";
+import { getReviewCodeCommand } from "./commands/getReviewCodeCommand";
+import { setHasActiveChatWhenClauseState } from "./helpers";
+import { getOnDidChangeConfigurationHandler } from "./helpers/getOnDidChangeConfigurationHandler";
+import { getOnDidChangeTextEditorSelectionHandler } from "./helpers/getOnDidChangeTextEditorSelectionHandler";
+import { getReviewCodeTextDocumentContentProvider } from "./helpers/getReviewCodeTextDocumentContentProvider";
+import { SecretsProvider } from "./helpers/SecretsProvider";
+import { SettingsProvider } from "./helpers/SettingsProvider";
+import { PersonaDataManager } from "./Persona/PersonaDataManager";
+import { ChatWebviewProvider } from "./webview/ChatWebviewProvider";
 import { ExtensionToWebviewMessageSender } from "./webview/ExtensionToWebviewMessageSender";
+import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMessageHandler";
 
 // This method is automatically called by VS Code called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
-  const chatDataManager = new ChatDataManager(context, settingsProvider);
+  const secretsProvider = new SecretsProvider(context);
+  const personaDataManager = new PersonaDataManager(context);
+  const chatDataManager = new ChatDataManager(
+    context,
+    settingsProvider,
+    personaDataManager,
+  );
   const chatWebviewProvider = new ChatWebviewProvider(context.extensionUri);
   const extensionToWebviewMessageSender = new ExtensionToWebviewMessageSender(
     chatWebviewProvider,
     chatDataManager,
+    personaDataManager,
   );
   const chatEditor = new ChatEditor(
     chatDataManager,
     extensionToWebviewMessageSender,
   );
   const llmApiService = new LLMApiService(
-    new LLMApiRequestSender(settingsProvider),
+    new LLMApiRequestSender(
+      personaDataManager,
+      chatEditor,
+      secretsProvider,
+      extensionToWebviewMessageSender,
+    ),
     new LLMApiResponseHandler(chatEditor, extensionToWebviewMessageSender),
   );
   const webviewToExtensionMessageHandler = new WebviewToExtensionMessageHandler(
     settingsProvider,
     chatDataManager,
+    personaDataManager,
     chatEditor,
     llmApiService,
     extensionToWebviewMessageSender,
@@ -89,8 +106,10 @@ export function activate(context: vscode.ExtensionContext) {
     chatDataManager,
     chatEditor,
     chatWebviewProvider,
+    extensionToWebviewMessageSender,
   );
   const openSettingsCommand = getOpenSettingsCommand();
+  const manageApiKeysCommand = getManageApiKeysCommand(secretsProvider);
 
   const onDidChangeConfigurationHandler =
     getOnDidChangeConfigurationHandler(settingsProvider);
@@ -112,6 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
     chatWebviewDisposable,
     addCodeToChatCommand,
     addCodeToNewChatCommand,
+    manageApiKeysCommand,
   );
 }
 

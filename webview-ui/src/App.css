@@ -214,6 +214,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .split-button-container > vscode-button {
@@ -246,6 +247,7 @@
   display: flex;
   gap: 0.25rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .persona-card h3,

@@ -87,7 +87,6 @@ export const PersonaSettings: React.FC = () => {
           </div>
           <div
             className="split-button-container"
-            // TODO: move styling to CSS class/Tailwind
             style={{
               marginBottom: "1rem",
             }}

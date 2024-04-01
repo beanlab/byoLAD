@@ -42,7 +42,7 @@ After installing the byoLAD extension, configure it with your API key from your 
 - Click "Create Persona"
 - Fill in the name, description, model, and prompt instructions
 
- ![](demoCreatePersona.gif)
+ ![](demoCreatePersonas2.gif)
 
 
 #### LLM Providers Currently Supported: 

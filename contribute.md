@@ -22,14 +22,14 @@ If you desire to run this extension locally, here are the steps to have it run p
 
 ### To run the extension
 
-- Run `npm run build:webview` (whenever you make changes within the `webview-ui` folder, you will need to run this command again).
+- Run `npm run build:webview` 
 - Press `F5` to open a new window with the extension loaded.
 - Another "Extension Development Host" VS code window should open.
-- With a file open, right click.
-- Click "Review Code File".
-- An error message may pop up saying "APIKey not set". If not, then it should have opened a new tab showing your code and the suggested changes.
+- With a file open, highlight some code and then right click. Click "Add Code To Chat".
+- Add some message and then hit enter
+- An error message may pop up saying "APIKey not set". If not, then it should responded.
 
-> Note: The instructions for setting your APIKey in setting is [here](https://code.visualstudio.com/docs/getstarted/settings)
+> Note: The instructions for setting your APIKey in setting is [here](README.md)
 
 #### Helpful tips
 
@@ -40,6 +40,7 @@ If you desire to run this extension locally, here are the steps to have it run p
 
 - You can relaunch the extension from the debug toolbar after changing code.
 - You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the VS Code window with your extension to load your changes.
+- Run `npm run build:webview` whenever you make changes within the `webview-ui` folder.
 
 ### Run tests
 

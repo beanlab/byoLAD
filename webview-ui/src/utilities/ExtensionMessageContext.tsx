@@ -1,11 +1,12 @@
 import { createContext, useContext } from "react";
-import { WebviewToExtensionMessageSender } from "./WebviewToExtensionMessageSender";
+
 import {
   Chat,
   ModelProvider,
   Persona,
   PersonaDraft,
 } from "../../../shared/types";
+import { WebviewToExtensionMessageSender } from "./WebviewToExtensionMessageSender";
 
 type ExtensionMessageContextType = {
   createNewChat: () => void;
@@ -17,10 +18,12 @@ type ExtensionMessageContextType = {
   insertCodeBlock: (code: string) => void;
   diffCodeBlock: (code: string) => void;
   updatePersona: (persona: Persona | PersonaDraft) => void;
-  deletePersona: (pesonaId: number) => void;
+  deletePersona: (personaId: number) => void;
   manageApiKeys: (modelProvider: ModelProvider | undefined) => void;
   setDefaultPersonaId: (personaId: number) => void;
   openExtensionVsCodeSettings: () => void;
+  importPersona: () => void;
+  exportPersona: (personaId: number) => void;
 };
 
 // Default context value should never be used, but is required to be defined
@@ -38,6 +41,8 @@ const ExtensionMessageContext = createContext<ExtensionMessageContextType>({
   manageApiKeys: () => {},
   setDefaultPersonaId: () => {},
   openExtensionVsCodeSettings: () => {},
+  importPersona: () => {},
+  exportPersona: () => {},
 });
 
 export const ExtensionMessageContextProvider = ({
@@ -62,6 +67,8 @@ export const ExtensionMessageContextProvider = ({
     setDefaultPersonaId: webviewToExtensionMessageSender.setDefaultPersonaId,
     openExtensionVsCodeSettings:
       webviewToExtensionMessageSender.openExtensionVsCodeSettings,
+    importPersona: webviewToExtensionMessageSender.importPersona,
+    exportPersona: webviewToExtensionMessageSender.exportPersona,
   };
   return (
     <ExtensionMessageContext.Provider value={context}>

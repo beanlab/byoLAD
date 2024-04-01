@@ -7,6 +7,7 @@ import {
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ChatEditor } from "../Chat/ChatEditor";
 import { LLMApiService } from "../ChatModel/LLMApiService";
+import { exportPersona } from "../helpers";
 import { copyToClipboard } from "../helpers/copyToClipboard";
 import { diffCode } from "../helpers/diffCode";
 import { insertCode } from "../helpers/insertCode";
@@ -164,6 +165,16 @@ export class WebviewToExtensionMessageHandler {
         await vscode.commands.executeCommand(
           "vscode-byolad.openSettingsCommand",
         );
+        break;
+      }
+      case "importPersona": {
+        await vscode.commands.executeCommand("vscode-byolad.importPersona");
+        break;
+      }
+      case "exportPersona": {
+        const params =
+          message.params as WebviewToExtensionMessageTypeParamsMap[typeof message.messageType];
+        await exportPersona(params.personaId, this.personaDataManager);
         break;
       }
       default: {

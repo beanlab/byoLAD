@@ -279,3 +279,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+code {
+  background: none;
+}

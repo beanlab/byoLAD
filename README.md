@@ -49,10 +49,6 @@ After installing the byoLAD extension, configure it with your API key from your 
 - [OpenAI](https://openai.com/blog/openai-api)
     - [models](https://platform.openai.com/docs/models/overview)
     - [API Key](https://platform.openai.com/docs/api-reference/authentication)
-- [Google](https://developers.generativeai.google/)
-    - [models](https://developers.generativeai.google/models/language)
-    - [API Key](https://developers.generativeai.google/tutorials/setup)
-
 
 > Note: If you want to run the extension locally, go to [contribute.md](contribute.md)
 

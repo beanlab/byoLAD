@@ -47,7 +47,7 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
         vscode.Uri.joinPath(this._extensionUri, "media"),
         vscode.Uri.joinPath(
           this._extensionUri,
-          "webview-ui/node_modules/@vscode/codicons/dist",
+          "node_modules/@vscode/codicons/dist",
         ),
       ],
     };
@@ -133,10 +133,8 @@ export class ChatWebviewProvider implements vscode.WebviewViewProvider {
     ]);
     // The VS Codicon CSS reference (as used in the CatCodicons sample @ https://github.com/microsoft/vscode-extension-samples/tree/22d5639ff5c1d88f144c057fc3d29cc9dfd99d62/webview-codicons-sample)
     const codiconsUri = getUri(webview, extensionUri, [
-      "webview-ui",
       "node_modules",
-      "@vscode",
-      "codicons",
+      "@vscode/codicons",
       "dist",
       "codicon.css",
     ]);

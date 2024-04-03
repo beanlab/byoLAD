@@ -1,69 +1,39 @@
+import { Chat, ChatMessageFinishReason, Persona } from "../../shared/types";
+
 export interface ChatModel {
   chat: (request: ChatModelRequest) => Promise<ChatModelResponse>;
 }
 
+/**
+ * Everything needed to request a chat response from the LLM API.
+ */
 export interface ChatModelRequest {
-  conversation: Conversation;
+  chat: Chat;
+  persona: Persona;
+  responseFormattingInstruction: string;
 }
 
+/**
+ * Everything needed to handle a chat response from the LLM API.
+ */
 export interface ChatModelResponse {
+  /**
+   * Whether the chat request was successful. False if there was an error.
+   */
   success: boolean;
-  errorMessage?: string;
-  message?: ChatMessage;
-}
-
-export interface ChatMessage {
-  role: ChatRole;
-  content: MessageBlock[];
+  /**
+   * Content of the message, interpreted as markdown. Only may be present if
+   * `success` is true.
+   */
+  content?: string;
+  /**
+   * Reason the message finished, if any. Only may be present if `success` is
+   * true.
+   */
   finishReason?: ChatMessageFinishReason;
-}
-
-/**
- * A section of a message. A complete message in a Conversation is made up of one or more blocks.
- */
-export interface MessageBlock {
-  type: "text" | "code";
   /**
-   * The content of the block.
-   * For a TextBlock: markdown text.
-   * For a CodeBlock: the code itself without the code fences or language identifier.
+   * Description of the error that occurred, if any. Only may be present if
+   * `success` is false.
    */
-  content: string;
-}
-
-/**
- * A text block in a message. The content is markdown text.
- */
-export interface TextBlock extends MessageBlock {
-  type: "text";
-}
-
-/**
- * A code block in a message. The content is the code itself without the code fences or language identifier.
- */
-export interface CodeBlock extends MessageBlock {
-  type: "code";
-  /**
-   * The language identifier of the code block as used in markdown code fences.
-   */
-  languageId?: string;
-}
-
-export enum ChatRole {
-  User = "user",
-  System = "system",
-  Assistant = "assistant",
-}
-
-export enum ChatMessageFinishReason {
-  Stop = "stop",
-  Length = "length",
-  ContentFilter = "content_filter",
-}
-
-export interface Conversation {
-  id: number;
-  name: string;
-  messages: ChatMessage[];
-  contextInstruction?: string;
+  errorMessage?: string;
 }

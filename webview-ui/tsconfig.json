@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["./src", "./node_modules/@types/*"]
+  "include": ["./src", "./node_modules/@types/*", "../../shared/**/*.ts"]
 }

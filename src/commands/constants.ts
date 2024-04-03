@@ -6,14 +6,18 @@ export const DIFF_VIEW_TITLE_SUFFIX = ": AI Suggestions ↔ Current";
 export const MERGE_CONFLICT_DIFF_VIEW_POSITION_SETTING_ERROR_MESSAGE =
   "Error with byoLAD extension setting applySuggestions.diffViewPosition: Could not get merge-conflict.diffViewPosition setting or it doesn't match any of the available options (likely due to a breaking change in that extension). Using the default byoLAD setting.";
 export const LLM_MESSAGE_FORMATTING_INSTRUCTION = `The user will provide you with requests/questions and optionally code samples to modify or use as reference.
-  You MUST respond in valid Markdown format with any code samples using code fences and a language identifier.
+  You MUST respond in valid Markdown format. Each code sample section must have code fences ("\`\`\`") and a language identifier. Non-code sections of your response should not have code fences and should be plain Markdown. 
   This is necessary so the user can easily see which parts of your response are code and which parts are just descriptive/explanatory Markdown text.`;
 
-// ConversationManager Keys
-export const CONVERSATIONS_KEY = "conversations";
-export const CONVERSATION_IDS_KEY = "conversationIds";
-export const ACTIVE_CONVERSATION_ID_KEY = "activeConversationId";
-export const NEXT_ID_KEY = "nextId";
+// ChatDataManager Keys
+// Note: Changes to workspace state keys will cause compatibility issues with existing workspaces that have byoLAD data unless the data is migrated.
+export const CHATS_KEY = "chats"; // Do not change without handling migration
+export const CHAT_IDS_KEY = "chatIds"; // Do not change without handling migration
+export const ACTIVE_CHAT_ID_KEY = "activeChatId"; // Do not change without handling migration
+export const NEXT_ID_KEY = "nextId"; // Do not change without handling migration
+
+// "when" clause keys
+export const HAS_ACTIVE_CHAT_WHEN_CLAUSE_KEY = "vscode-byolad.hasActiveChat";
 
 // Settings/configuration error messages
 export const MODEL_NOT_SET_ERROR_MESSAGE =

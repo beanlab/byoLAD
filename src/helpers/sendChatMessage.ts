@@ -1,103 +1,87 @@
 import * as vscode from "vscode";
-import {
-  ChatMessage,
-  ChatModelResponse,
-  ChatRole,
-} from "../ChatModel/ChatModel";
-import { Conversation } from "../ChatModel/ChatModel";
-import { SettingsProvider } from "./SettingsProvider";
-import { ConversationManager } from "../Conversation/ConversationManager";
-import { ChatWebviewProvider } from "../providers/ChatViewProvider";
 
+import { Chat, ChatRole } from "../../shared/types";
+import { stringToMessageBlocks } from "../../shared/utils/messageBlockHelpers";
+import { ChatDataManager } from "../Chat/ChatDataManager";
+import { ChatEditor } from "../Chat/ChatEditor";
+import { LLMApiService } from "../ChatModel/LLMApiService";
+import { ChatWebviewProvider } from "../webview/ChatWebviewProvider";
+import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
+import {
+  getFileContentAsCodeBlock,
+  getSelectedTextAsCodeBlock,
+} from "./getCodeBlock";
+import { getCurrentOpenFileName } from "./getCurrentOpenFileName";
+
+/**
+ * Primary function to send a chat message. Starts a new chat if needed,
+ * includes the markdown and code from the editor (if desired), and sends the message to
+ * the LLM API. Updating the webview and chat data storage accordingly. If the webview
+ * is not open, it's opened and a new chat is started.
+ * @param chat Chat to send the message to, or null to start a new chat.
+ * @param markdown Markdown to include at the top of the message.
+ * @param includeCodeFromEditor Whether to include the selected code (or whole code file if nothing selected) from the editor.
+ */
 export async function sendChatMessage(
-  chatMessage: ChatMessage,
-  settingsProvider: SettingsProvider,
-  conversationManager: ConversationManager,
+  chat: Chat | null,
+  markdown: string,
+  includeCodeFromEditor: boolean,
+  extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
+  chatEditor: ChatEditor,
+  chatDataManager: ChatDataManager,
+  llmApiService: LLMApiService,
   chatWebviewProvider: ChatWebviewProvider,
 ) {
-  const conversation = conversationManager.getActiveConversation();
-  if (!conversation) {
-    vscode.window.showErrorMessage("No active conversation");
-    return;
+  const ifAlreadyVisible = chatWebviewProvider.isWebviewVisible();
+  // Start a new chat if the webview is not visible or no active chat is provided
+  if (!ifAlreadyVisible || !chat) {
+    chat = chatDataManager.startChat();
   }
 
-  if (
-    conversation.messages.length === 0 ||
-    conversation.messages[conversation.messages.length - 1].role !==
-      ChatRole.User
-  ) {
-    conversation.messages.push(chatMessage);
-  } else {
-    conversation.messages[conversation.messages.length - 1] = chatMessage;
-  }
+  // Include the markdown at the top of the message, first parsing it into message blocks
+  const messageBlocks = stringToMessageBlocks(markdown);
 
-  try {
-    const response: ChatModelResponse = await settingsProvider
-      .getChatModel()
-      .chat({
-        conversation,
-      });
-    if (response.success && response.message) {
-      handleSuccessfulResponse(
-        response.message,
-        conversation,
-        conversationManager,
-        chatWebviewProvider,
-      );
-    } else {
-      handleErrorResponse(response, chatWebviewProvider);
+  // Include the selected code (or whole code file) from the editor if desired
+  if (includeCodeFromEditor) {
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+      vscode.window.showErrorMessage("No active editor");
+      return;
     }
-  } catch (error) {
-    console.error("Error occurred:", error);
-    vscode.window.showErrorMessage(`Unexpected error: ${error}`);
-  }
-}
 
-/**
- * Handle a successful response from the chat model. Update the conversation and the side panel.
- *
- * @param responseMessage Response message from the chat model
- * @param conversation Conversation to update
- * @param conversationManager Conversation manager
- * @param chatWebviewProvider Current side panel
- */
-function handleSuccessfulResponse(
-  responseMessage: ChatMessage,
-  conversation: Conversation,
-  conversationManager: ConversationManager,
-  chatWebviewProvider: ChatWebviewProvider,
-): void {
-  conversation.messages.push(responseMessage);
-  conversationManager.updateConversation(conversation);
-  chatWebviewProvider.updateConversation(
-    conversationManager.conversations,
-    conversation.id,
+    let codeBlock = getSelectedTextAsCodeBlock(activeEditor);
+    if (!codeBlock) {
+      codeBlock = getFileContentAsCodeBlock(activeEditor);
+    }
+    messageBlocks.push(codeBlock);
+  }
+
+  // if this is the first time a message is sent, then update the chat title
+  if (chat.messages.length == 0) {
+    chat.title = markdown;
+    chat.tags = [];
+  }
+
+  // if the file is a new file, add it to the tags
+  const openedFileName = getCurrentOpenFileName();
+  if (openedFileName !== undefined && !chat.tags.includes(openedFileName)) {
+    chat.tags.push(openedFileName);
+  }
+
+  // Update UI immediately only if the webview is already visible
+  const ifUpdateWebviewImmediately = ifAlreadyVisible;
+
+  // Update the chat itself and (conditionally) the webview, and send the message to the LLM API
+  await chatEditor.appendMessageBlocks(
+    chat,
+    ChatRole.User,
+    messageBlocks,
+    ifUpdateWebviewImmediately,
   );
-}
-
-/**
- * TODO: How to handle all of these? Probably depends on how the webview sidepanel is implemented.
- *
- * @param response
- * @param conversation
- * @param conversationManager
- */
-function handleErrorResponse(
-  response: ChatModelResponse,
-  chatWebviewProvider: ChatWebviewProvider,
-): void {
-  if (!response.success) {
-    if (response.errorMessage) {
-      vscode.window.showErrorMessage(`Error: ${response.errorMessage}`);
-    } else {
-      vscode.window.showErrorMessage("Unknown error");
-    }
-  } else if (!response.message) {
-    vscode.window.showErrorMessage(
-      "Response marked successful, but no message was returned",
-    );
+  if (!ifAlreadyVisible) {
+    await chatWebviewProvider.show();
   } else {
-    vscode.window.showErrorMessage("Unknown error");
+    await extensionToWebviewMessageSender.showChatView();
   }
-  chatWebviewProvider.sendErrorResponse();
+  await llmApiService.requestLlmApiChatResponse(chat);
 }

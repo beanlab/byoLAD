@@ -1,26 +1,21 @@
-/* Styling for the back and add button at top of page */
-.navigation {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding-bottom: 4px;
-  padding-left: 5%;
-}
+/* body {
+  padding: 0;
+} */
 
-.App-header {
-  position: fixed;
+/* Styling for the back and add button at top of page */
+.navbar {
   width: 100%;
-  height: 20px;
   background-color: var(--vscode-sideBar-background);
   padding-bottom: 4px;
   z-index: 1; /* Stay in front of other elements */
+  display: flex;
+  justify-content: space-between; /* Push the buttons to the edges */
 }
 
-.navbar {
+.horizontal-section {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 20px;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .back-button {
@@ -48,52 +43,49 @@
   text-align: center;
 }
 
-/* Styles the text and content below the nav bar */
-.App-body {
-  font-size: calc(8px + 2vmin);
-  /* Vertical offset of the body to render below the navbar.
-     Also ensures that the edges of body content (e.g., the user icon)
-     don't peek out from the edges of the navbar
-  */
-  padding: 24px 1px;
+.view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-/* Chat Bar Styling Below */
-/* styles the box around the chat bar not including the buttons below */
+.message-list {
+  font-size: var(--vscode-editor-font-size);
+  padding: 0 1px 5px; /* Side padding ensures that the edges of body content (e.g., the user icon) don't peek out from the edges of the navbar */
+  flex: 1; /* Fill the remaining space above the input form */
+  overflow-y: auto; /* Scrollable */
+}
+
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .chat-box {
-  padding-left: 5%;
-  padding-right: 5%;
-  min-height: 9vh;
+  padding: 10px 0;
 }
 
-.chat-bar {
-  background-color: #717171;
-  width: 100%;
+.chat-form {
+  position: relative;
   display: flex;
   align-items: center;
-  border-radius: 60px;
-  padding: 8px 8px;
 }
 
-.chat-bar input {
-  background: transparent;
-  flex: 1;
-  border: 0;
-  outline: none;
-  padding: 5px;
-  color: #aaaaaa;
-  width: 80%;
+.chat-input {
+  resize: none;
+  width: 100%;
 }
 
-::placeholder {
-  color: #aaaaaa;
+.chat-input-buttons {
+  position: absolute;
+  display: flex;
+  right: 5px;
 }
 
 /* Message Styling Below */
 .message {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-size: 0.9rem;
+  padding: 3px 0;
 }
 
 .role-name {
@@ -108,6 +100,11 @@
 .text-block-container {
   position: relative;
   padding: 3px 0;
+  overflow-wrap: break-word;
+}
+
+.text-block-container > p {
+  margin: 2px;
 }
 
 .message-header {
@@ -136,24 +133,156 @@
   top: 0;
 }
 
-/* Styling for the the conversation list page */
+/* Styling for the the chat list page */
+.chat-list {
+  flex: 1;
+  overflow: auto;
+}
+
 .convo {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 10px;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding: 4px 0;
 }
 
 .convo-id {
+  font-size: 1.2em;
   padding-right: 20px;
   cursor: pointer;
-  padding-top: 10px;
+}
+
+.convo-action-buttons {
+  display: flex;
+  align-items: center;
 }
 
 .delete-all {
   display: flex;
   justify-content: center;
   padding-bottom: 4px;
+}
+
+.error-message-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 3px 0;
+  color: var(--vscode-problemsErrorIcon-foreground);
+}
+
+.warning-error-icon {
+  padding-right: 5px;
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.page-header > h2 {
+  margin: 0;
+}
+
+.chat-options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+/* Persona Settings*/
+.persona-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+}
+
+.persona-edit-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.persona-edit-field-container > label {
+  font-weight: bold;
+  font-size: calc(var(--vscode-editor-font-size) * 1.15);
+}
+
+.split-button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.split-button-container > vscode-button {
+  flex: 1;
+}
+
+.persona-edit-validation-error-message {
+  color: var(--vscode-errorForeground);
+}
+
+.persona-cards {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.persona-card {
+  border: 1px solid var(--vscode-menu-border);
+  border-radius: var(--button-icon-corner-radius);
+  padding: 1rem;
+}
+
+.persona-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.persona-card-button-group {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.persona-card h3,
+.persona-card p {
+  margin: 0;
+}
+
+.file-tags {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 70%;
+}
+
+.file-tag {
+  display: flex;
+  margin: 3px;
+}
+
+.persona-tag {
+  display: flex;
+  margin: 3px;
+}
+
+.tags {
+  display: flex;
+  justify-content: space-between; /* Add this */
+}
+
+.chat-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+code {
+  background: none;
 }

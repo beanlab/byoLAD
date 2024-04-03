@@ -1,54 +1,48 @@
-import { VSCodeDivider } from "@vscode/webview-ui-toolkit/react";
-import { ChatRole, CodeBlock, MessageBlock } from "../utilities/ChatModel";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { CodeMessageBlock } from "./MessageBlock";
-import { TextMessageBlock } from "./MessageBlock";
+import { ChatRole, CodeBlock, MessageBlock } from "../../../shared/types";
 import { ByoLadIconAdaptiveTheme } from "./ByoLadIconAdaptiveTheme";
+import { CodeMessageBlock, TextMessageBlock } from "./MessageBlock";
 
 interface MessageProps {
   role: ChatRole;
   messageBlocks: MessageBlock[];
-  extensionMessenger: ExtensionMessenger;
   deleteMessageBlock: (messageBlockPosition: number) => void;
 }
 
+/**
+ * A single message in a chat consisting of one or more message blocks.
+ */
 export const Message: React.FC<MessageProps> = ({
   role,
   messageBlocks,
-  extensionMessenger,
   deleteMessageBlock,
 }) => {
   return (
-    <div>
-      <VSCodeDivider role="separator" />
-      <div className="message">
-        <MessageHeader role={role} />
-        <div className="message-blocks">
-          {messageBlocks.map((messageBlock, position) => {
-            if (messageBlock.type === "text") {
-              return (
-                <TextMessageBlock
-                  deleteMessageBlock={() => deleteMessageBlock(position)}
-                >
-                  {messageBlock.content}
-                </TextMessageBlock>
-              );
-            } else if (messageBlock.type === "code") {
-              return (
-                <CodeMessageBlock
-                  languageId={(messageBlock as CodeBlock).languageId}
-                  extensionMessenger={extensionMessenger}
-                  deleteMessageBlock={() => deleteMessageBlock(position)}
-                >
-                  {messageBlock.content}
-                </CodeMessageBlock>
-              );
-            } else {
-              console.error(`Unknown message block type: ${messageBlock.type}`);
-              return <></>;
-            }
-          })}
-        </div>
+    <div className="message">
+      <MessageHeader role={role} />
+      <div className="message-blocks">
+        {messageBlocks.map((messageBlock, position) => {
+          if (messageBlock.type === "text") {
+            return (
+              <TextMessageBlock
+                deleteMessageBlock={() => deleteMessageBlock(position)}
+              >
+                {messageBlock.content}
+              </TextMessageBlock>
+            );
+          } else if (messageBlock.type === "code") {
+            return (
+              <CodeMessageBlock
+                languageId={(messageBlock as CodeBlock).languageId}
+                deleteMessageBlock={() => deleteMessageBlock(position)}
+              >
+                {messageBlock.content}
+              </CodeMessageBlock>
+            );
+          } else {
+            console.error(`Unknown message block type: ${messageBlock.type}`);
+            return <></>;
+          }
+        })}
       </div>
     </div>
   );
@@ -74,7 +68,7 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ role }) => {
         </div>
       );
     case ChatRole.System:
-      console.log("System messages should not be displayed");
+      console.error("System messages should not be displayed");
       return <></>;
     default:
       return <></>;

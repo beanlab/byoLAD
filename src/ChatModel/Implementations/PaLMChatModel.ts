@@ -1,23 +1,17 @@
 import { DiscussServiceClient } from "@google-ai/generativelanguage";
 import { GoogleAuth } from "google-auth-library";
 import {
-  ChatMessage,
-  ChatMessageFinishReason,
+  Chat,
   ChatRole,
-  ChatModel,
-  ChatModelRequest,
-  ChatModelResponse,
+  ChatMessageFinishReason,
+  ChatMessage,
   MessageBlock,
   CodeBlock,
   TextBlock,
-} from "../ChatModel";
+} from "../../../shared/types";
+import { ChatModel, ChatModelRequest, ChatModelResponse } from "../ChatModel";
 import { NO_RESPONSE_ERROR_MESSAGE } from "../../commands/constants";
-import {
-  messageBlocksToString,
-  stringToMessageBlocks,
-} from "../../Conversation/messageBlockHelpers";
-import { Conversation } from "../ChatModel";
-import { getExampleMessages } from "../../Conversation/getExampleMessages";
+import { messageBlocksToString } from "../../../shared/utils/messageBlockHelpers";
 
 interface PaLMPrompt {
   context?: string;
@@ -61,7 +55,12 @@ export class PaLMChatModel implements ChatModel {
     return await this.client
       .generateMessage({
         model: this.model,
-        prompt: this.convertToPaLMPrompt(request.conversation),
+        prompt: this.convertToPaLMPrompt(
+          request.chat,
+          request.persona.instructions +
+            "\n" +
+            request.responseFormattingInstruction,
+        ),
       })
       .then((response) => {
         const candidates: PalMMessage[] | null = response[0]
@@ -71,23 +70,23 @@ export class PaLMChatModel implements ChatModel {
         if (candidates && candidates.length > 0) {
           return {
             success: true,
-            message: {
-              role: ChatRole.Assistant,
-              content: stringToMessageBlocks(candidates[0].content),
-            },
-          };
+            content: candidates[0].content,
+            chat: request.chat,
+          } as ChatModelResponse;
         } else {
           if (filters && filters.length > 0) {
             return {
               success: false,
               errorMessage: this.getFilterErrorMessage(filters),
               finish_reason: ChatMessageFinishReason.ContentFilter,
-            };
+              chat: request.chat,
+            } as ChatModelResponse;
           } else {
             return {
               success: false,
               errorMessage: NO_RESPONSE_ERROR_MESSAGE,
-            };
+              chat: request.chat,
+            } as ChatModelResponse;
           }
         }
       })
@@ -95,23 +94,17 @@ export class PaLMChatModel implements ChatModel {
         return {
           success: false,
           errorMessage: error.message,
-        };
+          chat: request.chat,
+        } as ChatModelResponse;
       });
   }
 
-  convertToPaLMPrompt(conversation: Conversation): PaLMPrompt {
-    if (conversation.contextInstruction) {
-      return {
-        context: conversation.contextInstruction,
-        examples: this.getFormattedExamples(),
-        messages: this.convertToPaLMMessages(conversation.messages),
-      };
-    } else {
-      return {
-        examples: this.getFormattedExamples(),
-        messages: this.convertToPaLMMessages(conversation.messages),
-      };
-    }
+  convertToPaLMPrompt(chat: Chat, baseInstructions: string): PaLMPrompt {
+    return {
+      context: baseInstructions,
+      examples: this.getFormattedExamples(),
+      messages: this.convertToPaLMMessages(chat.messages),
+    };
   }
 
   /**
@@ -141,14 +134,9 @@ export class PaLMChatModel implements ChatModel {
    * @returns Array of PaLM messages
    */
   convertToPaLMMessages(chatMessages: ChatMessage[]): PalMMessage[] {
-    // Add messages to the beginning of the conversation history to provide examples/set the stage
-    const introMessages: ChatMessage[] = getExampleMessages();
-
-    const messages: ChatMessage[] = [...introMessages, ...chatMessages];
-
     // Convert system messages to user messages so that PaLM can handle it (only supports two authors)
     const messagesWithAcceptedAuthorship: ChatMessage[] = [];
-    for (const message of messages) {
+    for (const message of chatMessages) {
       if (message.role === ChatRole.System) {
         messagesWithAcceptedAuthorship.push({
           ...message,

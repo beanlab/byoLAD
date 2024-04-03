@@ -3,7 +3,7 @@
   "name": "vscode-byolad",
   "displayName": "byoLAD",
   "description": "",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -29,58 +29,27 @@
   "activationEvents": [],
   "preview": true,
   "icon": "byo_LAD.png",
-  "main": "./out/extension.js",
+  "main": "./out/src/extension.js",
   "contributes": {
     "configuration": {
       "title": "byoLAD",
       "properties": {
-        "vscode-byolad.provider": {
-          "type": "string",
-          "enum": [
-            "OpenAI",
-            "Google"
-          ],
-          "default": "OpenAI",
-          "markdownDescription": "**Required**\n\nYou are billed by the provider according to their API usage policies.",
-          "order": 0
-        },
-        "vscode-byolad.model": {
-          "type": "string",
-          "default": "",
-          "markdownDescription": "**Required**\n\nFor OpenAI, format your input like 'gpt-4-32k' or 'gpt-3.5-turbo'. See all available models [here](https://platform.openai.com/docs/models/).\n\nFor Google, format your input like 'text-bison-001' or 'chat-bison-001'. See all available models [here](https://developers.generativeai.google/models/language).",
-          "order": 1
-        },
-        "vscode-byolad.APIKey": {
-          "type": "string",
-          "default": "",
-          "markdownDescription": "**Required**\n\nGet an API key for OpenAI [here](https://platform.openai.com/account/api-keys).\n\nGet an API key for Google [here](https://developers.generativeai.google/tutorials/setup).",
-          "order": 2
-        },
-        "vscode-byolad.basePromptInstruction": {
-          "type": "string",
-          "default": "You are a friendly coding assistant.\nKeep your answers as concise as possible while still being helpful.\nIf you need more information, ask.",
-          "description": "The base instructions provided to the LLM to establish its overall purpose.",
-          "editPresentation": "multilineText",
-          "order": 3
-        },
         "vscode-byolad.reviewCodePrompt": {
           "type": "string",
           "default": "Review the provided code. Return code that reflects the following improvements:\n- fix bugs\n- improve code quality, best practices, readability\n- improve performance\n- provide code comments as necessary\n- add missing documentation",
           "description": "The prompt to use to review code.",
-          "editPresentation": "multilineText",
-          "order": 4
+          "editPresentation": "multilineText"
         },
         "vscode-byolad.explainCodePrompt": {
           "type": "string",
           "default": "Explain the provided code in a way that is helpful given its context. You may use code samples as necessary to illustrate your explanation if needed. Make the explanation simple and easy to understand.",
           "description": "The prompt to use to explain code.",
-          "editPresentation": "multilineText",
-          "order": 5
+          "editPresentation": "multilineText"
         },
         "vscode-byolad.applySuggestions.diffViewPosition": {
           "type": "string",
           "default": "Below",
-          "description": "Controls where the diff view should be opened when comparing AI suggestions.",
+          "description": "Where the diff view should be opened when comparing AI suggestions.",
           "enum": [
             "Current",
             "Beside",
@@ -91,26 +60,20 @@
             "Open the diff view in the current editor group",
             "Open the diff view next to the current editor group",
             "Open the diff view below the current editor group",
-            "Use the value of the merge-conflict.diffViewPosition setting to determine where the diff view for AI suggestions should be opened"
-          ],
-          "order": 6
+            "Use the current value of the merge-conflict.diffViewPosition setting to determine where the diff view for AI suggestions should be opened"
+          ]
         }
       }
     },
     "commands": [
       {
-        "command": "vscode-byolad.newConversation",
-        "title": "byoLAD — New Conversation",
+        "command": "vscode-byolad.newChat",
+        "title": "byoLAD — New Chat",
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.deleteAllConversations",
-        "title": "byoLAD — Delete All Conversations",
-        "category": "byoLAD"
-      },
-      {
-        "command": "vscode-byolad.deleteConversation",
-        "title": "byoLAD — Delete Conversation",
+        "command": "vscode-byolad.deleteAllChats",
+        "title": "byoLAD — Delete All Chats",
         "category": "byoLAD"
       },
       {
@@ -130,8 +93,23 @@
         "category": "byoLAD"
       },
       {
-        "command": "vscode-byolad.addCodeToConversation",
+        "command": "vscode-byolad.addCodeToChat",
         "title": "byoLAD — Add Code to Chat",
+        "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.addCodeToNewChat",
+        "title": "byoLAD — Add Code to New Chat",
+        "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.manageApiKeys",
+        "title": "byoLAD — Manage LLM Provider API Keys",
+        "category": "byoLAD"
+      },
+      {
+        "command": "vscode-byolad.importPersona",
+        "title": "byoLAD — Import Persona (JSON)",
         "category": "byoLAD"
       }
     ],
@@ -146,21 +124,30 @@
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.newConversation",
+          "command": "vscode-byolad.newChat",
           "when": "!editorReadonly && !isInDiffEditor"
         },
         {
-          "command": "vscode-byolad.addCodeToConversation",
-          "when": "editorFocus"
+          "command": "vscode-byolad.addCodeToChat",
+          "when": "editorFocus && view.vscode-byolad.chat.visible && vscode-byolad.hasActiveChat"
         },
         {
-          "command": "vscode-byolad.deleteAllConversations"
+          "command": "vscode-byolad.addCodeToNewChat",
+          "when": "editorFocus && (!view.vscode-byolad.chat.visible || !vscode-byolad.hasActiveChat)"
+        },
+        {
+          "command": "vscode-byolad.deleteAllChats"
         }
       ],
       "editor/context": [
         {
-          "when": "editorFocus",
-          "command": "vscode-byolad.addCodeToConversation",
+          "when": "editorFocus && view.vscode-byolad.chat.visible && vscode-byolad.hasActiveChat",
+          "command": "vscode-byolad.addCodeToChat",
+          "group": "1_modification"
+        },
+        {
+          "when": "editorFocus && (!view.vscode-byolad.chat.visible || !vscode-byolad.hasActiveChat)",
+          "command": "vscode-byolad.addCodeToNewChat",
           "group": "1_modification"
         }
       ]
@@ -215,16 +202,17 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
+    "test": "node ./out/src/test/runTest.js",
     "publish": "vsce publish"
   },
   "devDependencies": {
+    "@types/autosize": "^4.0.3",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
     "@types/vscode": "^1.81.0",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
-    "@vscode/test-electron": "^2.3.4",
+    "@vscode/test-electron": "^2.3.8",
     "@vscode/vsce": "^2.21.1",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",
@@ -235,8 +223,10 @@
   },
   "dependencies": {
     "@google-ai/generativelanguage": "^1.0.1",
+    "autosize": "^6.0.1",
     "@vscode/codicons": "^0.0.35",
     "google-auth-library": "^9.0.0",
-    "openai": "^4.5.0"
+    "openai": "^4.5.0",
+    "scroll-into-view-if-needed": "^3.1.0"
   }
 }

@@ -6,24 +6,29 @@ import {
   a11yLight,
   a11yDark,
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
 import Markdown from "react-markdown";
 import { useContext, useState } from "react";
 import { VsCodeThemeContext } from "../utilities/VsCodeThemeContext";
 import { VsCodeTheme } from "../types";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
 
 interface CodeMessageBlockProps {
   languageId: string | undefined;
   children: string;
-  extensionMessenger: ExtensionMessenger;
   deleteMessageBlock: () => void;
 }
+
+/**
+ * A single code message block in a message.
+ * Includes syntax highlighting and buttons to interact with that code.
+ */
 export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
   languageId,
   children,
-  extensionMessenger,
   deleteMessageBlock,
 }) => {
+  const { copyToClipboard, insertCodeBlock, diffCodeBlock } =
+    useExtensionMessageContext();
   const syntaxStyle = getThemedSyntaxStyle();
   const content: string = children;
   const noMargin = {
@@ -48,7 +53,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Copy to clipboard"
           title="Copy to clipboard"
-          onClick={() => extensionMessenger.copyToClipboard(content)}
+          onClick={() => copyToClipboard(content)}
         >
           <i className="codicon codicon-copy" />
         </VSCodeButton>
@@ -56,7 +61,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="Insert at cursor"
           title="Insert at cursor"
-          onClick={() => extensionMessenger.insertCodeBlock(content)}
+          onClick={() => insertCodeBlock(content)}
         >
           <i className="codicon codicon-insert" />
         </VSCodeButton>
@@ -64,7 +69,7 @@ export const CodeMessageBlock: React.FC<CodeMessageBlockProps> = ({
           appearance="icon"
           aria-label="View diff in editor"
           title="View diff in editor"
-          onClick={() => extensionMessenger.diffClodeBlock(content)}
+          onClick={() => diffCodeBlock(content)}
         >
           <i className="codicon codicon-diff" />
         </VSCodeButton>
@@ -82,6 +87,9 @@ interface TextMessageBlockProps {
   deleteMessageBlock: () => void;
 }
 
+/**
+ * A single text message block in a message. Uses Markdown to render the text.
+ */
 export const TextMessageBlock: React.FC<TextMessageBlockProps> = ({
   children,
   deleteMessageBlock,

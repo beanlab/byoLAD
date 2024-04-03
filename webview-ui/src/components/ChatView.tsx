@@ -1,90 +1,62 @@
-import { useState } from "react";
-import { ExtensionMessenger } from "../utilities/ExtensionMessenger";
-import { ChatRole, Conversation, TextBlock } from "../utilities/ChatModel";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import { VSCodeBadge } from "@vscode/webview-ui-toolkit/react";
+import { useEffect, useRef } from "react";
+import scrollIntoView from "scroll-into-view-if-needed";
+
+import { Chat, ChatRole, ImagePaths } from "../../../shared/types";
+import { AppView } from "../types";
+import { useAppContext } from "../utilities/AppContext";
+import { useExtensionMessageContext } from "../utilities/ExtensionMessageContext";
+import { ChatInput } from "./ChatInput";
+import ErrorMessage from "./ErrorMessage";
 import { Message } from "./Message";
-import { ImagePaths } from "../types";
+import NavBar from "./NavBar";
+import Stack from "./Stack";
 
 interface ChatViewProps {
-  activeChat: Conversation;
-  changeActiveChat: (conversation: Conversation | null) => void;
   imagePaths: ImagePaths;
-  loadingMessage: boolean;
-  setLoadingMessage: (loading: boolean) => void;
+  errorMessage: string | null;
+  hasSelection: boolean;
+  loadingMessageState: {
+    loadingMessage: boolean;
+    setLoadingMessage: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 }
 
+/**
+ * A single chat used to communicate with the AI. Includes chat messages and an
+ * input text box to send messages.
+ */
 export const ChatView = ({
-  activeChat,
-  changeActiveChat,
   imagePaths,
-  loadingMessage,
-  setLoadingMessage,
+  errorMessage,
+  hasSelection,
+  loadingMessageState,
 }: ChatViewProps) => {
-  const [userPrompt, setUserPrompt] = useState("");
+  const { activeChat, navigate } = useAppContext();
+  const { updateChat } = useExtensionMessageContext();
+  const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
-  const extensionMessenger = new ExtensionMessenger();
+  if (!activeChat) {
+    navigate(AppView.ChatList);
+  }
 
-  const handleInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newval = event.target.value;
-    setUserPrompt(newval);
-  };
-
-  const handleSubmit = (
-    e:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.FormEvent<HTMLFormElement>
-      | React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    e.preventDefault();
-    setLoadingMessage(true);
-    const newActiveChat = { ...activeChat };
-    if (!newActiveChat.messages || newActiveChat.messages.length === 0) {
-      newActiveChat.messages = [];
-      const newUserMessage = {
-        content: [
-          {
-            type: "text",
-            content: userPrompt,
-          } as TextBlock,
-        ],
-        role: ChatRole.User,
-      };
-      newActiveChat.messages.push(newUserMessage);
-    } else {
-      const lastMessage =
-        newActiveChat.messages[newActiveChat.messages.length - 1];
-      if (lastMessage.role === ChatRole.User) {
-        lastMessage.content.push({
-          type: "text",
-          content: userPrompt,
-        } as TextBlock);
-      } else {
-        const newUserMessage = {
-          content: [
-            {
-              type: "text",
-              content: userPrompt,
-            } as TextBlock,
-          ],
-          role: ChatRole.User,
-        };
-        newActiveChat.messages.push(newUserMessage);
-      }
+  /**
+   * Scroll to the bottom of the chat (if messages are long enough to scroll).
+   */
+  const scrollToBottom = () => {
+    if (endOfMessagesRef.current) {
+      scrollIntoView(endOfMessagesRef.current, {
+        behavior: "smooth",
+        scrollMode: "if-needed",
+      });
     }
-    changeActiveChat(newActiveChat);
-    setUserPrompt("");
-    extensionMessenger.sendChatMessage(
-      newActiveChat.messages[newActiveChat.messages.length - 1],
-      true,
-    );
   };
 
   const deleteMessageBlock = (
     messagePosition: number,
     messageBlockPosition: number,
+    chat: Chat,
   ) => {
-    const newChat = { ...activeChat };
+    const newChat = { ...chat };
     newChat.messages[messagePosition].content.splice(messageBlockPosition, 1);
     if (newChat.messages[messagePosition].content.length == 0) {
       if (
@@ -100,26 +72,55 @@ export const ChatView = ({
       }
       newChat.messages.splice(messagePosition, 1);
     }
-    extensionMessenger.updateChat(newChat);
+    updateChat(newChat);
   };
 
-  const messages = activeChat.messages.map((message, position) => {
-    if (message.role != ChatRole.System) {
-      return (
-        <Message
-          role={message.role}
-          messageBlocks={message.content}
-          extensionMessenger={extensionMessenger}
-          deleteMessageBlock={(messageBlockPosition: number) =>
-            deleteMessageBlock(position, messageBlockPosition)
-          }
-        />
-      );
+  const messages = activeChat
+    ? activeChat.messages.map((message, position) => {
+        if (message.role != ChatRole.System) {
+          return (
+            <Message
+              role={message.role}
+              messageBlocks={message.content}
+              deleteMessageBlock={(messageBlockPosition: number) =>
+                deleteMessageBlock(position, messageBlockPosition, activeChat)
+              }
+            />
+          );
+        }
+      })
+    : [];
+
+  // Refs to persist across renders
+  const prevMessagesLengthRef = useRef(messages.length);
+  const prevBlocksInLastMessageRef = useRef(0);
+
+  /**
+   * Automatically scroll to the bottom of the chat only when new messages/blocks are added.
+   * This is done by comparing the current length of messages/blocks to the previous length of messages/blocks.
+   */
+  useEffect(() => {
+    if (activeChat && activeChat.messages && activeChat.messages.length > 0) {
+      const lastMessage = activeChat.messages[activeChat.messages.length - 1];
+      if (activeChat.messages.length > prevMessagesLengthRef.current) {
+        // When new messages are added
+        scrollToBottom();
+      } else if (activeChat.messages.length === prevMessagesLengthRef.current) {
+        if (
+          lastMessage &&
+          lastMessage.content.length > prevBlocksInLastMessageRef.current
+        ) {
+          // Or when new message blocks are added
+          scrollToBottom();
+        }
+      }
+      prevMessagesLengthRef.current = activeChat.messages.length; // Update count for next render
+      prevBlocksInLastMessageRef.current = lastMessage.content.length; // Update count for next render
     }
-  });
+  }, [activeChat?.messages]);
 
   let welcomeMessage = null;
-  if (activeChat.messages.length === 0) {
+  if (activeChat && activeChat.messages.length === 0) {
     welcomeMessage = (
       <div className="welcome-message">
         <div className="top-logo">
@@ -128,66 +129,40 @@ export const ChatView = ({
         </div>
         <p>
           Here you can chat with your AI, ask questions about code, or generate
-          code. You can add snippets of code to your conversation from the
-          editor by selecting the code and clicking the "Add Code to Chat"
-          button.
+          code. You can add snippets of code to your chat from the editor by
+          selecting the code and clicking the "Add Code to Chat" button.
         </p>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="App-header">
-        <VSCodeBadge className="navbar">
-          <VSCodeButton
-            appearance="icon"
-            aria-label="Back to chat list"
-            title="Back to chat list"
-            onClick={() => changeActiveChat(null)}
-            className="back-button"
-          >
-            <i className="codicon codicon-chevron-left"></i>
-          </VSCodeButton>
-          <VSCodeButton
-            appearance="icon"
-            aria-label="New conversation"
-            title="New conversation"
-            onClick={extensionMessenger.newConversation}
-          >
-            <i className="codicon codicon-add"></i>
-          </VSCodeButton>
-        </VSCodeBadge>
-      </div>
-      <div className="App-body">
-        <div>{welcomeMessage}</div>
-        <div>{messages}</div>
-      </div>
-      <footer className="App-footer">
-        {loadingMessage === true && <p>Loading...</p>}
-        <div className="chat-box">
-          <form
-            className="chat-bar"
-            name="chatbox"
-            onSubmit={(e) => handleSubmit(e)}
-          >
-            <input
-              onChange={handleInputOnChange}
-              value={userPrompt}
-              type="text"
-              placeholder="Message"
-            />
-            <VSCodeButton
-              type="submit"
-              appearance="icon"
-              aria-label="Send message"
-              title="Send message"
-            >
-              <i className="codicon codicon-send"></i>
-            </VSCodeButton>
-          </form>
+    <>
+      {activeChat ? (
+        <div className="view-container">
+          <NavBar />
+          <div className="page-header">
+            <h2 className="chat-title" title={activeChat.title}>
+              {activeChat.title}
+            </h2>
+          </div>
+          <div className="message-list">
+            <div>{welcomeMessage}</div>
+            <Stack>{messages}</Stack>
+            <div ref={endOfMessagesRef}></div>
+          </div>
+
+          {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+
+          <ChatInput
+            activeChat={activeChat}
+            hasSelection={hasSelection}
+            loadingMessageState={loadingMessageState}
+          />
         </div>
-      </footer>
-    </div>
+      ) : (
+        <div>No active chat found. Try reloading this window.</div>
+      )}
+    </>
   );
 };

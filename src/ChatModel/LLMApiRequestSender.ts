@@ -8,7 +8,6 @@ import { PersonaDataManager } from "../Persona/PersonaDataManager";
 import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 import { ChatModel, ChatModelRequest, ChatModelResponse } from "./ChatModel";
 import { GPTChatModel } from "./Implementations/GPTChatModel";
-import { PaLMChatModel } from "./Implementations/PaLMChatModel";
 
 export class LLMApiRequestSender {
   private readonly personaDataManager: PersonaDataManager;
@@ -91,8 +90,8 @@ export class LLMApiRequestSender {
     switch (modelProvider) {
       case ModelProvider.OpenAI:
         return new GPTChatModel(modelId, apiKey);
-      case ModelProvider.Google:
-        return new PaLMChatModel(modelId, apiKey);
+      // case ModelProvider.Google:
+      //   return new PaLMChatModel(modelId, apiKey);
       default: {
         const _exhaustiveCheck: never = modelProvider;
         throw new Error(`Unhandled ModelProvider: ${_exhaustiveCheck}`);

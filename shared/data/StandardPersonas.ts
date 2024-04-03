@@ -41,6 +41,6 @@ export const STANDARD_PERSONAS: Persona[] = [
     - remember, be concise; the student will ask for additional examples or explanation if they want it.
     `,
     modelProvider: ModelProvider.OpenAI, // TODO: Defaults?
-    modelId: "gpt-3.5-turbo", // TODO: Defaults?
+    modelId: "gpt-4-turbo-preview", // TODO: Defaults?
   },
 ];

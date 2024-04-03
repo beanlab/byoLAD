@@ -19,8 +19,8 @@ function getProviderModelUrl(provider: ModelProvider): string {
   switch (provider) {
     case ModelProvider.OpenAI:
       return "https://platform.openai.com/docs/models/";
-    case ModelProvider.Google:
-      return "https://developers.generativeai.google/models/language";
+    // case ModelProvider.Google:
+    //   return "https://developers.generativeai.google/models/language";
     default: {
       const _exhaustiveCheck: never = provider;
       return _exhaustiveCheck;
@@ -32,8 +32,8 @@ function getPlaceholderModelId(provider: ModelProvider): string {
   switch (provider) {
     case ModelProvider.OpenAI:
       return "gpt-3.5-turbo"; // Known valid value
-    case ModelProvider.Google:
-      return "chat-bison"; // Known valid value
+    // case ModelProvider.Google:
+    //   return "chat-bison"; // Known valid value
     default: {
       const _exhaustiveCheck: never = provider;
       return _exhaustiveCheck;

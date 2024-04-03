@@ -1,8 +1,3 @@
-export enum LLMProvider {
-  OpenAI = "OpenAI",
-  Google = "Google",
-}
-
 export enum MessageSeverity {
   Error = "error",
   Warning = "warning",

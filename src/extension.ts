@@ -25,7 +25,7 @@ import { ChatWebviewProvider } from "./webview/ChatWebviewProvider";
 import { ExtensionToWebviewMessageSender } from "./webview/ExtensionToWebviewMessageSender";
 import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMessageHandler";
 
-// This method is automatically called by VS Code called when the extension is activated
+// This method is automatically called by VS Code when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);

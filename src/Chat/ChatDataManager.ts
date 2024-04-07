@@ -97,8 +97,9 @@ export class ChatDataManager {
    */
   startChat(messages?: ChatMessage[]): Chat {
     const chat = this.createChat(messages);
-    // this.chats = [...this.chats, chat];
-    this.chats.push(chat);
+    // Assigning the array directly to `this.chats` handles cases where the stored chats are
+    // undefined, instead of using `this.chats.push(chat)`
+    this.chats = [...this.chats, chat];
     try {
       if (!this.chatIds.includes(chat.id)) {
         this.chatIds = [...this.chatIds, chat.id];
@@ -178,5 +179,12 @@ export class ChatDataManager {
     this.chats = [];
     this.chatIds = [];
     this.activeChatId = null;
+  }
+
+  setAllAsUndefined() {
+    this.context.workspaceState.update(constants.ACTIVE_CHAT_ID_KEY, undefined);
+    this.context.workspaceState.update(constants.CHATS_KEY, undefined);
+    this.context.workspaceState.update(constants.CHAT_IDS_KEY, undefined);
+    this.context.workspaceState.update(constants.NEXT_ID_KEY, undefined);
   }
 }

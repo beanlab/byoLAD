@@ -67,6 +67,11 @@
     },
     "commands": [
       {
+        "command": "vscode-byolad.clearAllExtensionData",
+        "title": "byoLAD — Clear All Extension Data",
+        "category": "byoLAD"
+      },
+      {
         "command": "vscode-byolad.newChat",
         "title": "byoLAD — New Chat",
         "category": "byoLAD"

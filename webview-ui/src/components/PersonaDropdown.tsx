@@ -21,7 +21,7 @@ export const PersonaDropdown: React.FC<PersonaDropdownProps> = ({
 
   return (
     <VSCodeDropdown
-      id="persona-dropdown"
+      className="persona-dropdown"
       onInput={handleOnPersonaSelect}
       value={selectedPersonaId.toString()} // Sets initial value
     >

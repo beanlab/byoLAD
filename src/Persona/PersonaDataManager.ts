@@ -188,8 +188,8 @@ export class PersonaDataManager {
     if (!name.trim()) {
       throw new Error("Persona name cannot be empty or whitespace");
     }
-    if (name.length > 25) {
-      throw new Error("Persona name cannot be more than 25 characters");
+    if (name.length >= 30) {
+      throw new Error("Persona name cannot be more than 30 characters");
     }
   }
 

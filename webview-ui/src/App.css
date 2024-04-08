@@ -286,3 +286,7 @@
 code {
   background: none;
 }
+
+.persona-dropdown {
+  width: 220px;
+}

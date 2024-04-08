@@ -1,7 +1,6 @@
 import { ExtensionContext } from "vscode";
 
 import { Chat, ChatMessage } from "../../shared/types";
-import * as constants from "../commands/constants";
 import { setHasActiveChatWhenClauseState } from "../helpers";
 import { SettingsProvider } from "../helpers/SettingsProvider";
 import { PersonaDataManager } from "../Persona/PersonaDataManager";
@@ -10,6 +9,10 @@ import { PersonaDataManager } from "../Persona/PersonaDataManager";
  * Manages the chat history and the active chat in the VS Code workspace state.
  */
 export class ChatDataManager {
+  private readonly CHATS_KEY = "chats";
+  private readonly CHAT_IDS_KEY = "chatIds";
+  private readonly ACTIVE_CHAT_ID_KEY = "activeChatId";
+  private readonly NEXT_ID_KEY = "nextId";
   private readonly context: ExtensionContext;
   private readonly settingsProvider: SettingsProvider;
   private readonly personaDataManager: PersonaDataManager;
@@ -24,8 +27,18 @@ export class ChatDataManager {
     this.personaDataManager = personaDataManager;
   }
 
+  /**
+   * Cleans up all stored data, removing keys from the workspace state.
+   */
+  clearData() {
+    this.context.workspaceState.update(this.ACTIVE_CHAT_ID_KEY, undefined);
+    this.context.workspaceState.update(this.CHATS_KEY, undefined);
+    this.context.workspaceState.update(this.CHAT_IDS_KEY, undefined);
+    this.context.workspaceState.update(this.NEXT_ID_KEY, undefined);
+  }
+
   get chats(): Chat[] {
-    return this.context.workspaceState.get<Chat[]>(constants.CHATS_KEY) || [];
+    return this.context.workspaceState.get<Chat[]>(this.CHATS_KEY) || [];
   }
 
   set chats(value: Chat[]) {
@@ -33,26 +46,23 @@ export class ChatDataManager {
     if (new Set(ids).size !== ids.length) {
       throw new Error("Duplicate ids");
     }
-    this.context.workspaceState.update(constants.CHATS_KEY, value);
+    this.context.workspaceState.update(this.CHATS_KEY, value);
   }
 
   get chatIds(): number[] {
-    return (
-      this.context.workspaceState.get<number[]>(constants.CHAT_IDS_KEY) || []
-    );
+    return this.context.workspaceState.get<number[]>(this.CHAT_IDS_KEY) || [];
   }
 
   set chatIds(value: number[]) {
     if (new Set(value).size !== value.length) {
       throw new Error("Duplicate Chat IDs");
     }
-    this.context.workspaceState.update(constants.CHAT_IDS_KEY, value);
+    this.context.workspaceState.update(this.CHAT_IDS_KEY, value);
   }
 
   get activeChatId(): number | null {
     return (
-      this.context.workspaceState.get<number>(constants.ACTIVE_CHAT_ID_KEY) ||
-      null
+      this.context.workspaceState.get<number>(this.ACTIVE_CHAT_ID_KEY) || null
     );
   }
 
@@ -66,15 +76,15 @@ export class ChatDataManager {
       setHasActiveChatWhenClauseState(true);
     }
 
-    this.context.workspaceState.update(constants.ACTIVE_CHAT_ID_KEY, value);
+    this.context.workspaceState.update(this.ACTIVE_CHAT_ID_KEY, value);
   }
 
   get nextId(): number {
-    return this.context.workspaceState.get<number>(constants.NEXT_ID_KEY) || 1;
+    return this.context.workspaceState.get<number>(this.NEXT_ID_KEY) || 1;
   }
 
   set nextId(value: number) {
-    this.context.workspaceState.update(constants.NEXT_ID_KEY, value);
+    this.context.workspaceState.update(this.NEXT_ID_KEY, value);
   }
 
   getChat(id: number): Chat | undefined {
@@ -170,21 +180,5 @@ export class ChatDataManager {
       this.chats = oldChats;
       throw error;
     }
-  }
-
-  /**
-   * Deletes all chats from the chat history.
-   */
-  clearAllChats() {
-    this.chats = [];
-    this.chatIds = [];
-    this.activeChatId = null;
-  }
-
-  setAllAsUndefined() {
-    this.context.workspaceState.update(constants.ACTIVE_CHAT_ID_KEY, undefined);
-    this.context.workspaceState.update(constants.CHATS_KEY, undefined);
-    this.context.workspaceState.update(constants.CHAT_IDS_KEY, undefined);
-    this.context.workspaceState.update(constants.NEXT_ID_KEY, undefined);
   }
 }

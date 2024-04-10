@@ -65,7 +65,8 @@ We use [semantic versioning](https://semver.org/).
 
 Follow these steps to publish a new version of the extension:
 
-1. Increment the extension version number as needed. This should be done in `package.json` and `webview-ui/package.json`.
+1. Increment the extension version number as needed. This should be done in `package.json` and `webview-ui/package.json`. Run `npm run install:all` from the root directory to update the version numbers in the corresponding `package-lock.json` files.
+   1. In the case that changing the version number causes issues in local development, try deleting the `out` folder and running `npm run compile` from the root directory. Similarly, you can try deleting the `webview-ui/build` folder and running `npm run build:webview` from the root directory.
 2. Merge all desired changes into the `main` branch following all PR and code review practices.
 3. Create a release branch off of `main` to act as a checkpoint, following the naming convention `RELEASE-{version}` (e.g., version 1.2.3 should have the release branch `RELEASE-1.2.3`).
 4. Create a new [release](https://github.com/beanlab/byoLAD/releases) through GitHub. Note the following:

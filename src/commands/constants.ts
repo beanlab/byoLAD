@@ -9,13 +9,6 @@ export const LLM_MESSAGE_FORMATTING_INSTRUCTION = `The user will provide you wit
   You MUST respond in valid Markdown format. Each code sample section must have code fences ("\`\`\`") and a language identifier. Non-code sections of your response should not have code fences and should be plain Markdown. 
   This is necessary so the user can easily see which parts of your response are code and which parts are just descriptive/explanatory Markdown text.`;
 
-// ChatDataManager Keys
-// Note: Changes to workspace state keys will cause compatibility issues with existing workspaces that have byoLAD data unless the data is migrated.
-export const CHATS_KEY = "chats"; // Do not change without handling migration
-export const CHAT_IDS_KEY = "chatIds"; // Do not change without handling migration
-export const ACTIVE_CHAT_ID_KEY = "activeChatId"; // Do not change without handling migration
-export const NEXT_ID_KEY = "nextId"; // Do not change without handling migration
-
 // "when" clause keys
 export const HAS_ACTIVE_CHAT_WHEN_CLAUSE_KEY = "vscode-byolad.hasActiveChat";
 

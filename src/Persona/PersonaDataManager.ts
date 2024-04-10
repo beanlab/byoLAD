@@ -33,6 +33,15 @@ export class PersonaDataManager {
     }
   }
 
+  /**
+   * Cleans up all stored data, removing keys from the workspace state.
+   */
+  clearData() {
+    this.context.workspaceState.update(this.PERSONAS_CUSTOM_KEY, undefined);
+    this.context.workspaceState.update(this.PERSONAS_NEXT_ID_KEY, undefined);
+    this.context.workspaceState.update(this.PERSONAS_DEFAULT_ID_KEY, undefined);
+  }
+
   get customPersonas(): Persona[] {
     return (
       this.context.workspaceState.get<Persona[]>(this.PERSONAS_CUSTOM_KEY) || []
@@ -71,12 +80,8 @@ export class PersonaDataManager {
     let defaultId = this.context.workspaceState.get<number>(
       this.PERSONAS_DEFAULT_ID_KEY,
     );
-    if (defaultId) {
-      defaultId = this.resetDefaultPersonaIdIfInvalid(defaultId);
-      return defaultId;
-    } else {
-      throw new Error("Default Persona ID not set");
-    }
+    defaultId = this.resetDefaultPersonaIdIfInvalid(defaultId);
+    return defaultId;
   }
 
   /**

@@ -7,6 +7,7 @@ import { LLMApiResponseHandler } from "./ChatModel/LLMApiResponseHandler";
 import { LLMApiService } from "./ChatModel/LLMApiService";
 import { getAddCodeToChatCommand } from "./commands/getAddCodeToChatCommand";
 import { getAddCodeToNewChatCommand } from "./commands/getAddCodeToNewChatCommand";
+import { getClearAllExtensionDataCommand } from "./commands/getClearAllExtensionDataCommand";
 import { getDeleteAllChatsCommand } from "./commands/getDeleteAllChatsCommand";
 import { getExplainCodeCommand } from "./commands/getExplainCodeCommand";
 import { getImportPersonaCommand } from "./commands/getImportPersonaCommand";
@@ -25,7 +26,7 @@ import { ChatWebviewProvider } from "./webview/ChatWebviewProvider";
 import { ExtensionToWebviewMessageSender } from "./webview/ExtensionToWebviewMessageSender";
 import { WebviewToExtensionMessageHandler } from "./webview/WebviewToExtensionMessageHandler";
 
-// This method is automatically called by VS Code called when the extension is activated
+// This method is automatically called by VS Code when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
   const config = vscode.workspace.getConfiguration("vscode-byolad");
   const settingsProvider = new SettingsProvider(config);
@@ -75,6 +76,12 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   // Get all commands and event handlers
+  const clearAllExtensionDataCommand = getClearAllExtensionDataCommand(
+    chatDataManager,
+    personaDataManager,
+    chatWebviewProvider,
+    extensionToWebviewMessageSender,
+  );
   const newChatCommand = getNewChatCommand(
     chatDataManager,
     extensionToWebviewMessageSender,
@@ -126,6 +133,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Add the commands and event handlers to the extension context so they can be used
   context.subscriptions.push(
+    clearAllExtensionDataCommand,
     newChatCommand,
     deleteAllChatsCommand,
     reviewFileCodeCommand,

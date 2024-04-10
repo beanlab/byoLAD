@@ -56,8 +56,8 @@ export async function sendChatMessage(
     messageBlocks.push(codeBlock);
   }
 
-  // if this is the first time a message is sent, then update the chat title
-  if (chat.messages.length == 0) {
+  // if it is still the default title, then update the chat title
+  if (chat.title == chatDataManager.DEFAULT_CHAT_NAME) {
     chat.title = markdown;
     chat.tags = [];
   }

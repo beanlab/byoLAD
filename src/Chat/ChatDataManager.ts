@@ -13,6 +13,7 @@ export class ChatDataManager {
   private readonly context: ExtensionContext;
   private readonly settingsProvider: SettingsProvider;
   private readonly personaDataManager: PersonaDataManager;
+  public readonly DEFAULT_CHAT_NAME: string = "Empty Chat";
 
   constructor(
     context: ExtensionContext,
@@ -128,7 +129,7 @@ export class ChatDataManager {
       id: newId,
       messages: messages ?? [],
       personaId: this.personaDataManager.defaultPersonaId,
-      title: "Empty Chat",
+      title: this.DEFAULT_CHAT_NAME,
       tags: [],
     };
     return chat;

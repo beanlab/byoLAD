@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+
 import { ChatDataManager } from "../Chat/ChatDataManager";
 import { ExtensionToWebviewMessageSender } from "../webview/ExtensionToWebviewMessageSender";
 
@@ -10,6 +11,6 @@ export const getDeleteAllChatsCommand = (
   extensionToWebviewMessageSender: ExtensionToWebviewMessageSender,
 ) =>
   vscode.commands.registerCommand("vscode-byolad.deleteAllChats", async () => {
-    chatDataManager.clearAllChats();
+    chatDataManager.clearData();
     await extensionToWebviewMessageSender.refresh();
   });

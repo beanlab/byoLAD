@@ -1,6 +1,6 @@
 # Contribute
 
-Please feel free to contribute to our project. These are the instructions for contribution and local set up.
+Please feel free to contribute to our project. These are the instructions for contribution and local setup.
 
 ## Contribution Guidelines
 
@@ -50,9 +50,32 @@ If you desire to run this extension locally, here are the steps to have it run p
 - Make changes to `src/test/suite/extension.test.ts` or create new test files inside the `test/suite` folder.
   - The provided test runner will only consider files matching the name pattern `**.test.ts`.
   - We have structured the test code folder in the same way as the source code folder `src`.
-
+ 
 ### Strongly suggested options
 
 - Install the vscode-eslint and prettier-vscode extensions.
 - Set Prettier as your default formatter in VS code settings.
 - Turn on format on save in VS code settings.
+
+
+## How to Publish the Extension
+
+Review the VS Code [documentation](https://code.visualstudio.com/api/working-with-extensions/publishing-extension) regarding publishing extensions to the VS Code Marketplace.
+
+We use [semantic versioning](https://semver.org/).
+
+Follow these steps to publish a new version of the extension:
+1. Merge all desired changes into the `main` branch following all PR and code review practices.
+2. Create a release branch off of `main` to act as a checkpoint, following the naming convention `RELEASE-{version}` (e.g., version 1.2.3 should have the release branch `RELEASE-1.2.3`).
+3. Create a new [release](https://github.com/beanlab/byoLAD/releases) through GitHub. Note the following:
+    1. Create a new tag whose name is the version number (e.g., `1.2.3`).
+    2. Target the release branch created above (e.g., `RELEASE-1.2.3`).
+    3. Set the release title as the version number (e.g., `1.2.3`).
+    4. Provide a useful description of the release.
+    5. Set as the repo's latest release (checkbox).
+4. Check [GitHub Actions](https://github.com/beanlab/byoLAD/actions) to ensure the "Publish" job ran successfully. Check the [workflows](https://github.com/beanlab/byoLAD/tree/main/.github/workflows) on the `main` branch to see how this is done.
+5. Wait several minutes for the new version to be available in the VS Code Marketplace.
+
+There are more ways to expand how we use tools like GitHub Actions and `vsce` to automate this workflow further. This documentation should be updated if these are used.
+
+

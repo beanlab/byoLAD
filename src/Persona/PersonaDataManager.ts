@@ -138,7 +138,7 @@ export class PersonaDataManager {
       description: draft.description,
       instructions: draft.instructions,
       modelProvider: draft.modelProvider,
-      modelId: draft.modelId,
+      modelId: draft.modelId.trim()  
     };
     this.nextId++;
     this.personas = [...this.personas, newPersona];

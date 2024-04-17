@@ -128,7 +128,7 @@ export class PersonaDataManager {
   addNewPersona(draft: PersonaDraft): Persona {
     this.validateNewPersonaName(draft.name);
     const errorMessages: Map<keyof PersonaDraft, string> =
-      validatePersonaDraftProperties(draft);
+      validatePersonaDraftProperties(draft, this.personas.map((persona)=>persona.name));
     if (errorMessages.size) {
       throw new Error(`Invalid Persona: ${errorMapToString(errorMessages)}`);
     }

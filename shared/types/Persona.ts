@@ -1,3 +1,4 @@
+// import { STANDARD_PERSONAS } from "../data/StandardPersonas";
 import { ModelProvider } from "./";
 
 /**
@@ -45,6 +46,7 @@ type ValidationRule = (value: string) => string | null;
 
 export function validatePersonaDraftProperties(
   persona: PersonaDraft,
+  currPersonaNames: string[]
 ): Map<keyof PersonaDraft, string> {
   const errors = new Map<keyof PersonaDraft, string>();
 
@@ -56,6 +58,7 @@ export function validatePersonaDraftProperties(
       fieldMissing,
       isEmptyOrWhitespace,
       isGreaterThanMaxLength(PERSONA_NAME_MAX_LENGTH),
+      duplicateName(currPersonaNames)
     ],
     errors,
   );
@@ -137,9 +140,16 @@ const isGreaterThanMaxLength =
       ? `cannot be longer than ${maxLength} characters`
       : null;
 
-const fieldMissing: ValidationRule = (value) => (!value ? "is required" : null);
+const fieldMissing: ValidationRule = (value:string) => (!value ? "is required" : null);
 
 const isInvalidModelProvider: ValidationRule = (value: string) =>
   !Object.values(ModelProvider).includes(value as ModelProvider)
     ? "is not a supported model provider"
     : null;
+
+const duplicateName =
+  (currPersonaNames: string[]): ValidationRule =>
+  (value) =>
+    currPersonaNames.includes(value)
+      ? `"${value}" is the name of an existing persona`
+      : null;

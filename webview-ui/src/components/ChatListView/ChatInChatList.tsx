@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { KeyboardEvent } from "react";
 
 import {
   VSCodeButton,
@@ -59,6 +60,12 @@ export const ChatInChatList = ({
     }
   };
 
+  const handleKeywordKeyPress = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.key == "Enter") {
+      handleSaveClick();
+    }
+  };
+
   const allowedToEdit = () => {
     return currEditableIndex === null || currEditableIndex === index;
   };
@@ -70,6 +77,7 @@ export const ChatInChatList = ({
           <VSCodeTextField
             value={title}
             onInput={(e) => handleInputChange(e as InputEvent)}
+            onKeyDown={(e) => handleKeywordKeyPress(e)}
           />
         ) : (
           <div

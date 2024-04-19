@@ -133,7 +133,10 @@ export class PersonaDataManager {
   addNewPersona(draft: PersonaDraft): Persona {
     this.validateNewPersonaName(draft.name);
     const errorMessages: Map<keyof PersonaDraft, string> =
-      validatePersonaDraftProperties(draft);
+      validatePersonaDraftProperties(
+        draft,
+        this.personas.map((persona) => persona.name),
+      );
     if (errorMessages.size) {
       throw new Error(`Invalid Persona: ${errorMapToString(errorMessages)}`);
     }
@@ -143,7 +146,7 @@ export class PersonaDataManager {
       description: draft.description,
       instructions: draft.instructions,
       modelProvider: draft.modelProvider,
-      modelId: draft.modelId,
+      modelId: draft.modelId.trim(),
     };
     this.nextId++;
     this.personas = [...this.personas, newPersona];
@@ -193,8 +196,8 @@ export class PersonaDataManager {
     if (!name.trim()) {
       throw new Error("Persona name cannot be empty or whitespace");
     }
-    if (name.length > 25) {
-      throw new Error("Persona name cannot be more than 25 characters");
+    if (name.length >= 30) {
+      throw new Error("Persona name cannot be more than 30 characters");
     }
   }
 

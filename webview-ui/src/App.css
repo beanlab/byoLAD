@@ -99,7 +99,7 @@
 
 .text-block-container {
   position: relative;
-  padding: 3px 0;
+  padding: 3px 10px 3px 0px;
   overflow-wrap: break-word;
 }
 
@@ -285,4 +285,8 @@
 
 code {
   background: none;
+}
+
+.persona-dropdown {
+  width: 200px;
 }

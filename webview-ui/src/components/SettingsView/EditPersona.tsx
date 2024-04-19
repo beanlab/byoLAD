@@ -14,6 +14,7 @@ import {
   PersonaDraft,
   validatePersonaDraftProperties,
 } from "../../../../shared/types";
+import { useAppContext } from "../../utilities/AppContext";
 
 function getProviderModelUrl(provider: ModelProvider): string {
   switch (provider) {
@@ -46,6 +47,7 @@ export const EditPersona: React.FC<{
   onSave: (persona: Persona | PersonaDraft) => void;
   onCancel: () => void;
 }> = ({ persona: personaDraft, onSave, onCancel }) => {
+  const { personaList } = useAppContext();
   const [editedPersonaDraft, setEditedPersona] = useState(personaDraft);
   const [validationErrors, setValidationErrors] = useState<
     Map<keyof PersonaDraft, string>
@@ -56,11 +58,11 @@ export const EditPersona: React.FC<{
 
   // On mount, invalidates the input, which will keep the save button disabled if needed until the user makes a change
   useEffect(() => {
-    setValidationErrors(validatePersonaDraftProperties(editedPersonaDraft));
+    setValidationErrors(validatePersonaDraftProperties(editedPersonaDraft, personaList.map((persona)=>persona.name)));
   }, []);
 
   useEffect(() => {
-    setValidationErrors(validatePersonaDraftProperties(editedPersonaDraft));
+    setValidationErrors(validatePersonaDraftProperties(editedPersonaDraft, personaList.map((persona)=>persona.name)));
   }, [editedPersonaDraft]);
 
   const handleStringChange = (e: InputEvent) => {

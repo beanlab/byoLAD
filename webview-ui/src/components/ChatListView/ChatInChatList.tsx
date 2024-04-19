@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { KeyboardEvent } from "react";
 
 import {
   VSCodeButton,
@@ -13,20 +14,37 @@ import { useExtensionMessageContext } from "../../utilities/ExtensionMessageCont
 
 interface ChatInChatListProps {
   chat: Chat;
+  onEdit: () => void;
+  onSave: () => void;
+  currEditableIndex: number | null;
+  index: number;
 }
 
-export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
+export const ChatInChatList = ({
+  chat,
+  onEdit,
+  onSave,
+  currEditableIndex,
+  index,
+}: ChatInChatListProps) => {
   const { deleteChat, updateChat } = useExtensionMessageContext();
   const [editing, setEditing] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(chat.title);
   const { navigate, personaList } = useAppContext();
 
   const handleEditClick = () => {
-    setEditing(!editing);
-    if (editing === true) {
-      chat.title = title;
-      updateChat(chat);
+    if (allowedToEdit()) {
+      onEdit();
+      setEditing(!editing);
     }
+  };
+
+  const handleSaveClick = () => {
+    chat.title = title;
+
+    updateChat(chat);
+    onSave();
+    setEditing(false);
   };
 
   const handleInputChange = (event: InputEvent) => {
@@ -36,6 +54,22 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
   const getPersonaName = (personaId: number) =>
     personaList.find((p) => p.id === personaId)?.name;
 
+  const handleDeleteClick = (chatID: number) => {
+    if (allowedToEdit() && !editing) {
+      deleteChat(chatID);
+    }
+  };
+
+  const handleKeywordKeyPress = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.key == "Enter") {
+      handleSaveClick();
+    }
+  };
+
+  const allowedToEdit = () => {
+    return currEditableIndex === null || currEditableIndex === index;
+  };
+
   return (
     <div>
       <div className="convo">
@@ -43,6 +77,7 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
           <VSCodeTextField
             value={title}
             onInput={(e) => handleInputChange(e as InputEvent)}
+            onKeyDown={(e) => handleKeywordKeyPress(e)}
           />
         ) : (
           <div
@@ -59,7 +94,7 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
               appearance="icon"
               aria-label="Done editing chat title"
               title="Done editing chat title"
-              onClick={() => handleEditClick()}
+              onClick={() => handleSaveClick()}
             >
               <i className="codicon codicon-check"></i>
             </VSCodeButton>
@@ -77,7 +112,7 @@ export const ChatInChatList = ({ chat }: ChatInChatListProps) => {
             appearance="icon"
             aria-label="Delete chat"
             title="Delete chat"
-            onClick={() => deleteChat(chat.id)}
+            onClick={() => handleDeleteClick(chat.id)}
           >
             <i className="codicon codicon-trash"></i>
           </VSCodeButton>
